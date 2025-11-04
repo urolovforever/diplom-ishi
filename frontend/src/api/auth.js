@@ -22,4 +22,19 @@ export const authAPI = {
     })
     return response.data
   },
+
+  changePassword: async (passwordData) => {
+    const response = await api.post('/accounts/change-password/', passwordData)
+    return response.data
+  },
+
+  passwordResetRequest: async (email) => {
+    const response = await api.post('/accounts/password-reset/', { email })
+    return response.data
+  },
+
+  passwordResetConfirm: async (resetData) => {
+    const response = await api.post('/accounts/password-reset-confirm/', resetData)
+    return response.data
+  },
 }
