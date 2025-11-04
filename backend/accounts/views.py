@@ -66,22 +66,20 @@ class PasswordResetRequestView(APIView):
                 # Store code in cache for 15 minutes
                 cache.set(f'password_reset_{email}', code, 60 * 15)
 
-                # Send email (in production, use proper email backend)
-                # For now, we'll just print it
-                print(f"Password reset code for {email}: {code}")
-
-                # Uncomment this in production with proper email settings
-                # send_mail(
-                #     'Password Reset Code',
-                #     f'Your password reset code is: {code}\n\nThis code will expire in 15 minutes.',
-                #     settings.DEFAULT_FROM_EMAIL,
-                #     [email],
-                #     fail_silently=False,
-                # )
+                # Send email with reset code
+                try:
+                    send_mail(
+                        'Password Reset Code',
+                        f'Your password reset code is: {code}\n\nThis code will expire in 15 minutes.\n\nIf you did not request this code, please ignore this email.',
+                        settings.DEFAULT_FROM_EMAIL,
+                        [email],
+                        fail_silently=False,
+                    )
+                except Exception as e:
+                    print(f"Error sending email: {e}")
 
                 return Response({
-                    "message": "Password reset code sent to your email",
-                    "code": code  # Remove this in production!
+                    "message": "Password reset code sent to your email"
                 }, status=status.HTTP_200_OK)
 
             except User.DoesNotExist:
