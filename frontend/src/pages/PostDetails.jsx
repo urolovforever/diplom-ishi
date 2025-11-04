@@ -5,7 +5,8 @@ import { confessionAPI } from '../api/confession'
 import { useAuthStore } from '../store/authStore'
 import CommentSection from '../components/CommentSection'
 import Loading from '../components/Loading'
-import { FiHeart, FiMessageCircle, FiArrowLeft, FiPin } from 'react-icons/fi'
+import { FiHeart, FiMessageCircle, FiArrowLeft } from 'react-icons/fi'
+import { BsPinFill } from 'react-icons/bs'
 import { formatDistanceToNow } from 'date-fns'
 
 const PostDetails = () => {
@@ -100,7 +101,7 @@ const PostDetails = () => {
 
             {post.is_pinned && (
               <div className="flex items-center space-x-1 text-yellow-600 bg-yellow-50 px-3 py-1 rounded-full">
-                <FiPin size={16} />
+                <BsPinFill size={16} />
                 <span className="text-sm font-medium">Pinned</span>
               </div>
             )}
