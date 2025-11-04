@@ -183,8 +183,8 @@ const PasswordReset = () => {
                     : 'text-red-600'
                 }`}>
                   {formData.new_password === formData.confirm_password
-                    ? '✓ Parollar mos kelmoqda'
-                    : '✗ Parollar mos kelmayapti'}
+                    ? '✓ Passwords match'
+                    : '✗ Passwords do not match'}
                 </p>
               )}
             </div>
