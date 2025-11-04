@@ -6,7 +6,7 @@ import { confessionAPI } from '../api/confession'
 import { useAuthStore } from '../store/authStore'
 import MainLayout from '../components/layout/MainLayout'
 import Loading from '../components/Loading'
-import { FiEdit2, FiSave, FiX, FiLock, FiImage, FiCompass } from 'react-icons/fi'
+import { FiEdit2, FiSave, FiX, FiLock, FiImage, FiCompass, FiShield } from 'react-icons/fi'
 import { formatDistanceToNow } from 'date-fns'
 
 const Profile = () => {
@@ -48,7 +48,6 @@ const Profile = () => {
     const { name, value, files } = e.target
     if (files) {
       setFormData({ ...formData, [name]: files[0] })
-      // Preview avatar
       const reader = new FileReader()
       reader.onloadend = () => {
         setPreviewAvatar(reader.result)
@@ -143,56 +142,58 @@ const Profile = () => {
 
   return (
     <MainLayout showRightSidebar={false}>
-      <h1 className="text-3xl font-bold text-gray-800 mb-8">My Profile</h1>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Profile Card - Enhanced with gradient and shadow */}
-        <div className="lg:col-span-1">
-          <div className="bg-gradient-to-br from-blue-50 via-white to-purple-50 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 p-8 border border-blue-100">
-            <div className="text-center">
-              {/* Avatar with hover effect */}
-              <div className="relative inline-block mb-6 group">
-                <img
-                  src={previewAvatar || user.avatar || 'https://via.placeholder.com/150'}
-                  alt={user.username}
-                  className="w-40 h-40 rounded-full object-cover border-4 border-blue-500 mx-auto shadow-lg transition-transform duration-300 group-hover:scale-105"
-                />
-                {isEditing && (
-                  <label className="absolute bottom-2 right-2 bg-blue-600 text-white p-3 rounded-full cursor-pointer hover:bg-blue-700 shadow-lg transform transition-all duration-200 hover:scale-110">
-                    <FiImage size={20} />
-                    <input
-                      type="file"
-                      name="avatar"
-                      accept="image/*"
-                      onChange={handleChange}
-                      className="hidden"
-                    />
-                    <div className="absolute bottom-full right-0 mb-2 hidden group-hover:block">
-                      <div className="bg-gray-800 text-white text-xs py-1 px-2 rounded whitespace-nowrap">
-                        Change photo
-                      </div>
+      <div className="space-y-6">
+        {/* Profile Header Card - Full Width Horizontal */}
+        <div className="bg-gradient-to-br from-blue-50 via-white to-purple-50 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 p-8 border border-blue-100">
+          <div className="flex items-center space-x-8">
+            {/* Avatar */}
+            <div className="relative group">
+              <img
+                src={previewAvatar || user.avatar || 'https://via.placeholder.com/150'}
+                alt={user.username}
+                className="w-32 h-32 rounded-full object-cover border-4 border-blue-500 shadow-lg transition-transform duration-300 group-hover:scale-105"
+              />
+              {isEditing && (
+                <label className="absolute bottom-0 right-0 bg-blue-600 text-white p-3 rounded-full cursor-pointer hover:bg-blue-700 shadow-lg transform transition-all duration-200 hover:scale-110">
+                  <FiImage size={18} />
+                  <input
+                    type="file"
+                    name="avatar"
+                    accept="image/*"
+                    onChange={handleChange}
+                    className="hidden"
+                  />
+                  <div className="absolute bottom-full right-0 mb-2 hidden group-hover:block">
+                    <div className="bg-gray-800 text-white text-xs py-1 px-2 rounded whitespace-nowrap">
+                      Change photo
                     </div>
-                  </label>
-                )}
-              </div>
+                  </div>
+                </label>
+              )}
+            </div>
 
-              <h2 className="text-3xl font-bold text-gray-900 mb-2">
+            {/* User Info */}
+            <div className="flex-1">
+              <h1 className="text-4xl font-bold text-gray-900 mb-2">
                 {user.username}
-              </h2>
-              <p className="text-sm text-gray-600 mb-4">
+              </h1>
+              <p className="text-lg text-gray-600 mb-3">
                 {user.email}
               </p>
-              <span className="inline-block px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-full text-sm font-semibold shadow-md">
-                {user.role === 'superadmin' ? '👑 Super Admin' : user.role === 'admin' ? '⭐ Admin' : '👤 User'}
-              </span>
+              <div className="flex items-center space-x-3">
+                <span className="inline-flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-full text-sm font-semibold shadow-md">
+                  <FiShield size={16} />
+                  <span>{user.role === 'superadmin' ? 'Super Admin' : user.role === 'admin' ? 'Admin' : 'User'}</span>
+                </span>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Profile Details */}
-        <div className="lg:col-span-2 space-y-6">
+        {/* Profile Information and Change Password - Side by Side */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Profile Information */}
-          <div className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 p-6 min-h-[320px] border border-gray-100">
+          <div className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 p-6 border border-gray-100">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-2xl font-bold text-gray-800 flex items-center">
                 <FiEdit2 className="mr-2 text-blue-600" size={24} />
@@ -202,34 +203,33 @@ const Profile = () => {
               {!isEditing ? (
                 <button
                   onClick={() => setIsEditing(true)}
-                  className="flex items-center space-x-2 px-5 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105"
+                  className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105"
                 >
-                  <FiEdit2 size={18} />
-                  <span className="font-semibold">Edit Profile</span>
+                  <FiEdit2 size={16} />
+                  <span className="font-semibold">Edit</span>
                 </button>
               ) : (
                 <div className="flex space-x-2">
                   <button
                     onClick={handleSubmit}
                     disabled={loading}
-                    className="flex items-center space-x-2 px-5 py-2.5 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 disabled:opacity-50 shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105"
+                    className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 disabled:opacity-50 shadow-md hover:shadow-lg transition-all duration-200"
                   >
-                    <FiSave size={18} />
+                    <FiSave size={16} />
                     <span className="font-semibold">{loading ? 'Saving...' : 'Save'}</span>
                   </button>
                   <button
                     onClick={cancelEdit}
-                    className="flex items-center space-x-2 px-5 py-2.5 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 shadow-md hover:shadow-lg transition-all duration-200"
+                    className="flex items-center space-x-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 shadow-md transition-all duration-200"
                   >
-                    <FiX size={18} />
-                    <span className="font-semibold">Cancel</span>
+                    <FiX size={16} />
                   </button>
                 </div>
               )}
             </div>
 
-            <form className="space-y-5">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <form className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
                     First Name
@@ -240,8 +240,8 @@ const Profile = () => {
                     value={formData.first_name}
                     onChange={handleChange}
                     disabled={!isEditing}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-50 disabled:text-gray-600 transition-colors"
-                    placeholder="Enter your first name"
+                    className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-50 disabled:text-gray-600 transition-colors"
+                    placeholder="First name"
                   />
                 </div>
 
@@ -255,8 +255,8 @@ const Profile = () => {
                     value={formData.last_name}
                     onChange={handleChange}
                     disabled={!isEditing}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-50 disabled:text-gray-600 transition-colors"
-                    placeholder="Enter your last name"
+                    className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-50 disabled:text-gray-600 transition-colors"
+                    placeholder="Last name"
                   />
                 </div>
               </div>
@@ -270,8 +270,8 @@ const Profile = () => {
                   value={formData.bio}
                   onChange={handleChange}
                   disabled={!isEditing}
-                  rows="4"
-                  className={`w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none transition-colors ${
+                  rows="5"
+                  className={`w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none transition-colors ${
                     !isEditing ? 'bg-gray-50 text-gray-600 italic' : ''
                   }`}
                   placeholder="Tell us about yourself..."
@@ -281,26 +281,26 @@ const Profile = () => {
           </div>
 
           {/* Change Password */}
-          <div className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 p-6 min-h-[320px] border border-gray-100">
+          <div className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 p-6 border border-gray-100">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-2xl font-bold text-gray-800 flex items-center">
                 <FiLock className="mr-2 text-blue-600" size={24} />
-                Change Password
+                Security
               </h3>
 
               {!showPasswordChange && (
                 <button
                   onClick={() => setShowPasswordChange(true)}
-                  className="flex items-center space-x-2 px-5 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105"
+                  className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105"
                 >
-                  <FiLock size={18} />
-                  <span className="font-semibold">Change Password</span>
+                  <FiLock size={16} />
+                  <span className="font-semibold">Change</span>
                 </button>
               )}
             </div>
 
             {showPasswordChange ? (
-              <form onSubmit={handlePasswordSubmit} className="space-y-5">
+              <form onSubmit={handlePasswordSubmit} className="space-y-4">
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Current Password
@@ -311,8 +311,8 @@ const Profile = () => {
                     value={passwordData.old_password}
                     onChange={handlePasswordChange}
                     required
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                    placeholder="Enter current password"
+                    className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                    placeholder="Current password"
                   />
                 </div>
 
@@ -326,14 +326,14 @@ const Profile = () => {
                     value={passwordData.new_password}
                     onChange={handlePasswordChange}
                     required
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                    placeholder="Enter new password"
+                    className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                    placeholder="New password"
                   />
                 </div>
 
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Confirm New Password
+                    Confirm Password
                   </label>
                   <input
                     type="password"
@@ -341,18 +341,18 @@ const Profile = () => {
                     value={passwordData.confirm_password}
                     onChange={handlePasswordChange}
                     required
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                    placeholder="Confirm new password"
+                    className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                    placeholder="Confirm password"
                   />
                 </div>
 
-                <div className="flex space-x-3 pt-2">
+                <div className="flex space-x-2 pt-2">
                   <button
                     type="submit"
                     disabled={loading}
-                    className="flex-1 px-5 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 shadow-md hover:shadow-lg transition-all duration-200 font-semibold"
+                    className="flex-1 px-4 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 shadow-md hover:shadow-lg transition-all duration-200 font-semibold"
                   >
-                    {loading ? 'Changing...' : 'Update Password'}
+                    {loading ? 'Updating...' : 'Update Password'}
                   </button>
                   <button
                     type="button"
@@ -364,82 +364,92 @@ const Profile = () => {
                         confirm_password: ''
                       })
                     }}
-                    className="px-5 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 shadow-md hover:shadow-lg transition-all duration-200 font-semibold"
+                    className="px-4 py-2.5 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 shadow-md transition-all duration-200 font-semibold"
                   >
                     Cancel
                   </button>
                 </div>
               </form>
             ) : (
-              <div className="flex flex-col items-center justify-center py-12 text-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center mb-4">
-                  <FiLock className="text-blue-600" size={32} />
+              <div className="flex flex-col items-center justify-center py-8 text-center">
+                <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center mb-4">
+                  <FiLock className="text-blue-600" size={36} />
                 </div>
-                <p className="text-gray-500 mb-2">Keep your account secure</p>
-                <p className="text-sm text-gray-400">Click the button above to change your password</p>
-              </div>
-            )}
-          </div>
-
-          {/* Subscriptions - Enhanced empty state */}
-          <div className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 p-6 border border-gray-100">
-            <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-              <span className="mr-2">📚</span>
-              My Subscriptions
-              <span className="ml-2 text-lg text-gray-500">({subscriptions.length})</span>
-            </h3>
-
-            {subscriptions.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-12 text-center">
-                <div className="w-24 h-24 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center mb-6">
-                  <FiCompass className="text-blue-600" size={48} />
-                </div>
-                <h4 className="text-xl font-semibold text-gray-700 mb-2">
-                  No subscriptions yet
+                <h4 className="text-lg font-semibold text-gray-700 mb-2">
+                  Password Protection
                 </h4>
-                <p className="text-gray-500 mb-6 max-w-md">
-                  Start following confessions to see their posts in your feed and stay updated with their content.
+                <p className="text-sm text-gray-500 mb-4">
+                  Keep your account secure by updating your password regularly
                 </p>
-                <Link
-                  to="/explore"
-                  className="inline-flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105 font-semibold"
+                <button
+                  onClick={() => setShowPasswordChange(true)}
+                  className="text-blue-600 hover:text-blue-700 font-semibold text-sm"
                 >
-                  <FiCompass size={20} />
-                  <span>Explore Confessions</span>
-                </Link>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {subscriptions.map(sub => (
-                  <Link
-                    key={sub.id}
-                    to={`/confession/${sub.confession.slug}`}
-                    className="flex items-center space-x-4 p-4 border-2 border-gray-100 rounded-xl hover:shadow-md hover:border-blue-300 transition-all duration-200 group"
-                  >
-                    {sub.confession.logo ? (
-                      <img
-                        src={sub.confession.logo}
-                        alt={sub.confession.name}
-                        className="w-14 h-14 rounded-full object-cover shadow-md group-hover:scale-110 transition-transform duration-200"
-                      />
-                    ) : (
-                      <div className="w-14 h-14 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center shadow-md group-hover:scale-110 transition-transform duration-200">
-                        <span className="text-white font-bold text-lg">{sub.confession.name[0]}</span>
-                      </div>
-                    )}
-                    <div className="flex-1">
-                      <h4 className="font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">
-                        {sub.confession.name}
-                      </h4>
-                      <p className="text-xs text-gray-500">
-                        Subscribed {formatDistanceToNow(new Date(sub.subscribed_at), { addSuffix: true })}
-                      </p>
-                    </div>
-                  </Link>
-                ))}
+                  Click here to change →
+                </button>
               </div>
             )}
           </div>
+        </div>
+
+        {/* Subscriptions - Full Width */}
+        <div className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 p-6 border border-gray-100">
+          <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+            <span className="mr-2">📚</span>
+            My Subscriptions
+            <span className="ml-2 text-lg text-gray-500">({subscriptions.length})</span>
+          </h3>
+
+          {subscriptions.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-12 text-center">
+              <div className="w-24 h-24 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center mb-6">
+                <FiCompass className="text-blue-600" size={48} />
+              </div>
+              <h4 className="text-xl font-semibold text-gray-700 mb-2">
+                No subscriptions yet
+              </h4>
+              <p className="text-gray-500 mb-6 max-w-md">
+                Start following confessions to see their posts in your feed and stay updated with their content.
+              </p>
+              <Link
+                to="/explore"
+                className="inline-flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105 font-semibold"
+              >
+                <FiCompass size={20} />
+                <span>Explore Confessions</span>
+              </Link>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {subscriptions.map(sub => (
+                <Link
+                  key={sub.id}
+                  to={`/confession/${sub.confession.slug}`}
+                  className="flex items-center space-x-4 p-4 border-2 border-gray-100 rounded-xl hover:shadow-md hover:border-blue-300 transition-all duration-200 group"
+                >
+                  {sub.confession.logo ? (
+                    <img
+                      src={sub.confession.logo}
+                      alt={sub.confession.name}
+                      className="w-14 h-14 rounded-full object-cover shadow-md group-hover:scale-110 transition-transform duration-200"
+                    />
+                  ) : (
+                    <div className="w-14 h-14 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center shadow-md group-hover:scale-110 transition-transform duration-200">
+                      <span className="text-white font-bold text-lg">{sub.confession.name[0]}</span>
+                    </div>
+                  )}
+                  <div className="flex-1">
+                    <h4 className="font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">
+                      {sub.confession.name}
+                    </h4>
+                    <p className="text-xs text-gray-500">
+                      Subscribed {formatDistanceToNow(new Date(sub.subscribed_at), { addSuffix: true })}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </MainLayout>
