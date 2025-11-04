@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { confessionAPI } from '../api/confession'
 import { useAuthStore } from '../store/authStore'
+import MainLayout from '../components/layout/MainLayout'
 import CommentSection from '../components/CommentSection'
 import Loading from '../components/Loading'
 import { FiHeart, FiMessageCircle, FiArrowLeft } from 'react-icons/fi'
@@ -59,11 +60,21 @@ const PostDetails = () => {
     }
   }
 
-  if (loading) return <Loading />
-  if (!post) return <div className="text-center py-12">Post not found</div>
+  if (loading) return (
+    <MainLayout>
+      <Loading />
+    </MainLayout>
+  )
+
+  if (!post) return (
+    <MainLayout>
+      <div className="text-center py-12">Post not found</div>
+    </MainLayout>
+  )
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <MainLayout>
+      <div className="max-w-4xl mx-auto">
       {/* Back Button */}
       <Link
         to="/"
@@ -168,7 +179,8 @@ const PostDetails = () => {
 
       {/* Comments Section */}
       <CommentSection postId={post.id} />
-    </div>
+      </div>
+    </MainLayout>
   )
 }
 
