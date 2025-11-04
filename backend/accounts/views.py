@@ -67,6 +67,12 @@ class PasswordResetRequestView(APIView):
                 # Store code in cache for 15 minutes
                 cache.set(f'password_reset_{email}', code, 60 * 15)
 
+                # Print code to console for development
+                print("="*80)
+                print(f"PASSWORD RESET CODE for {email}: {code}")
+                print(f"Code will expire in 15 minutes")
+                print("="*80)
+
                 # Send email with reset code
                 try:
                     send_mail(
@@ -76,6 +82,7 @@ class PasswordResetRequestView(APIView):
                         [email],
                         fail_silently=False,
                     )
+                    print("Email sent successfully via console backend")
                 except Exception as e:
                     print(f"Error sending email: {e}")
 

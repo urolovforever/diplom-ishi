@@ -341,9 +341,26 @@ const Profile = () => {
                     value={passwordData.confirm_password}
                     onChange={handlePasswordChange}
                     required
-                    className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                    className={`w-full px-4 py-2.5 border-2 rounded-lg transition-colors ${
+                      passwordData.confirm_password === ''
+                        ? 'border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
+                        : passwordData.new_password === passwordData.confirm_password
+                          ? 'border-green-500 focus:ring-2 focus:ring-green-500 focus:border-green-500'
+                          : 'border-red-500 focus:ring-2 focus:ring-red-500 focus:border-red-500'
+                    }`}
                     placeholder="Confirm password"
                   />
+                  {passwordData.confirm_password !== '' && (
+                    <p className={`text-sm mt-1 font-medium ${
+                      passwordData.new_password === passwordData.confirm_password
+                        ? 'text-green-600'
+                        : 'text-red-600'
+                    }`}>
+                      {passwordData.new_password === passwordData.confirm_password
+                        ? '✓ Parollar mos kelmoqda'
+                        : '✗ Parollar mos kelmayapti'}
+                    </p>
+                  )}
                 </div>
 
                 <div className="flex space-x-2 pt-2">
