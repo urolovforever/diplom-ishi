@@ -1,0 +1,25 @@
+import api from './axios'
+
+export const authAPI = {
+  register: async (userData) => {
+    const response = await api.post('/accounts/register/', userData)
+    return response.data
+  },
+
+  login: async (credentials) => {
+    const response = await api.post('/accounts/login/', credentials)
+    return response.data
+  },
+
+  getProfile: async () => {
+    const response = await api.get('/accounts/profile/')
+    return response.data
+  },
+
+  updateProfile: async (userData) => {
+    const response = await api.put('/accounts/profile/', userData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    })
+    return response.data
+  },
+}

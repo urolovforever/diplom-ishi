@@ -1,0 +1,103 @@
+from django.db import models
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
+
+class Confession(models.Model):
+    """Diniy konfessiya (kanal)"""
+    name = models.CharField(max_length=100, unique=True)
+    slug = models.SlugField(max_length=100, unique=True)
+    description = models.TextField()
+    logo = models.ImageField(upload_to='confessions/', blank=True, null=True)
+    admin = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='managed_confessions',
+        limit_choices_to={'role__in': ['admin', 'superadmin']}
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = ['name']
+        verbose_name = 'Confession'
+        verbose_name_plural = 'Confessions'
+
+
+class Subscription(models.Model):
+    """Foydalanuvchi obunasi"""
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='subscriptions')
+    confession = models.ForeignKey(Confession, on_delete=models.CASCADE, related_name='subscribers')
+    subscribed_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ['user', 'confession']
+        ordering = ['-subscribed_at']
+
+    def __str__(self):
+        return f"{self.user.username} -> {self.confession.name}"
+
+
+class Post(models.Model):
+    """Konfessiya posti (yangilik)"""
+    confession = models.ForeignKey(Confession, on_delete=models.CASCADE, related_name='posts')
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
+    title = models.CharField(max_length=255)
+    content = models.TextField()
+    image = models.ImageField(upload_to='posts/images/', blank=True, null=True)
+    video_url = models.URLField(blank=True, null=True, help_text="YouTube/Vimeo URL")
+    is_pinned = models.BooleanField(default=False, help_text="Pin this post to top")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.confession.name}: {self.title}"
+
+    @property
+    def likes_count(self):
+        return self.likes.count()
+
+    @property
+    def comments_count(self):
+        return self.comments.count()
+
+    class Meta:
+        ordering = ['-is_pinned', '-created_at']
+        verbose_name = 'Post'
+        verbose_name_plural = 'Posts'
+
+
+class Like(models.Model):
+    """Post uchun like"""
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='likes')
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='likes')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ['user', 'post']
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.user.username} liked {self.post.title}"
+
+
+class Comment(models.Model):
+    """Post uchun komment"""
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.author.username} on {self.post.title}"
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Comment'
+        verbose_name_plural = 'Comments'
