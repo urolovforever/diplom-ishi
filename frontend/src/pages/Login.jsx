@@ -49,7 +49,12 @@ const Login = () => {
       toast.success('Login successful!')
       navigate('/')
     } catch (error) {
-      toast.error(error.response?.data?.detail || 'Login failed. Please check your credentials.')
+      // Show specific error message for invalid credentials
+      if (error.response?.status === 401) {
+        toast.error('Xato username yoki parol. Qaytadan urinib ko\'ring.')
+      } else {
+        toast.error(error.response?.data?.detail || 'Login xato. Iltimos username va parolni tekshiring.')
+      }
     } finally {
       setLoading(false)
     }
@@ -69,10 +74,10 @@ const Login = () => {
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Username */}
+          {/* Username or Email */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Username
+              Username yoki Email
             </label>
             <div className="relative">
               <FiMail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
@@ -83,7 +88,7 @@ const Login = () => {
                 onChange={handleChange}
                 required
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Enter your username"
+                placeholder="Username yoki email kiriting"
               />
             </div>
           </div>

@@ -166,10 +166,27 @@ const PasswordReset = () => {
                   value={formData.confirm_password}
                   onChange={(e) => setFormData({ ...formData, confirm_password: e.target.value })}
                   required
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className={`w-full pl-10 pr-4 py-3 border rounded-lg transition-colors ${
+                    formData.confirm_password === ''
+                      ? 'border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent'
+                      : formData.new_password === formData.confirm_password
+                        ? 'border-green-500 focus:ring-2 focus:ring-green-500 focus:border-green-500'
+                        : 'border-red-500 focus:ring-2 focus:ring-red-500 focus:border-red-500'
+                  }`}
                   placeholder="Confirm new password"
                 />
               </div>
+              {formData.confirm_password !== '' && (
+                <p className={`text-sm mt-1 font-medium ${
+                  formData.new_password === formData.confirm_password
+                    ? 'text-green-600'
+                    : 'text-red-600'
+                }`}>
+                  {formData.new_password === formData.confirm_password
+                    ? '✓ Parollar mos kelmoqda'
+                    : '✗ Parollar mos kelmayapti'}
+                </p>
+              )}
             </div>
 
             <button
