@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { FiHeart, FiMessageCircle, FiPin } from 'react-icons/fi'
+import { FiHeart, FiMessageCircle } from 'react-icons/fi'
+import { BsPinFill } from 'react-icons/bs'
 import { formatDistanceToNow } from 'date-fns'
 
 const PostCard = ({ post, onLike, onUnlike }) => {
@@ -41,7 +42,7 @@ const PostCard = ({ post, onLike, onUnlike }) => {
 
           {post.is_pinned && (
             <div className="flex items-center space-x-1 text-yellow-600 bg-yellow-50 px-2 py-1 rounded-full">
-              <FiPin size={14} />
+              <BsPinFill size={14} />
               <span className="text-xs font-medium">Pinned</span>
             </div>
           )}
