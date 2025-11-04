@@ -73,7 +73,7 @@ const RightSidebar = () => {
 
   if (loading) {
     return (
-      <div className="fixed right-0 top-0 h-screen w-80 bg-gray-50 p-4">
+      <div className="fixed right-0 top-0 h-screen w-96 bg-gray-50 p-5">
         <div className="animate-pulse space-y-4">
           <div className="bg-white rounded-xl h-48"></div>
           <div className="bg-white rounded-xl h-48"></div>
@@ -84,7 +84,7 @@ const RightSidebar = () => {
   }
 
   return (
-    <div className="fixed right-0 top-0 h-screen w-80 bg-gray-50 overflow-y-auto p-4">
+    <div className="fixed right-0 top-0 h-screen w-96 bg-gray-50 overflow-y-auto p-5">
       {/* Active Confessions */}
       <SidebarCard title="Active Confessions" icon={FiClock}>
         <div className="space-y-1">
