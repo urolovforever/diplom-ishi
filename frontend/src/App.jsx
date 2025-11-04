@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { useAuthStore } from './store/authStore'
+import { authAPI } from './api/auth'
 
 // Pages
 import Home from './pages/Home'
@@ -29,6 +30,26 @@ const AdminRoute = ({ children }) => {
 }
 
 function App() {
+  const { user, token, setAuth, logout } = useAuthStore()
+
+  // Load user profile if token exists but user doesn't
+  useEffect(() => {
+    const loadUserProfile = async () => {
+      if (token && !user) {
+        try {
+          const profileData = await authAPI.getProfile()
+          setAuth(profileData, token)
+        } catch (error) {
+          // If token is invalid, logout
+          console.error('Failed to load user profile:', error)
+          logout()
+        }
+      }
+    }
+
+    loadUserProfile()
+  }, [token, user, setAuth, logout])
+
   return (
     <Routes>
       <Route path="/" element={<Home />} />

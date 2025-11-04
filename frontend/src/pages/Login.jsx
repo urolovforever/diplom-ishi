@@ -37,10 +37,15 @@ const Login = () => {
     try {
       const response = await authAPI.login(formData)
 
-      // Get user profile
+      // First set the token so axios interceptor can use it
+      setAuth(null, response.access)
+
+      // Now get user profile with token in place
       const profileResponse = await authAPI.getProfile()
 
+      // Update with full user data
       setAuth(profileResponse, response.access)
+
       toast.success('Login successful!')
       navigate('/')
     } catch (error) {
