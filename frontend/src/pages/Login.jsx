@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { authAPI } from '../api/auth'
@@ -7,7 +7,7 @@ import { FiMail, FiLock, FiEye, FiEyeOff } from 'react-icons/fi'
 
 const Login = () => {
   const navigate = useNavigate()
-  const setAuth = useAuthStore(state => state.setAuth)
+  const { user, setAuth } = useAuthStore()
 
   const [formData, setFormData] = useState({
     username: '',
@@ -15,6 +15,13 @@ const Login = () => {
   })
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user) {
+      navigate('/')
+    }
+  }, [user, navigate])
 
   const handleChange = (e) => {
     setFormData({
