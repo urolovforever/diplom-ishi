@@ -45,6 +45,7 @@ class ChangePasswordView(APIView):
             user.save()
             return Response({"message": "Password changed successfully"}, status=status.HTTP_200_OK)
 
+        print(f"Change password validation errors: {serializer.errors}")
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -106,11 +107,13 @@ class PasswordResetConfirmView(APIView):
             cached_code = cache.get(f'password_reset_{email}')
 
             if not cached_code:
+                print(f"Reset code expired for {email}")
                 return Response({
                     "error": "Reset code expired or invalid"
                 }, status=status.HTTP_400_BAD_REQUEST)
 
             if cached_code != code:
+                print(f"Invalid reset code for {email}. Expected: {cached_code}, Got: {code}")
                 return Response({
                     "error": "Invalid reset code"
                 }, status=status.HTTP_400_BAD_REQUEST)
@@ -132,4 +135,5 @@ class PasswordResetConfirmView(APIView):
                     "error": "User not found"
                 }, status=status.HTTP_400_BAD_REQUEST)
 
+        print(f"Password reset confirm validation errors: {serializer.errors}")
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
