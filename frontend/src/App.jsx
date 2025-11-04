@@ -9,6 +9,7 @@ import Explore from './pages/Explore'
 import CreatePost from './pages/CreatePost'
 import Login from './pages/Login'
 import Register from './pages/Register'
+import PasswordReset from './pages/PasswordReset'
 import ConfessionPage from './pages/ConfessionPage'
 import PostDetails from './pages/PostDetails'
 import Profile from './pages/Profile'
@@ -56,6 +57,7 @@ function App() {
       <Route path="/explore" element={<Explore />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/password-reset" element={<PasswordReset />} />
       <Route path="/confession/:slug" element={<ConfessionPage />} />
       <Route path="/post/:id" element={<PostDetails />} />
 
