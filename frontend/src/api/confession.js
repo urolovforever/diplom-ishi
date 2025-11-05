@@ -22,6 +22,11 @@ export const confessionAPI = {
     return response.data
   },
 
+  assignAdmin: async (slug, adminId) => {
+    const response = await api.post(`/confessions/${slug}/assign_admin/`, { admin_id: adminId })
+    return response.data
+  },
+
   // Posts
   getPosts: async (params) => {
     const response = await api.get('/posts/', { params })

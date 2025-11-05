@@ -19,6 +19,18 @@ from .serializers import (
 User = get_user_model()
 
 
+class AdminUsersListView(APIView):
+    """Get list of users with admin or superadmin role (only for superadmin)"""
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        if request.user.role != 'superadmin':
+            return Response({"error": "Permission denied"}, status=status.HTTP_403_FORBIDDEN)
+
+        admins = User.objects.filter(role__in=['admin', 'superadmin']).values('id', 'username', 'email', 'role')
+        return Response(list(admins), status=status.HTTP_200_OK)
+
+
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     permission_classes = [AllowAny]

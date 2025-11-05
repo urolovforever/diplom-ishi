@@ -54,6 +54,33 @@ class ConfessionViewSet(viewsets.ModelViewSet):
             return Response({'message': 'Unsubscribed successfully'}, status=status.HTTP_200_OK)
         return Response({'message': 'Not subscribed'}, status=status.HTTP_400_BAD_REQUEST)
 
+    @action(detail=True, methods=['post'], permission_classes=[IsSuperAdminOnly])
+    def assign_admin(self, request, slug=None):
+        """Konfessiyaga admin tayinlash (faqat super admin)"""
+        confession = self.get_object()
+        admin_id = request.data.get('admin_id')
+
+        if not admin_id:
+            return Response({'error': 'admin_id is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            from django.contrib.auth import get_user_model
+            User = get_user_model()
+            admin_user = User.objects.get(id=admin_id)
+
+            if admin_user.role not in ['admin', 'superadmin']:
+                return Response({'error': 'User must have admin or superadmin role'}, status=status.HTTP_400_BAD_REQUEST)
+
+            confession.admin = admin_user
+            confession.save()
+
+            return Response({
+                'message': 'Admin assigned successfully',
+                'confession': ConfessionSerializer(confession, context={'request': request}).data
+            }, status=status.HTTP_200_OK)
+        except User.DoesNotExist:
+            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+
 
 class PostViewSet(viewsets.ModelViewSet):
     """

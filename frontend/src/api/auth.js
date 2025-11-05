@@ -37,4 +37,9 @@ export const authAPI = {
     const response = await api.post('/accounts/password-reset-confirm/', resetData)
     return response.data
   },
+
+  getAdminUsers: async () => {
+    const response = await api.get('/accounts/admin-users/')
+    return response.data
+  },
 }
