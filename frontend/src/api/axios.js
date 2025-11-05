@@ -24,7 +24,13 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    // Don't redirect to login page if:
+    // 1. We're already on the login page
+    // 2. The request was to the login endpoint
+    const isLoginPage = window.location.pathname === '/login'
+    const isLoginRequest = error.config?.url?.includes('/login')
+
+    if (error.response?.status === 401 && !isLoginPage && !isLoginRequest) {
       useAuthStore.getState().logout()
       window.location.href = '/login'
     }
