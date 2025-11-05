@@ -17,6 +17,7 @@ const Profile = () => {
   const [subscriptions, setSubscriptions] = useState([])
   const [showPasswordChange, setShowPasswordChange] = useState(false)
   const [previewAvatar, setPreviewAvatar] = useState(null)
+  const [removeAvatar, setRemoveAvatar] = useState(false)
 
   const [formData, setFormData] = useState({
     first_name: user?.first_name || '',
@@ -48,6 +49,7 @@ const Profile = () => {
     const { name, value, files } = e.target
     if (files) {
       setFormData({ ...formData, [name]: files[0] })
+      setRemoveAvatar(false)
       const reader = new FileReader()
       reader.onloadend = () => {
         setPreviewAvatar(reader.result)
@@ -56,6 +58,12 @@ const Profile = () => {
     } else {
       setFormData({ ...formData, [name]: value })
     }
+  }
+
+  const handleRemoveAvatar = () => {
+    setPreviewAvatar(null)
+    setRemoveAvatar(true)
+    setFormData({ ...formData, avatar: null })
   }
 
   const handlePasswordChange = (e) => {
@@ -81,6 +89,8 @@ const Profile = () => {
       }
       if (formData.avatar) {
         submitData.append('avatar', formData.avatar)
+      } else if (removeAvatar) {
+        submitData.append('avatar', '')
       }
 
       const updatedUser = await authAPI.updateProfile(submitData)
@@ -88,6 +98,7 @@ const Profile = () => {
       setIsEditing(false)
       setFormData({ ...formData, avatar: null })
       setPreviewAvatar(null)
+      setRemoveAvatar(false)
       toast.success('Profile updated successfully!')
     } catch (error) {
       console.error(error)
@@ -132,6 +143,7 @@ const Profile = () => {
       avatar: null
     })
     setPreviewAvatar(null)
+    setRemoveAvatar(false)
   }
 
   if (!user) return (
@@ -148,27 +160,45 @@ const Profile = () => {
           <div className="flex items-center space-x-8">
             {/* Avatar */}
             <div className="relative group">
-              <img
-                src={previewAvatar || user.avatar || 'https://via.placeholder.com/150'}
-                alt={user.username}
-                className="w-32 h-32 rounded-full object-cover border-4 border-blue-500 shadow-lg transition-transform duration-300 group-hover:scale-105"
-              />
+              {(previewAvatar || user.avatar) && !removeAvatar ? (
+                <img
+                  src={previewAvatar || user.avatar}
+                  alt={user.username}
+                  className="w-32 h-32 rounded-full object-cover border-4 border-blue-500 shadow-lg transition-transform duration-300 group-hover:scale-105"
+                />
+              ) : (
+                <div className="w-32 h-32 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center border-4 border-blue-500 shadow-lg">
+                  <span className="text-white font-bold text-5xl">{user.username[0].toUpperCase()}</span>
+                </div>
+              )}
               {isEditing && (
-                <label className="absolute bottom-0 right-0 bg-blue-600 text-white p-3 rounded-full cursor-pointer hover:bg-blue-700 shadow-lg transform transition-all duration-200 hover:scale-110">
-                  <FiImage size={18} />
-                  <input
-                    type="file"
-                    name="avatar"
-                    accept="image/*"
-                    onChange={handleChange}
-                    className="hidden"
-                  />
-                  <div className="absolute bottom-full right-0 mb-2 hidden group-hover:block">
-                    <div className="bg-gray-800 text-white text-xs py-1 px-2 rounded whitespace-nowrap">
-                      Change photo
+                <>
+                  <label className="absolute bottom-0 right-0 bg-blue-600 text-white p-3 rounded-full cursor-pointer hover:bg-blue-700 shadow-lg transform transition-all duration-200 hover:scale-110">
+                    <FiImage size={18} />
+                    <input
+                      type="file"
+                      name="avatar"
+                      accept="image/*"
+                      onChange={handleChange}
+                      className="hidden"
+                    />
+                    <div className="absolute bottom-full right-0 mb-2 hidden group-hover:block">
+                      <div className="bg-gray-800 text-white text-xs py-1 px-2 rounded whitespace-nowrap">
+                        Change photo
+                      </div>
                     </div>
-                  </div>
-                </label>
+                  </label>
+                  {(user.avatar || previewAvatar) && !removeAvatar && (
+                    <button
+                      type="button"
+                      onClick={handleRemoveAvatar}
+                      className="absolute top-0 right-0 bg-red-600 text-white p-2 rounded-full cursor-pointer hover:bg-red-700 shadow-lg transform transition-all duration-200 hover:scale-110"
+                      title="Remove photo"
+                    >
+                      <FiX size={16} />
+                    </button>
+                  )}
+                </>
               )}
             </div>
 

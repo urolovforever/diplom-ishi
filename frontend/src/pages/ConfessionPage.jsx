@@ -4,6 +4,7 @@ import { toast } from 'react-toastify'
 import { confessionAPI } from '../api/confession'
 import { useAuthStore } from '../store/authStore'
 import PostCard from '../components/PostCard'
+import MainLayout from '../components/layout/MainLayout'
 import Loading from '../components/Loading'
 import { FiUsers, FiFileText, FiUserPlus, FiUserMinus, FiEdit2, FiX, FiImage } from 'react-icons/fi'
 
@@ -168,11 +169,21 @@ const ConfessionPage = () => {
   // Check if user is admin of this confession
   const isConfessionAdmin = user && confession?.admin?.id === user.id
 
-  if (loading) return <Loading />
-  if (!confession) return <div className="text-center py-12">Confession not found</div>
+  if (loading) return (
+    <MainLayout>
+      <Loading />
+    </MainLayout>
+  )
+
+  if (!confession) return (
+    <MainLayout>
+      <div className="text-center py-12">Confession not found</div>
+    </MainLayout>
+  )
 
   return (
-    <div>
+    <MainLayout>
+      <div>
       {/* Header */}
       <div className="bg-white rounded-xl shadow-md p-8 mb-8">
         <div className="flex items-start justify-between">
@@ -356,7 +367,8 @@ const ConfessionPage = () => {
           </div>
         </div>
       )}
-    </div>
+      </div>
+    </MainLayout>
   )
 }
 
