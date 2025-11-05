@@ -134,17 +134,6 @@ const PostDetails = () => {
             />
           )}
 
-          {/* Video */}
-          {post.video_url && (
-            <div className="relative pb-[56.25%] mb-6 rounded-lg overflow-hidden">
-              <iframe
-                src={post.video_url}
-                className="absolute inset-0 w-full h-full"
-                allowFullScreen
-              />
-            </div>
-          )}
-
           {/* Text Content */}
           <div className="prose max-w-none mb-6">
             <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">

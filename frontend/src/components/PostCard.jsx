@@ -103,16 +103,6 @@ const PostCard = ({ post, onLike, onUnlike, onDelete, isConfessionAdmin }) => {
             />
           )}
 
-          {/* Video */}
-          {post.video_url && (
-            <div className="relative pb-[56.25%] mb-4 rounded-lg overflow-hidden">
-              <iframe
-                src={post.video_url}
-                className="absolute inset-0 w-full h-full"
-                allowFullScreen
-              />
-            </div>
-          )}
         </div>
       </Link>
 

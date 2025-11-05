@@ -1,31 +1,74 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import { confessionAPI } from '../../api/confession'
-import { FiTrendingUp, FiClock, FiUsers } from 'react-icons/fi'
+import { useAuthStore } from '../../store/authStore'
+import { FiClock, FiUsers } from 'react-icons/fi'
 
 const RightSidebar = () => {
+  const { user } = useAuthStore()
   const [activeConfessions, setActiveConfessions] = useState([])
   const [suggestions, setSuggestions] = useState([])
+  const [subscribedIds, setSubscribedIds] = useState([])
   const [loading, setLoading] = useState(true)
+  const [subscribing, setSubscribing] = useState({})
 
   useEffect(() => {
     fetchData()
-  }, [])
+  }, [user])
 
   const fetchData = async () => {
     try {
-      // Fetch all confessions for now
-      const confessionsData = await confessionAPI.getConfessions()
+      const confessionsData = await confessionAPI.getConfessions({ page_size: 100 })
+      const allConfessions = confessionsData.results || confessionsData
 
-      // Mock active confessions (last 24 hours activity)
-      setActiveConfessions(confessionsData.results?.slice(0, 5) || [])
+      if (user) {
+        // Get user subscriptions
+        const subsData = await confessionAPI.getSubscriptions()
+        const subIds = subsData.map ? subsData.map(s => s.confession.id) : (subsData.results || []).map(s => s.confession.id)
+        setSubscribedIds(subIds)
 
-      // Mock suggestions
-      setSuggestions(confessionsData.results?.slice(5, 10) || [])
+        // Active: subscribed confessions
+        const subscribedConfessions = allConfessions.filter(c => subIds.includes(c.id))
+        setActiveConfessions(subscribedConfessions.slice(0, 5))
+
+        // Suggestions: unsubscribed confessions sorted by followers
+        const unsubscribed = allConfessions.filter(c => !subIds.includes(c.id))
+        unsubscribed.sort((a, b) => (b.subscribers_count || 0) - (a.subscribers_count || 0))
+        setSuggestions(unsubscribed.slice(0, 5))
+      } else {
+        // For guests: show top confessions
+        const sorted = [...allConfessions].sort((a, b) => (b.subscribers_count || 0) - (a.subscribers_count || 0))
+        setActiveConfessions(sorted.slice(0, 5))
+        setSuggestions(sorted.slice(5, 10))
+      }
     } catch (error) {
       console.error('Failed to fetch sidebar data:', error)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleFollow = async (e, confession) => {
+    e.preventDefault()
+    e.stopPropagation()
+
+    if (!user) {
+      toast.error('Please login to subscribe')
+      return
+    }
+
+    setSubscribing({ ...subscribing, [confession.id]: true })
+
+    try {
+      await confessionAPI.subscribe(confession.slug)
+      toast.success(`Subscribed to ${confession.name}!`)
+      // Refresh data
+      await fetchData()
+    } catch (error) {
+      toast.error('Failed to subscribe')
+    } finally {
+      setSubscribing({ ...subscribing, [confession.id]: false })
     }
   }
 
@@ -42,7 +85,7 @@ const RightSidebar = () => {
   const ConfessionItem = ({ confession, showButton = false }) => (
     <Link
       to={`/confession/${confession.slug}`}
-      className="flex items-center space-x-3 py-2 hover:bg-gray-50 rounded-lg px-2 transition-colors"
+      className="flex items-center space-x-3 py-2 hover:bg-gray-50 rounded-lg px-2 transition-colors group"
     >
       {confession.logo ? (
         <img
@@ -60,12 +103,16 @@ const RightSidebar = () => {
           {confession.name}
         </p>
         <p className="text-xs text-gray-500">
-          {confession.subscribers_count || 0} subscribers
+          {confession.subscribers_count || 0} followers
         </p>
       </div>
-      {showButton && (
-        <button className="text-xs font-semibold text-blue-600 hover:text-blue-700 px-3 py-1 rounded-full hover:bg-blue-50">
-          Follow
+      {showButton && user && (
+        <button
+          onClick={(e) => handleFollow(e, confession)}
+          disabled={subscribing[confession.id]}
+          className="text-xs font-semibold text-blue-600 hover:text-blue-700 px-3 py-1 rounded-full hover:bg-blue-50 disabled:opacity-50"
+        >
+          {subscribing[confession.id] ? '...' : 'Follow'}
         </button>
       )}
     </Link>
@@ -77,7 +124,6 @@ const RightSidebar = () => {
         <div className="animate-pulse space-y-4">
           <div className="bg-white rounded-xl h-48"></div>
           <div className="bg-white rounded-xl h-48"></div>
-          <div className="bg-white rounded-xl h-48"></div>
         </div>
       </div>
     )
@@ -85,40 +131,16 @@ const RightSidebar = () => {
 
   return (
     <div className="fixed right-0 top-0 h-screen w-96 bg-gray-50 overflow-y-auto p-5">
-      {/* Active Confessions */}
-      <SidebarCard title="Active Confessions" icon={FiClock}>
-        <div className="space-y-1">
-          {activeConfessions.length > 0 ? (
-            activeConfessions.map((confession) => (
+      {/* Active/My Confessions */}
+      {user && activeConfessions.length > 0 && (
+        <SidebarCard title="My Confessions" icon={FiClock}>
+          <div className="space-y-1">
+            {activeConfessions.map((confession) => (
               <ConfessionItem key={confession.id} confession={confession} />
-            ))
-          ) : (
-            <p className="text-sm text-gray-500 py-2">No active confessions</p>
-          )}
-        </div>
-      </SidebarCard>
-
-      {/* Trending Topics */}
-      <SidebarCard title="Trending Topics" icon={FiTrendingUp}>
-        <div className="space-y-3">
-          <div className="hover:bg-gray-50 rounded-lg px-2 py-2 cursor-pointer transition-colors">
-            <p className="text-sm font-semibold text-gray-800">#Peace</p>
-            <p className="text-xs text-gray-500">1.2K posts</p>
+            ))}
           </div>
-          <div className="hover:bg-gray-50 rounded-lg px-2 py-2 cursor-pointer transition-colors">
-            <p className="text-sm font-semibold text-gray-800">#Unity</p>
-            <p className="text-xs text-gray-500">856 posts</p>
-          </div>
-          <div className="hover:bg-gray-50 rounded-lg px-2 py-2 cursor-pointer transition-colors">
-            <p className="text-sm font-semibold text-gray-800">#Tolerance</p>
-            <p className="text-xs text-gray-500">642 posts</p>
-          </div>
-          <div className="hover:bg-gray-50 rounded-lg px-2 py-2 cursor-pointer transition-colors">
-            <p className="text-sm font-semibold text-gray-800">#Interfaith</p>
-            <p className="text-xs text-gray-500">523 posts</p>
-          </div>
-        </div>
-      </SidebarCard>
+        </SidebarCard>
+      )}
 
       {/* Suggestions */}
       <SidebarCard title="Suggestions For You" icon={FiUsers}>
@@ -128,7 +150,9 @@ const RightSidebar = () => {
               <ConfessionItem key={confession.id} confession={confession} showButton />
             ))
           ) : (
-            <p className="text-sm text-gray-500 py-2">No suggestions available</p>
+            <p className="text-sm text-gray-500 py-2">
+              {user ? 'No more suggestions' : 'Login to get personalized suggestions'}
+            </p>
           )}
         </div>
       </SidebarCard>
