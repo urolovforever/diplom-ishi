@@ -12,8 +12,10 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import PasswordReset from './pages/PasswordReset'
 import ConfessionPage from './pages/ConfessionPage'
+import ConfessionFollowers from './pages/ConfessionFollowers'
 import PostDetails from './pages/PostDetails'
 import Profile from './pages/Profile'
+import UserProfile from './pages/UserProfile'
 import AdminPanel from './pages/AdminPanel'
 import NotFound from './pages/NotFound'
 
@@ -60,7 +62,9 @@ function App() {
       <Route path="/register" element={<Register />} />
       <Route path="/password-reset" element={<PasswordReset />} />
       <Route path="/confession/:slug" element={<ConfessionPage />} />
+      <Route path="/confession/:slug/followers" element={<ConfessionFollowers />} />
       <Route path="/post/:id" element={<PostDetails />} />
+      <Route path="/user/:username" element={<UserProfile />} />
 
       {/* Protected Routes */}
       <Route path="/profile" element={

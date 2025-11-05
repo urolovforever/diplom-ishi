@@ -45,6 +45,14 @@ class UserProfileView(generics.RetrieveUpdateAPIView):
         return self.request.user
 
 
+class PublicUserProfileView(generics.RetrieveAPIView):
+    """Get public user profile by username"""
+    serializer_class = UserSerializer
+    permission_classes = [AllowAny]
+    lookup_field = 'username'
+    queryset = User.objects.all()
+
+
 class ChangePasswordView(APIView):
     permission_classes = [IsAuthenticated]
 

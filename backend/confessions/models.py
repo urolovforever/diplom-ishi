@@ -52,6 +52,7 @@ class Post(models.Model):
     image = models.ImageField(upload_to='posts/images/', blank=True, null=True)
     video_url = models.URLField(blank=True, null=True, help_text="YouTube/Vimeo URL")
     is_pinned = models.BooleanField(default=False, help_text="Pin this post to top")
+    views_count = models.PositiveIntegerField(default=0, help_text="Number of views")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -65,6 +66,11 @@ class Post(models.Model):
     @property
     def comments_count(self):
         return self.comments.count()
+
+    def increment_views(self):
+        """Increment view count"""
+        self.views_count += 1
+        self.save(update_fields=['views_count'])
 
     class Meta:
         ordering = ['-is_pinned', '-created_at']

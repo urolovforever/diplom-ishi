@@ -42,4 +42,9 @@ export const authAPI = {
     const response = await api.get('/accounts/admin-users/')
     return response.data
   },
+
+  getUserProfile: async (username) => {
+    const response = await api.get(`/accounts/users/${username}/`)
+    return response.data
+  },
 }
