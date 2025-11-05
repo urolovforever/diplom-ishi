@@ -12,6 +12,13 @@ export const confessionAPI = {
     return response.data
   },
 
+  updateConfession: async (slug, confessionData) => {
+    const response = await api.patch(`/confessions/${slug}/`, confessionData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    })
+    return response.data
+  },
+
   subscribe: async (slug) => {
     const response = await api.post(`/confessions/${slug}/subscribe/`)
     return response.data
@@ -47,6 +54,18 @@ export const confessionAPI = {
     const response = await api.post('/posts/', postData, {
       headers: { 'Content-Type': 'multipart/form-data' }
     })
+    return response.data
+  },
+
+  updatePost: async (id, postData) => {
+    const response = await api.patch(`/posts/${id}/`, postData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    })
+    return response.data
+  },
+
+  deletePost: async (id) => {
+    const response = await api.delete(`/posts/${id}/`)
     return response.data
   },
 

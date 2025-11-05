@@ -1,16 +1,29 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
-import { FiHeart, FiMessageCircle } from 'react-icons/fi'
+import { Link, useNavigate } from 'react-router-dom'
+import { FiHeart, FiMessageCircle, FiEdit2, FiTrash2 } from 'react-icons/fi'
 import { BsPinFill } from 'react-icons/bs'
 import { formatDistanceToNow } from 'date-fns'
 
-const PostCard = ({ post, onLike, onUnlike }) => {
+const PostCard = ({ post, onLike, onUnlike, onDelete, isConfessionAdmin }) => {
+  const navigate = useNavigate()
   const handleLikeToggle = (e) => {
     e.preventDefault()
     if (post.is_liked) {
       onUnlike(post.id)
     } else {
       onLike(post.id)
+    }
+  }
+
+  const handleEdit = (e) => {
+    e.preventDefault()
+    navigate(`/post/${post.id}/edit`)
+  }
+
+  const handleDelete = (e) => {
+    e.preventDefault()
+    if (onDelete) {
+      onDelete(post.id)
     }
   }
 
@@ -40,12 +53,33 @@ const PostCard = ({ post, onLike, onUnlike }) => {
             </div>
           </Link>
 
-          {post.is_pinned && (
-            <div className="flex items-center space-x-1 text-yellow-600 bg-yellow-50 px-2 py-1 rounded-full">
-              <BsPinFill size={14} />
-              <span className="text-xs font-medium">Pinned</span>
-            </div>
-          )}
+          <div className="flex items-center space-x-2">
+            {post.is_pinned && (
+              <div className="flex items-center space-x-1 text-yellow-600 bg-yellow-50 px-2 py-1 rounded-full">
+                <BsPinFill size={14} />
+                <span className="text-xs font-medium">Pinned</span>
+              </div>
+            )}
+
+            {isConfessionAdmin && (
+              <div className="flex items-center space-x-1">
+                <button
+                  onClick={handleEdit}
+                  className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                  title="Edit post"
+                >
+                  <FiEdit2 size={18} />
+                </button>
+                <button
+                  onClick={handleDelete}
+                  className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                  title="Delete post"
+                >
+                  <FiTrash2 size={18} />
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

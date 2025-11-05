@@ -10,7 +10,7 @@ from .serializers import (
     ConfessionSerializer, PostSerializer, PostCreateSerializer,
     CommentSerializer, SubscriptionSerializer
 )
-from .permissions import IsConfessionAdminOrReadOnly, IsCommentAuthorOrReadOnly, IsSuperAdminOnly
+from .permissions import IsConfessionAdminOrReadOnly, IsCommentAuthorOrReadOnly, IsSuperAdminOnly, IsConfessionAdminOrSuperAdmin
 
 
 class ConfessionViewSet(viewsets.ModelViewSet):
@@ -26,8 +26,10 @@ class ConfessionViewSet(viewsets.ModelViewSet):
     ordering_fields = ['name', 'created_at']
 
     def get_permissions(self):
-        if self.action in ['create', 'update', 'partial_update', 'destroy']:
+        if self.action in ['create', 'destroy']:
             return [IsSuperAdminOnly()]
+        elif self.action in ['update', 'partial_update']:
+            return [IsConfessionAdminOrSuperAdmin()]
         return super().get_permissions()
 
     @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
