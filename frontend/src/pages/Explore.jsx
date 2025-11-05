@@ -30,9 +30,14 @@ const Explore = () => {
 
   const fetchConfessions = async () => {
     try {
-      const data = await confessionAPI.getConfessions()
-      setConfessions(data.results || data)
-      setFilteredConfessions(data.results || data)
+      const data = await confessionAPI.getConfessions({ page_size: 100 })
+      const confessionsList = data.results || data
+
+      // Sort by followers count (descending)
+      confessionsList.sort((a, b) => (b.subscribers_count || 0) - (a.subscribers_count || 0))
+
+      setConfessions(confessionsList)
+      setFilteredConfessions(confessionsList)
     } catch (error) {
       toast.error('Failed to load confessions')
     } finally {
