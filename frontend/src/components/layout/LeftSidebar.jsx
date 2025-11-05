@@ -63,7 +63,7 @@ const LeftSidebar = () => {
             <NavItem to="/messages" icon={FiMessageCircle} label="Messages" />
             <NavItem to="/notifications" icon={FiBell} label="Notifications" />
 
-            {(user.role === 'admin' || user.role === 'superadmin') && (
+            {user.role === 'admin' && (
               <NavItem to="/create" icon={FiPlusSquare} label="Create" />
             )}
 
