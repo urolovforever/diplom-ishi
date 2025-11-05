@@ -65,6 +65,20 @@ const Home = () => {
     }
   }
 
+  const handlePostDelete = async (postId) => {
+    if (!window.confirm('Are you sure you want to delete this post?')) {
+      return
+    }
+
+    try {
+      await confessionAPI.deletePost(postId)
+      setPosts(posts.filter(post => post.id !== postId))
+      toast.success('Post deleted successfully!')
+    } catch (error) {
+      toast.error('Failed to delete post')
+    }
+  }
+
   if (loading) return (
     <MainLayout>
       <Loading />
@@ -95,6 +109,8 @@ const Home = () => {
               post={post}
               onLike={handleLike}
               onUnlike={handleUnlike}
+              onDelete={handlePostDelete}
+              isConfessionAdmin={user && post.confession.admin?.id === user.id}
             />
           ))
         )}

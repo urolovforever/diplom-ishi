@@ -7,6 +7,7 @@ import { authAPI } from './api/auth'
 import Home from './pages/Home'
 import Explore from './pages/Explore'
 import CreatePost from './pages/CreatePost'
+import EditPost from './pages/EditPost'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import PasswordReset from './pages/PasswordReset'
@@ -72,6 +73,12 @@ function App() {
       <Route path="/create" element={
         <AdminRoute>
           <CreatePost />
+        </AdminRoute>
+      } />
+
+      <Route path="/post/:id/edit" element={
+        <AdminRoute>
+          <EditPost />
         </AdminRoute>
       } />
 

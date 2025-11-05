@@ -57,3 +57,28 @@ class IsSuperAdminOnly(permissions.BasePermission):
 
     def has_permission(self, request, view):
         return request.user and request.user.role == 'superadmin'
+
+
+class IsConfessionAdminOrSuperAdmin(permissions.BasePermission):
+    """
+    Faqat konfessiya admini yoki superadmin konfessiyani tahrirlashi mumkin
+    """
+
+    def has_permission(self, request, view):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        return request.user and request.user.is_authenticated
+
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        # SuperAdmin hamma narsani qila oladi
+        if request.user.role == 'superadmin':
+            return True
+
+        # Konfessiya admini o'z konfessiyasini tahrirlashi mumkin (delete qila olmaydi)
+        if request.method in ['PUT', 'PATCH']:
+            return obj.admin == request.user
+
+        return False
