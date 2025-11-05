@@ -46,14 +46,15 @@ const Login = () => {
       // Update with full user data
       setAuth(profileResponse, response.access)
 
-      // Redirect without success toast - cleaner UX
+      // Show success message and redirect
+      toast.success('Login successful!')
       navigate('/')
     } catch (error) {
       // Show specific error message for invalid credentials
       if (error.response?.status === 401) {
-        toast.error('Invalid username or password')
+        toast.error('Xato username yoki parol. Qaytadan urinib ko\'ring.')
       } else {
-        toast.error(error.response?.data?.detail || 'Invalid username or password')
+        toast.error(error.response?.data?.detail || 'Xato username yoki parol. Qaytadan urinib ko\'ring.')
       }
     } finally {
       setLoading(false)
