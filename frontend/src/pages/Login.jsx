@@ -52,9 +52,9 @@ const Login = () => {
     } catch (error) {
       // Show specific error message for invalid credentials
       if (error.response?.status === 401) {
-        toast.error('Xato username yoki parol. Qaytadan urinib ko\'ring.')
+        toast.error('Invalid username or password')
       } else {
-        toast.error(error.response?.data?.detail || 'Xato username yoki parol. Qaytadan urinib ko\'ring.')
+        toast.error(error.response?.data?.detail || 'Invalid username or password')
       }
     } finally {
       setLoading(false)

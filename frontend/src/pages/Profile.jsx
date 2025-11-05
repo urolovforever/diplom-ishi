@@ -357,8 +357,8 @@ const Profile = () => {
                         : 'text-red-600'
                     }`}>
                       {passwordData.new_password === passwordData.confirm_password
-                        ? '✓ Parollar mos kelmoqda'
-                        : '✗ Parollar mos kelmayapti'}
+                        ? '✓ Passwords match'
+                        : '✗ Passwords do not match'}
                     </p>
                   )}
                 </div>
