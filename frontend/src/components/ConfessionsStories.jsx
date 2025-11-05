@@ -46,7 +46,7 @@ const ConfessionsStories = ({ onConfessionSelect }) => {
   const handleConfessionClick = (confession) => {
     setSelectedConfession(confession.id === selectedConfession ? null : confession.id)
     if (onConfessionSelect) {
-      onConfessionSelect(confession.id === selectedConfession ? null : confession.slug)
+      onConfessionSelect(confession.id === selectedConfession ? null : confession.id)
     }
   }
 

@@ -32,20 +32,22 @@ const ConfessionPage = () => {
   const fetchData = async () => {
     setLoading(true)
     try {
-      const [confessionData, postsData] = await Promise.all([
-        confessionAPI.getConfession(slug),
-        confessionAPI.getPosts({ confession: slug })
-      ])
+      // First get confession data
+      const confessionData = await confessionAPI.getConfession(slug)
       setConfession(confessionData)
-      setPosts(postsData.results || postsData)
       setEditFormData({
         name: confessionData.name,
         description: confessionData.description,
         logo: null
       })
       setLogoPreview(confessionData.logo)
+
+      // Then get posts using confession ID
+      const postsData = await confessionAPI.getPosts({ confession: confessionData.id })
+      setPosts(postsData.results || postsData)
     } catch (error) {
       toast.error('Failed to load confession')
+      console.error(error)
     } finally {
       setLoading(false)
     }
