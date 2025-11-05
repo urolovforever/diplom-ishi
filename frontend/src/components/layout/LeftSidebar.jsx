@@ -69,7 +69,7 @@ const LeftSidebar = () => {
 
             <NavItem to="/profile" icon={FiUser} label="Profile" />
 
-            {(user.role === 'admin' || user.role === 'superadmin') && (
+            {user.role === 'superadmin' && (
               <NavItem to="/admin" icon={FiSettings} label="Admin Panel" />
             )}
           </>
