@@ -224,7 +224,7 @@ const SuperAdminPanel = () => {
     try {
       setLoading(true)
       const [confessionsData, adminsData] = await Promise.all([
-        confessionAPI.getConfessions(),
+        confessionAPI.getConfessions({ page_size: 100 }),
         authAPI.getAdminUsers()
       ])
       setConfessions(confessionsData.results || confessionsData)
