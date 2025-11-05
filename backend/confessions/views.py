@@ -8,7 +8,7 @@ from django.shortcuts import get_object_or_404
 from .models import Confession, Post, Comment, Like, Subscription
 from .serializers import (
     ConfessionSerializer, PostSerializer, PostCreateSerializer,
-    CommentSerializer, SubscriptionSerializer
+    CommentSerializer, SubscriptionSerializer, UserMinimalSerializer
 )
 from .permissions import IsConfessionAdminOrReadOnly, IsCommentAuthorOrReadOnly, IsSuperAdminOnly, IsConfessionAdminOrSuperAdmin
 
@@ -83,6 +83,15 @@ class ConfessionViewSet(viewsets.ModelViewSet):
         except User.DoesNotExist:
             return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
 
+    @action(detail=True, methods=['get'])
+    def followers(self, request, slug=None):
+        """Konfessiya obunachilari ro'yxati"""
+        confession = self.get_object()
+        subscriptions = Subscription.objects.filter(confession=confession).select_related('user')
+        followers = [subscription.user for subscription in subscriptions]
+        serializer = UserMinimalSerializer(followers, many=True)
+        return Response(serializer.data)
+
 
 class PostViewSet(viewsets.ModelViewSet):
     """
@@ -102,6 +111,13 @@ class PostViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+
+    def retrieve(self, request, *args, **kwargs):
+        """Retrieve post and increment view count"""
+        instance = self.get_object()
+        instance.increment_views()
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
 
     @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
     def feed(self, request):

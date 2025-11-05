@@ -6,7 +6,7 @@ import { useAuthStore } from '../store/authStore'
 import MainLayout from '../components/layout/MainLayout'
 import CommentSection from '../components/CommentSection'
 import Loading from '../components/Loading'
-import { FiHeart, FiMessageCircle, FiArrowLeft } from 'react-icons/fi'
+import { FiHeart, FiMessageCircle, FiArrowLeft, FiEye } from 'react-icons/fi'
 import { BsPinFill } from 'react-icons/bs'
 import { formatDistanceToNow } from 'date-fns'
 
@@ -143,25 +143,32 @@ const PostDetails = () => {
         </div>
 
         {/* Actions */}
-        <div className="px-6 py-4 border-t border-gray-100 flex items-center space-x-4">
-          <button
-            onClick={handleLikeToggle}
-            className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-all ${
-              post.is_liked
-                ? 'text-red-600 bg-red-50 hover:bg-red-100'
-                : 'text-gray-600 hover:bg-gray-100'
-            }`}
-          >
-            <FiHeart
-              size={20}
-              fill={post.is_liked ? 'currentColor' : 'none'}
-            />
-            <span>{post.likes_count} {post.likes_count === 1 ? 'Like' : 'Likes'}</span>
-          </button>
+        <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <button
+              onClick={handleLikeToggle}
+              className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-all ${
+                post.is_liked
+                  ? 'text-red-600 bg-red-50 hover:bg-red-100'
+                  : 'text-gray-600 hover:bg-gray-100'
+              }`}
+            >
+              <FiHeart
+                size={20}
+                fill={post.is_liked ? 'currentColor' : 'none'}
+              />
+              <span>{post.likes_count} {post.likes_count === 1 ? 'Like' : 'Likes'}</span>
+            </button>
 
-          <div className="flex items-center space-x-2 text-gray-600 px-4 py-2">
-            <FiMessageCircle size={20} />
-            <span>{post.comments_count} {post.comments_count === 1 ? 'Comment' : 'Comments'}</span>
+            <div className="flex items-center space-x-2 text-gray-600 px-4 py-2">
+              <FiMessageCircle size={20} />
+              <span>{post.comments_count} {post.comments_count === 1 ? 'Comment' : 'Comments'}</span>
+            </div>
+          </div>
+
+          <div className="flex items-center space-x-2 text-gray-500">
+            <FiEye size={18} />
+            <span>{post.views_count || 0} views</span>
           </div>
         </div>
       </div>
