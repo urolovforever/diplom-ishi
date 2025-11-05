@@ -103,6 +103,13 @@ class PostViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 
+    def retrieve(self, request, *args, **kwargs):
+        """Retrieve post and increment view count"""
+        instance = self.get_object()
+        instance.increment_views()
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
+
     @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
     def feed(self, request):
         """Foydalanuvchining obuna bo'lgan konfessiyalari postlari"""
