@@ -42,10 +42,11 @@ class ConfessionSerializer(serializers.ModelSerializer):
 
 class CommentSerializer(serializers.ModelSerializer):
     author = UserMinimalSerializer(read_only=True)
+    post = serializers.PrimaryKeyRelatedField(queryset=Post.objects.all(), write_only=True)
 
     class Meta:
         model = Comment
-        fields = ['id', 'author', 'content', 'created_at', 'updated_at']
+        fields = ['id', 'post', 'author', 'content', 'created_at', 'updated_at']
         read_only_fields = ['id', 'author', 'created_at', 'updated_at']
 
 
