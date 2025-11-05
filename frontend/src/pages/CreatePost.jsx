@@ -5,7 +5,7 @@ import { confessionAPI } from '../api/confession'
 import { useAuthStore } from '../store/authStore'
 import MainLayout from '../components/layout/MainLayout'
 import Loading from '../components/Loading'
-import { FiImage, FiVideo, FiX } from 'react-icons/fi'
+import { FiImage, FiX } from 'react-icons/fi'
 
 const CreatePost = () => {
   const navigate = useNavigate()
@@ -16,7 +16,6 @@ const CreatePost = () => {
     content: '',
     confession: '',
     image: null,
-    video_url: '',
     is_pinned: false
   })
 
@@ -95,9 +94,6 @@ const CreatePost = () => {
 
       if (formData.image) {
         postFormData.append('image', formData.image)
-      }
-      if (formData.video_url) {
-        postFormData.append('video_url', formData.video_url)
       }
 
       await confessionAPI.createPost(postFormData)
@@ -206,24 +202,6 @@ const CreatePost = () => {
                 />
               </label>
             )}
-          </div>
-
-          {/* Video URL */}
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              Video URL (YouTube, Vimeo, etc.)
-            </label>
-            <div className="flex items-center space-x-2">
-              <FiVideo className="text-gray-400" size={20} />
-              <input
-                type="url"
-                name="video_url"
-                value={formData.video_url}
-                onChange={handleChange}
-                placeholder="https://youtube.com/..."
-                className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
           </div>
 
           {/* Pin Post - Only for admins */}
