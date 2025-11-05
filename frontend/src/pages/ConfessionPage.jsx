@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate, Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { confessionAPI } from '../api/confession'
 import { useAuthStore } from '../store/authStore'
-import PostCard from '../components/PostCard'
 import MainLayout from '../components/layout/MainLayout'
 import Loading from '../components/Loading'
-import { FiUsers, FiFileText, FiUserPlus, FiUserMinus, FiEdit2, FiX, FiImage } from 'react-icons/fi'
+import { FiUsers, FiFileText, FiUserPlus, FiUserMinus, FiEdit2, FiX, FiImage, FiTrash2, FiEye, FiHeart, FiMessageCircle } from 'react-icons/fi'
 
 const ConfessionPage = () => {
   const { slug } = useParams()
+  const navigate = useNavigate()
   const { user } = useAuthStore()
 
   const [confession, setConfession] = useState(null)
@@ -168,6 +168,32 @@ const ConfessionPage = () => {
     }
   }
 
+  const handlePostClick = (postId) => {
+    const canView = user && (confession.is_subscribed || isConfessionAdmin || user.role === 'superadmin')
+
+    if (!user) {
+      toast.error('Please login to view posts')
+      return
+    }
+
+    if (!canView) {
+      toast.error('Subscribe to this confession to view posts')
+      return
+    }
+
+    navigate(`/post/${postId}`)
+  }
+
+  const handleEditPost = (e, postId) => {
+    e.stopPropagation()
+    navigate(`/post/${postId}/edit`)
+  }
+
+  const handleDeletePost = async (e, postId) => {
+    e.stopPropagation()
+    await handlePostDelete(postId)
+  }
+
   // Check if user is admin of this confession
   const isConfessionAdmin = user && confession?.admin?.id === user.id
 
@@ -204,10 +230,13 @@ const ConfessionPage = () => {
               <p className="text-gray-600 mb-4">{confession.description}</p>
 
               <div className="flex items-center space-x-6 text-sm text-gray-500">
-                <div className="flex items-center space-x-1">
+                <Link
+                  to={`/confession/${slug}/followers`}
+                  className="flex items-center space-x-1 hover:text-blue-600 transition-colors cursor-pointer"
+                >
                   <FiUsers />
                   <span>{confession.subscribers_count} followers</span>
-                </div>
+                </Link>
                 <div className="flex items-center space-x-1">
                   <FiFileText />
                   <span>{confession.posts_count} posts</span>
@@ -244,25 +273,80 @@ const ConfessionPage = () => {
         </div>
       </div>
 
-      {/* Posts */}
-      <div className="max-w-3xl mx-auto space-y-6">
-        <h2 className="text-2xl font-bold text-gray-800 mb-4">Recent Posts</h2>
+      {/* Posts Grid */}
+      <div>
+        <h2 className="text-2xl font-bold text-gray-800 mb-6 px-4">Posts</h2>
 
         {posts.length === 0 ? (
           <div className="text-center py-12 bg-white rounded-xl shadow-md">
             <p className="text-gray-500 text-lg">No posts yet</p>
           </div>
         ) : (
-          posts.map(post => (
-            <PostCard
-              key={post.id}
-              post={post}
-              onLike={handleLike}
-              onUnlike={handleUnlike}
-              onDelete={handlePostDelete}
-              isConfessionAdmin={isConfessionAdmin}
-            />
-          ))
+          <div className="grid grid-cols-3 gap-1 md:gap-2">
+            {posts.map(post => (
+              <div
+                key={post.id}
+                onClick={() => handlePostClick(post.id)}
+                className="relative aspect-square cursor-pointer group overflow-hidden bg-gray-100"
+              >
+                {/* Post Image or Gradient */}
+                {post.image ? (
+                  <img
+                    src={post.image}
+                    alt={post.title}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center p-4">
+                    <h3 className="text-white text-center font-semibold text-sm md:text-base line-clamp-3">
+                      {post.title}
+                    </h3>
+                  </div>
+                )}
+
+                {/* Hover Overlay */}
+                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-all duration-200 flex items-center justify-center opacity-0 group-hover:opacity-100">
+                  <div className="text-white space-y-2">
+                    {/* Stats */}
+                    <div className="flex items-center justify-center space-x-4 text-sm md:text-base">
+                      <div className="flex items-center space-x-1">
+                        <FiHeart fill="white" />
+                        <span className="font-semibold">{post.likes_count}</span>
+                      </div>
+                      <div className="flex items-center space-x-1">
+                        <FiMessageCircle fill="white" />
+                        <span className="font-semibold">{post.comments_count}</span>
+                      </div>
+                      <div className="flex items-center space-x-1">
+                        <FiEye />
+                        <span className="font-semibold">{post.views_count || 0}</span>
+                      </div>
+                    </div>
+
+                    {/* Admin Actions */}
+                    {isConfessionAdmin && (
+                      <div className="flex items-center justify-center space-x-2 mt-3">
+                        <button
+                          onClick={(e) => handleEditPost(e, post.id)}
+                          className="p-2 bg-blue-500 rounded-full hover:bg-blue-600 transition-colors"
+                          title="Edit post"
+                        >
+                          <FiEdit2 size={16} />
+                        </button>
+                        <button
+                          onClick={(e) => handleDeletePost(e, post.id)}
+                          className="p-2 bg-red-500 rounded-full hover:bg-red-600 transition-colors"
+                          title="Delete post"
+                        >
+                          <FiTrash2 size={16} />
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         )}
       </div>
 

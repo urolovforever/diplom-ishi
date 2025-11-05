@@ -34,6 +34,11 @@ export const confessionAPI = {
     return response.data
   },
 
+  getFollowers: async (slug) => {
+    const response = await api.get(`/confessions/${slug}/followers/`)
+    return response.data
+  },
+
   // Posts
   getPosts: async (params) => {
     const response = await api.get('/posts/', { params })
