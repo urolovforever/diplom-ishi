@@ -16,7 +16,8 @@ const CreatePost = () => {
     content: '',
     confession: '',
     image: null,
-    video_url: ''
+    video_url: '',
+    is_pinned: false
   })
 
   const [confessions, setConfessions] = useState([])
@@ -31,11 +32,18 @@ const CreatePost = () => {
   const fetchConfessions = async () => {
     try {
       const data = await confessionAPI.getConfessions()
-      setConfessions(data.results || data)
+      let confessionsList = data.results || data
+
+      // Filter confessions for admin - only show the ones they manage
+      if (user.role === 'admin') {
+        confessionsList = confessionsList.filter(c => c.admin?.id === user.id)
+      }
+
+      setConfessions(confessionsList)
 
       // Auto-select confession if user is confession admin
-      if (user.role === 'admin' && data.results?.length > 0) {
-        setFormData(prev => ({ ...prev, confession: data.results[0].id }))
+      if (user.role === 'admin' && confessionsList.length > 0) {
+        setFormData(prev => ({ ...prev, confession: confessionsList[0].id }))
       }
     } catch (error) {
       toast.error('Failed to load confessions')
@@ -45,8 +53,11 @@ const CreatePost = () => {
   }
 
   const handleChange = (e) => {
-    const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
+    const { name, value, type, checked } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }))
   }
 
   const handleImageChange = (e) => {
@@ -80,6 +91,7 @@ const CreatePost = () => {
       postFormData.append('title', formData.title)
       postFormData.append('content', formData.content)
       postFormData.append('confession', formData.confession)
+      postFormData.append('is_pinned', formData.is_pinned)
 
       if (formData.image) {
         postFormData.append('image', formData.image)
@@ -213,6 +225,23 @@ const CreatePost = () => {
               />
             </div>
           </div>
+
+          {/* Pin Post - Only for admins */}
+          {(user.role === 'admin' || user.role === 'superadmin') && (
+            <div className="flex items-center space-x-3 p-4 bg-blue-50 rounded-lg">
+              <input
+                type="checkbox"
+                name="is_pinned"
+                id="is_pinned"
+                checked={formData.is_pinned}
+                onChange={handleChange}
+                className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+              />
+              <label htmlFor="is_pinned" className="text-sm font-medium text-gray-700 cursor-pointer">
+                Pin this post to the top of the confession
+              </label>
+            </div>
+          )}
 
           {/* Submit Buttons */}
           <div className="flex items-center space-x-4 pt-4">
