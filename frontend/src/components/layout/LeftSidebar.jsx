@@ -260,7 +260,14 @@ const LeftSidebar = () => {
                       {/* Content */}
                       <div className="flex-1 min-w-0">
                         {/* Actor info */}
-                        <div className="flex items-center space-x-2 mb-1">
+                        <div
+                          className="flex items-center space-x-2 mb-1 cursor-pointer hover:opacity-70"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            navigate(`/user/${notification.actor.username}`)
+                            setShowNotifications(false)
+                          }}
+                        >
                           {notification.actor.avatar ? (
                             <img
                               src={notification.actor.avatar}
@@ -270,7 +277,7 @@ const LeftSidebar = () => {
                           ) : (
                             <FaUserCircle className="w-6 h-6 text-gray-400" />
                           )}
-                          <span className="text-sm font-medium text-gray-900 truncate">
+                          <span className="text-sm font-medium text-blue-600 hover:text-blue-700 truncate">
                             @{notification.actor.username}
                           </span>
                         </div>
