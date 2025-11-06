@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../../store/authStore'
 import {
@@ -11,11 +11,36 @@ import {
   FiLogOut,
   FiSettings
 } from 'react-icons/fi'
+import NotificationsSidebar from '../NotificationsSidebar'
+import { getUnreadCount } from '../../api/notification'
 
 const LeftSidebar = () => {
   const { user, logout } = useAuthStore()
   const location = useLocation()
   const navigate = useNavigate()
+  const [showNotifications, setShowNotifications] = useState(false)
+  const [unreadCount, setUnreadCount] = useState(0)
+
+  // Fetch unread count
+  useEffect(() => {
+    const fetchUnreadCount = async () => {
+      if (user && (user.role === 'admin' || user.role === 'superadmin')) {
+        try {
+          const data = await getUnreadCount()
+          setUnreadCount(data.count)
+        } catch (error) {
+          console.error('Failed to fetch unread count:', error)
+        }
+      }
+    }
+
+    fetchUnreadCount()
+
+    // Poll for new notifications every 30 seconds
+    const interval = setInterval(fetchUnreadCount, 30000)
+
+    return () => clearInterval(interval)
+  }, [user])
 
   const handleLogout = () => {
     logout()
@@ -26,17 +51,39 @@ const LeftSidebar = () => {
     return location.pathname === path
   }
 
-  const NavItem = ({ to, icon: Icon, label, onClick }) => (
+  const handleNotificationsClick = (e) => {
+    e.preventDefault()
+    setShowNotifications(true)
+  }
+
+  const handleNotificationsRead = async () => {
+    // Refresh unread count
+    try {
+      const data = await getUnreadCount()
+      setUnreadCount(data.count)
+    } catch (error) {
+      console.error('Failed to refresh unread count:', error)
+    }
+  }
+
+  const NavItem = ({ to, icon: Icon, label, onClick, badge }) => (
     <Link
       to={to}
       onClick={onClick}
-      className={`flex items-center space-x-4 px-5 py-3.5 rounded-xl transition-all duration-200 ${
+      className={`flex items-center space-x-4 px-5 py-3.5 rounded-xl transition-all duration-200 relative ${
         isActive(to)
           ? 'bg-blue-50 text-blue-600 font-semibold'
           : 'text-gray-700 hover:bg-gray-100'
       }`}
     >
-      <Icon size={26} />
+      <div className="relative">
+        <Icon size={26} />
+        {badge > 0 && (
+          <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+            {badge > 9 ? '9+' : badge}
+          </span>
+        )}
+      </div>
       <span className="text-base font-medium">{label}</span>
     </Link>
   )
@@ -61,7 +108,16 @@ const LeftSidebar = () => {
         {user && (
           <>
             <NavItem to="/messages" icon={FiMessageCircle} label="Messages" />
-            <NavItem to="/notifications" icon={FiBell} label="Notifications" />
+
+            {(user.role === 'admin' || user.role === 'superadmin') && (
+              <NavItem
+                to="/notifications"
+                icon={FiBell}
+                label="Notifications"
+                onClick={handleNotificationsClick}
+                badge={unreadCount}
+              />
+            )}
 
             {user.role === 'admin' && (
               <NavItem to="/create" icon={FiPlusSquare} label="Create" />
@@ -120,6 +176,15 @@ const LeftSidebar = () => {
             Register
           </Link>
         </div>
+      )}
+
+      {/* Notifications Sidebar */}
+      {(user?.role === 'admin' || user?.role === 'superadmin') && (
+        <NotificationsSidebar
+          isOpen={showNotifications}
+          onClose={() => setShowNotifications(false)}
+          onNotificationsRead={handleNotificationsRead}
+        />
       )}
     </div>
   )

@@ -107,3 +107,61 @@ class Comment(models.Model):
         ordering = ['-created_at']
         verbose_name = 'Comment'
         verbose_name_plural = 'Comments'
+
+
+class Notification(models.Model):
+    """Notification system for confession admins"""
+    NOTIFICATION_TYPES = (
+        ('subscribe', 'Subscribe'),
+        ('like', 'Like'),
+        ('comment', 'Comment'),
+    )
+
+    recipient = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='notifications_received',
+        help_text="Admin who receives this notification"
+    )
+    actor = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='notifications_sent',
+        help_text="User who triggered the notification"
+    )
+    notification_type = models.CharField(max_length=20, choices=NOTIFICATION_TYPES)
+    confession = models.ForeignKey(
+        Confession,
+        on_delete=models.CASCADE,
+        related_name='notifications'
+    )
+    post = models.ForeignKey(
+        Post,
+        on_delete=models.CASCADE,
+        related_name='notifications',
+        blank=True,
+        null=True,
+        help_text="Related post (for like/comment notifications)"
+    )
+    comment = models.ForeignKey(
+        Comment,
+        on_delete=models.CASCADE,
+        related_name='notifications',
+        blank=True,
+        null=True,
+        help_text="Related comment (for comment notifications)"
+    )
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.actor.username} {self.notification_type} on {self.confession.name}"
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Notification'
+        verbose_name_plural = 'Notifications'
+        indexes = [
+            models.Index(fields=['recipient', '-created_at']),
+            models.Index(fields=['recipient', 'is_read']),
+        ]
