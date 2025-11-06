@@ -148,18 +148,20 @@ class CommentLike(models.Model):
 
 
 class Notification(models.Model):
-    """Notification system for confession admins"""
+    """Notification system for confession admins and users"""
     NOTIFICATION_TYPES = (
         ('subscribe', 'Subscribe'),
         ('like', 'Like'),
         ('comment', 'Comment'),
+        ('comment_like', 'Comment Like'),
+        ('comment_reply', 'Comment Reply'),
     )
 
     recipient = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name='notifications_received',
-        help_text="Admin who receives this notification"
+        help_text="User who receives this notification"
     )
     actor = models.ForeignKey(
         User,
@@ -171,7 +173,10 @@ class Notification(models.Model):
     confession = models.ForeignKey(
         Confession,
         on_delete=models.CASCADE,
-        related_name='notifications'
+        related_name='notifications',
+        blank=True,
+        null=True,
+        help_text="Related confession (for admin notifications)"
     )
     post = models.ForeignKey(
         Post,
