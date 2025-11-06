@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import Confession, Post, Comment, Like, Subscription, Notification
+from .models import Confession, Post, Comment, Like, Subscription, Notification, PostView
 
 
 @admin.register(Confession)
@@ -120,3 +120,16 @@ class NotificationAdmin(admin.ModelAdmin):
             'fields': ('is_read', 'created_at')
         }),
     )
+
+
+@admin.register(PostView)
+class PostViewAdmin(admin.ModelAdmin):
+    list_display = ['post', 'user', 'ip_address', 'viewed_at']
+    list_filter = ['viewed_at']
+    search_fields = ['post__title', 'user__username', 'ip_address']
+    readonly_fields = ['post', 'user', 'ip_address', 'viewed_at']
+    date_hierarchy = 'viewed_at'
+
+    def has_add_permission(self, request):
+        # Prevent manual creation of views in admin
+        return False

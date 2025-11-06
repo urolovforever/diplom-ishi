@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticate
 from django_filters.rest_framework import DjangoFilterBackend
 from django.shortcuts import get_object_or_404
 
-from .models import Confession, Post, Comment, Like, Subscription, Notification, CommentLike
+from .models import Confession, Post, Comment, Like, Subscription, Notification, CommentLike, PostView
 from .serializers import (
     ConfessionSerializer, PostSerializer, PostCreateSerializer,
     CommentSerializer, CommentReplySerializer, SubscriptionSerializer, UserMinimalSerializer,
@@ -129,11 +129,56 @@ class PostViewSet(viewsets.ModelViewSet):
         serializer.save(author=self.request.user)
 
     def retrieve(self, request, *args, **kwargs):
-        """Retrieve post and increment view count"""
+        """Retrieve post and increment view count (once per user per day)"""
+        from datetime import timedelta
+        from django.utils import timezone
+
         instance = self.get_object()
-        instance.increment_views()
+
+        # Get user identifier (user or IP address)
+        user = request.user if request.user.is_authenticated else None
+        ip_address = self.get_client_ip(request) if not user else None
+
+        # Check if user/IP has viewed this post in the last 24 hours
+        day_ago = timezone.now() - timedelta(days=1)
+
+        if user:
+            # Check by user
+            recent_view = PostView.objects.filter(
+                post=instance,
+                user=user,
+                viewed_at__gte=day_ago
+            ).exists()
+        else:
+            # Check by IP address
+            recent_view = PostView.objects.filter(
+                post=instance,
+                ip_address=ip_address,
+                viewed_at__gte=day_ago
+            ).exists()
+
+        # Only increment view if user hasn't viewed recently
+        if not recent_view:
+            # Create new view record
+            PostView.objects.create(
+                post=instance,
+                user=user,
+                ip_address=ip_address
+            )
+            # Increment count
+            instance.increment_views()
+
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
+
+    def get_client_ip(self, request):
+        """Get client IP address from request"""
+        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forwarded_for:
+            ip = x_forwarded_for.split(',')[0]
+        else:
+            ip = request.META.get('REMOTE_ADDR')
+        return ip
 
     @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
     def feed(self, request):
