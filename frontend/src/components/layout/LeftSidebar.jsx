@@ -51,8 +51,7 @@ const LeftSidebar = () => {
     return location.pathname === path
   }
 
-  const handleNotificationsClick = (e) => {
-    e.preventDefault()
+  const handleNotificationsClick = () => {
     setShowNotifications(true)
   }
 
@@ -66,27 +65,41 @@ const LeftSidebar = () => {
     }
   }
 
-  const NavItem = ({ to, icon: Icon, label, onClick, badge }) => (
-    <Link
-      to={to}
-      onClick={onClick}
-      className={`flex items-center space-x-4 px-5 py-3.5 rounded-xl transition-all duration-200 relative ${
-        isActive(to)
-          ? 'bg-blue-50 text-blue-600 font-semibold'
-          : 'text-gray-700 hover:bg-gray-100'
-      }`}
-    >
-      <div className="relative">
-        <Icon size={26} />
-        {badge > 0 && (
-          <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-            {badge > 9 ? '9+' : badge}
-          </span>
-        )}
-      </div>
-      <span className="text-base font-medium">{label}</span>
-    </Link>
-  )
+  const NavItem = ({ to, icon: Icon, label, onClick, badge, isButton }) => {
+    const content = (
+      <>
+        <div className="relative">
+          <Icon size={26} />
+          {badge > 0 && (
+            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+              {badge > 9 ? '9+' : badge}
+            </span>
+          )}
+        </div>
+        <span className="text-base font-medium">{label}</span>
+      </>
+    )
+
+    const className = `flex items-center space-x-4 px-5 py-3.5 rounded-xl transition-all duration-200 relative ${
+      !isButton && isActive(to)
+        ? 'bg-blue-50 text-blue-600 font-semibold'
+        : 'text-gray-700 hover:bg-gray-100'
+    } ${isButton ? 'w-full text-left' : ''}`
+
+    if (isButton) {
+      return (
+        <button onClick={onClick} className={className}>
+          {content}
+        </button>
+      )
+    }
+
+    return (
+      <Link to={to} onClick={onClick} className={className}>
+        {content}
+      </Link>
+    )
+  }
 
   return (
     <div className="fixed left-0 top-0 h-screen w-72 bg-white border-r border-gray-200 flex flex-col">
@@ -111,11 +124,11 @@ const LeftSidebar = () => {
 
             {(user.role === 'admin' || user.role === 'superadmin') && (
               <NavItem
-                to="/notifications"
                 icon={FiBell}
                 label="Notifications"
                 onClick={handleNotificationsClick}
                 badge={unreadCount}
+                isButton={true}
               />
             )}
 
