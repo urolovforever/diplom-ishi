@@ -184,11 +184,6 @@ const ConfessionsStories = ({ onConfessionSelect }) => {
         </div>
       )}
 
-      <style jsx>{`
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
-      `}</style>
     </div>
   )
 }
