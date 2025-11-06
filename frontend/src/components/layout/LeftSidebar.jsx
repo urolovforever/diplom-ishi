@@ -289,10 +289,12 @@ const LeftSidebar = () => {
                           {notification.message}
                         </p>
 
-                        {/* Confession name */}
-                        <p className="text-xs text-gray-500 mb-1 truncate">
-                          in {notification.confession.name}
-                        </p>
+                        {/* Confession name (if available) */}
+                        {notification.confession && (
+                          <p className="text-xs text-gray-500 mb-1 truncate">
+                            in {notification.confession.name}
+                          </p>
+                        )}
 
                         {/* Time */}
                         <p className="text-xs text-gray-400">

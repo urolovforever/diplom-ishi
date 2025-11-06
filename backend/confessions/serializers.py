@@ -178,11 +178,13 @@ class NotificationSerializer(serializers.ModelSerializer):
 
     def get_confession(self, obj):
         """Return minimal confession info"""
-        return {
-            'id': obj.confession.id,
-            'name': obj.confession.name,
-            'slug': obj.confession.slug,
-        }
+        if obj.confession:
+            return {
+                'id': obj.confession.id,
+                'name': obj.confession.name,
+                'slug': obj.confession.slug,
+            }
+        return None
 
     def get_post(self, obj):
         """Return post info if available"""
