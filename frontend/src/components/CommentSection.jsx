@@ -4,16 +4,28 @@ import { confessionAPI } from '../api/confession'
 import { useAuthStore } from '../store/authStore'
 import { formatDistanceToNow } from 'date-fns'
 import { FiTrash2, FiSend } from 'react-icons/fi'
+import { FaUserCircle } from 'react-icons/fa'
 
 const CommentSection = ({ postId }) => {
   const { user } = useAuthStore()
   const [comments, setComments] = useState([])
   const [newComment, setNewComment] = useState('')
   const [loading, setLoading] = useState(false)
+  const [post, setPost] = useState(null)
 
   useEffect(() => {
+    fetchPostData()
     fetchComments()
   }, [postId])
+
+  const fetchPostData = async () => {
+    try {
+      const data = await confessionAPI.getPost(postId)
+      setPost(data)
+    } catch (error) {
+      console.error('Failed to fetch post:', error)
+    }
+  }
 
   const fetchComments = async () => {
     try {
@@ -65,6 +77,18 @@ const CommentSection = ({ postId }) => {
     }
   }
 
+  // Check if user can delete a comment
+  const canDeleteComment = (comment) => {
+    if (!user) return false
+    // User can delete their own comment
+    if (user.id === comment.author.id) return true
+    // Post confession admin can delete any comment on their post
+    if (post && post.confession.admin?.id === user.id) return true
+    // Superadmin can delete any comment
+    if (user.role === 'superadmin') return true
+    return false
+  }
+
   return (
     <div className="bg-white rounded-xl shadow-md p-6">
       <h3 className="text-xl font-bold text-gray-800 mb-4">
@@ -75,12 +99,18 @@ const CommentSection = ({ postId }) => {
       {user && (
         <form onSubmit={handleSubmit} className="mb-6">
           <div className="flex space-x-3">
-            {user.avatar && (
+            {user.avatar ? (
               <img
                 src={user.avatar}
                 alt={user.username}
                 className="w-10 h-10 rounded-full object-cover"
               />
+            ) : (
+              <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 flex items-center justify-center flex-shrink-0">
+                <span className="text-white font-bold text-lg">
+                  {user.username[0].toUpperCase()}
+                </span>
+              </div>
             )}
             <div className="flex-1">
               <textarea
@@ -112,12 +142,18 @@ const CommentSection = ({ postId }) => {
         ) : (
           comments.map(comment => (
             <div key={comment.id} className="flex space-x-3 p-4 bg-gray-50 rounded-lg">
-              {comment.author.avatar && (
+              {comment.author.avatar ? (
                 <img
                   src={comment.author.avatar}
                   alt={comment.author.username}
                   className="w-10 h-10 rounded-full object-cover"
                 />
+              ) : (
+                <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 flex items-center justify-center flex-shrink-0">
+                  <span className="text-white font-bold text-lg">
+                    {comment.author.username[0].toUpperCase()}
+                  </span>
+                </div>
               )}
               <div className="flex-1">
                 <div className="flex items-center justify-between mb-1">
@@ -130,7 +166,7 @@ const CommentSection = ({ postId }) => {
                     </span>
                   </div>
 
-                  {user && (user.id === comment.author.id || user.role === 'admin' || user.role === 'superadmin') && (
+                  {canDeleteComment(comment) && (
                     <button
                       onClick={() => handleDelete(comment.id)}
                       className="text-red-600 hover:text-red-700"
