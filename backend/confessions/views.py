@@ -318,19 +318,17 @@ class SubscriptionViewSet(viewsets.ReadOnlyModelViewSet):
 
 class NotificationViewSet(viewsets.ReadOnlyModelViewSet):
     """
-    Notifications for confession admins
+    Notifications for all users
     """
     serializer_class = NotificationSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        """Only show notifications for admin users"""
+        """Show notifications for the current user"""
         user = self.request.user
-        if user.role in ['admin', 'superadmin']:
-            return Notification.objects.filter(recipient=user).select_related(
-                'actor', 'confession', 'post', 'comment'
-            )
-        return Notification.objects.none()
+        return Notification.objects.filter(recipient=user).select_related(
+            'actor', 'confession', 'post', 'comment'
+        )
 
     @action(detail=False, methods=['post'])
     def mark_all_read(self, request):
