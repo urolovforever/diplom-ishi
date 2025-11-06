@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { confessionAPI } from '../api/confession'
 import { useAuthStore } from '../store/authStore'
@@ -20,16 +21,20 @@ const Home = () => {
   const fetchPosts = async () => {
     setLoading(true)
     try {
+      if (!user) {
+        // No posts for guests - they need to login
+        setPosts([])
+        setLoading(false)
+        return
+      }
+
       let data
       if (selectedConfession) {
         // Fetch posts from specific confession
         data = await confessionAPI.getPosts({ confession: selectedConfession })
-      } else if (user) {
+      } else {
         // Fetch user's feed (subscribed confessions)
         data = await confessionAPI.getFeed()
-      } else {
-        // Fetch all posts for guests
-        data = await confessionAPI.getPosts()
       }
       setPosts(data.results || data)
     } catch (error) {
@@ -92,14 +97,26 @@ const Home = () => {
 
       {/* Posts Feed */}
       <div className="space-y-6">
-        {posts.length === 0 ? (
+        {!user ? (
+          <div className="text-center py-16 bg-white rounded-xl shadow-sm border border-gray-200">
+            <div className="text-6xl mb-4">🔒</div>
+            <p className="text-gray-700 text-xl font-semibold mb-2">Login Required</p>
+            <p className="text-gray-500 mb-6">
+              Please login to view posts from confessions you follow
+            </p>
+            <Link
+              to="/login"
+              className="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold"
+            >
+              Login Now
+            </Link>
+          </div>
+        ) : posts.length === 0 ? (
           <div className="text-center py-12 bg-white rounded-xl shadow-sm border border-gray-200">
             <div className="text-6xl mb-4">📭</div>
             <p className="text-gray-500 text-lg mb-2">No posts to show</p>
             <p className="text-gray-400 text-sm">
-              {user
-                ? 'Subscribe to confessions to see their posts here'
-                : 'Login to see your personalized feed'}
+              Subscribe to confessions to see their posts here
             </p>
           </div>
         ) : (
