@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useState, useEffect, useRef } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { confessionAPI } from '../api/confession'
 import { useAuthStore } from '../store/authStore'
@@ -31,6 +31,8 @@ const linkify = (text) => {
 
 const CommentItem = ({ comment, post, user, onDelete, onLikeToggle, onReply, onEdit, onPin, level = 0 }) => {
   const navigate = useNavigate()
+  const location = useLocation()
+  const commentRef = useRef(null)
   const [showReplyForm, setShowReplyForm] = useState(false)
   const [replyText, setReplyText] = useState('')
   const [submitting, setSubmitting] = useState(false)
@@ -38,6 +40,20 @@ const CommentItem = ({ comment, post, user, onDelete, onLikeToggle, onReply, onE
   const [editText, setEditText] = useState(comment.content)
   const [collapsed, setCollapsed] = useState(false)
   const [likeAnimation, setLikeAnimation] = useState(false)
+  const [isHighlighted, setIsHighlighted] = useState(false)
+
+  // Scroll to comment if URL hash matches
+  useEffect(() => {
+    const hash = location.hash
+    if (hash === `#comment-${comment.id}` && commentRef.current) {
+      setTimeout(() => {
+        commentRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        setIsHighlighted(true)
+        // Remove highlight after 2 seconds
+        setTimeout(() => setIsHighlighted(false), 2000)
+      }, 300) // Small delay to ensure page is fully loaded
+    }
+  }, [location.hash, comment.id])
 
   const canDeleteComment = () => {
     if (!user) return false
@@ -98,7 +114,11 @@ const CommentItem = ({ comment, post, user, onDelete, onLikeToggle, onReply, onE
   const hasReplies = comment.replies && comment.replies.length > 0
 
   return (
-    <div className={`${level > 0 ? 'ml-8 border-l-2 border-gray-200 pl-4' : ''} transition-all duration-300`}>
+    <div
+      id={`comment-${comment.id}`}
+      ref={commentRef}
+      className={`${level > 0 ? 'ml-8 border-l-2 border-gray-200 pl-4' : ''} transition-all duration-300 ${isHighlighted ? 'bg-blue-50 ring-2 ring-blue-400 rounded-lg' : ''}`}
+    >
       <div className="flex space-x-3 py-3">
         {/* Avatar */}
         {comment.author.avatar ? (
@@ -497,23 +517,6 @@ const CommentSection = ({ postId }) => {
         )}
       </div>
 
-      {/* Add custom animations */}
-      <style jsx>{`
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(-10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        .animate-fadeIn {
-          animation: fadeIn 0.3s ease-in-out;
-        }
-      `}</style>
     </div>
   )
 }

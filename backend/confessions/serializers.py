@@ -220,6 +220,9 @@ class NotificationSerializer(serializers.ModelSerializer):
             if obj.confession:
                 return f"/confession/{obj.confession.slug}"
         elif obj.post:
+            # For comment-related notifications, include comment anchor
+            if obj.notification_type in ['comment_like', 'comment_reply'] and obj.comment:
+                return f"/post/{obj.post.id}#comment-{obj.comment.id}"
             return f"/post/{obj.post.id}"
         elif obj.confession:
             return f"/confession/{obj.confession.slug}"
