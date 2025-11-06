@@ -1,8 +1,16 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { FiUsers, FiFileText, FiCheckCircle } from 'react-icons/fi'
 
 const ConfessionCard = ({ confession }) => {
+  const navigate = useNavigate()
+
+  const handleAdminClick = (e, username) => {
+    e.preventDefault() // Prevent navigation to confession page
+    e.stopPropagation()
+    navigate(`/user/${username}`)
+  }
+
   return (
     <Link
       to={`/confession/${confession.slug}`}
@@ -59,7 +67,13 @@ const ConfessionCard = ({ confession }) => {
         {confession.admin && (
           <div className="mt-3 pt-3 border-t border-gray-100">
             <p className="text-xs text-gray-500">
-              Admin: <span className="font-medium text-gray-700">{confession.admin.username}</span>
+              Admin:{' '}
+              <button
+                onClick={(e) => handleAdminClick(e, confession.admin.username)}
+                className="font-medium text-blue-600 hover:text-blue-800 hover:underline transition-colors"
+              >
+                {confession.admin.username}
+              </button>
             </p>
           </div>
         )}

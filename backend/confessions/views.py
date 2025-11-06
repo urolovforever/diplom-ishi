@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticate
 from django_filters.rest_framework import DjangoFilterBackend
 from django.shortcuts import get_object_or_404
 
-from .models import Confession, Post, Comment, Like, Subscription, Notification, CommentLike
+from .models import Confession, Post, Comment, Like, Subscription, Notification, CommentLike, PostView
 from .serializers import (
     ConfessionSerializer, PostSerializer, PostCreateSerializer,
     CommentSerializer, CommentReplySerializer, SubscriptionSerializer, UserMinimalSerializer,
@@ -129,11 +129,56 @@ class PostViewSet(viewsets.ModelViewSet):
         serializer.save(author=self.request.user)
 
     def retrieve(self, request, *args, **kwargs):
-        """Retrieve post and increment view count"""
+        """Retrieve post and increment view count (once per user per day)"""
+        from datetime import timedelta
+        from django.utils import timezone
+
         instance = self.get_object()
-        instance.increment_views()
+
+        # Get user identifier (user or IP address)
+        user = request.user if request.user.is_authenticated else None
+        ip_address = self.get_client_ip(request) if not user else None
+
+        # Check if user/IP has viewed this post in the last 24 hours
+        day_ago = timezone.now() - timedelta(days=1)
+
+        if user:
+            # Check by user
+            recent_view = PostView.objects.filter(
+                post=instance,
+                user=user,
+                viewed_at__gte=day_ago
+            ).exists()
+        else:
+            # Check by IP address
+            recent_view = PostView.objects.filter(
+                post=instance,
+                ip_address=ip_address,
+                viewed_at__gte=day_ago
+            ).exists()
+
+        # Only increment view if user hasn't viewed recently
+        if not recent_view:
+            # Create new view record
+            PostView.objects.create(
+                post=instance,
+                user=user,
+                ip_address=ip_address
+            )
+            # Increment count
+            instance.increment_views()
+
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
+
+    def get_client_ip(self, request):
+        """Get client IP address from request"""
+        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forwarded_for:
+            ip = x_forwarded_for.split(',')[0]
+        else:
+            ip = request.META.get('REMOTE_ADDR')
+        return ip
 
     @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
     def feed(self, request):
@@ -209,20 +254,23 @@ class CommentViewSet(viewsets.ModelViewSet):
         # Determine who to notify
         post = comment.post
         recipient = None
+        notif_type = 'comment'
 
         if comment.parent:
             # If this is a reply, notify the parent comment author
             recipient = comment.parent.author
+            notif_type = 'comment_reply'
         elif post.confession.admin and post.confession.admin != self.request.user:
             # If this is a top-level comment, notify the confession admin
             recipient = post.confession.admin
+            notif_type = 'comment'
 
         # Create notification
         if recipient and recipient != self.request.user:
             Notification.objects.create(
                 recipient=recipient,
                 actor=self.request.user,
-                notification_type='comment',
+                notification_type=notif_type,
                 confession=post.confession,
                 post=post,
                 comment=comment
@@ -235,6 +283,16 @@ class CommentViewSet(viewsets.ModelViewSet):
         like, created = CommentLike.objects.get_or_create(user=request.user, comment=comment)
 
         if created:
+            # Create notification for comment author (not for yourself)
+            if comment.author != request.user:
+                Notification.objects.create(
+                    recipient=comment.author,
+                    actor=request.user,
+                    notification_type='comment_like',
+                    confession=comment.post.confession,
+                    post=comment.post,
+                    comment=comment
+                )
             return Response({'message': 'Comment liked'}, status=status.HTTP_201_CREATED)
         return Response({'message': 'Already liked'}, status=status.HTTP_200_OK)
 
@@ -245,6 +303,13 @@ class CommentViewSet(viewsets.ModelViewSet):
         deleted, _ = CommentLike.objects.filter(user=request.user, comment=comment).delete()
 
         if deleted:
+            # Delete comment like notification
+            Notification.objects.filter(
+                recipient=comment.author,
+                actor=request.user,
+                notification_type='comment_like',
+                comment=comment
+            ).delete()
             return Response({'message': 'Comment unliked'}, status=status.HTTP_200_OK)
         return Response({'message': 'Not liked'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -298,19 +363,17 @@ class SubscriptionViewSet(viewsets.ReadOnlyModelViewSet):
 
 class NotificationViewSet(viewsets.ReadOnlyModelViewSet):
     """
-    Notifications for confession admins
+    Notifications for all users
     """
     serializer_class = NotificationSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        """Only show notifications for admin users"""
+        """Show notifications for the current user"""
         user = self.request.user
-        if user.role in ['admin', 'superadmin']:
-            return Notification.objects.filter(recipient=user).select_related(
-                'actor', 'confession', 'post', 'comment'
-            )
-        return Notification.objects.none()
+        return Notification.objects.filter(recipient=user).select_related(
+            'actor', 'confession', 'post', 'comment'
+        )
 
     @action(detail=False, methods=['post'])
     def mark_all_read(self, request):

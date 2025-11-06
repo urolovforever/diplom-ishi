@@ -78,6 +78,27 @@ class Post(models.Model):
         verbose_name_plural = 'Posts'
 
 
+class PostView(models.Model):
+    """Track individual post views with timestamps"""
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='post_views')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='post_views', null=True, blank=True)
+    ip_address = models.GenericIPAddressField(null=True, blank=True, help_text="IP for anonymous users")
+    viewed_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-viewed_at']
+        verbose_name = 'Post View'
+        verbose_name_plural = 'Post Views'
+        indexes = [
+            models.Index(fields=['post', 'user', '-viewed_at']),
+            models.Index(fields=['post', 'ip_address', '-viewed_at']),
+        ]
+
+    def __str__(self):
+        identifier = self.user.username if self.user else self.ip_address
+        return f"{identifier} viewed {self.post.title} at {self.viewed_at}"
+
+
 class Like(models.Model):
     """Post uchun like"""
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='likes')
@@ -148,18 +169,20 @@ class CommentLike(models.Model):
 
 
 class Notification(models.Model):
-    """Notification system for confession admins"""
+    """Notification system for confession admins and users"""
     NOTIFICATION_TYPES = (
         ('subscribe', 'Subscribe'),
         ('like', 'Like'),
         ('comment', 'Comment'),
+        ('comment_like', 'Comment Like'),
+        ('comment_reply', 'Comment Reply'),
     )
 
     recipient = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name='notifications_received',
-        help_text="Admin who receives this notification"
+        help_text="User who receives this notification"
     )
     actor = models.ForeignKey(
         User,
@@ -171,7 +194,10 @@ class Notification(models.Model):
     confession = models.ForeignKey(
         Confession,
         on_delete=models.CASCADE,
-        related_name='notifications'
+        related_name='notifications',
+        blank=True,
+        null=True,
+        help_text="Related confession (for admin notifications)"
     )
     post = models.ForeignKey(
         Post,

@@ -28,7 +28,7 @@ const LeftSidebar = () => {
   // Fetch unread count
   useEffect(() => {
     const fetchUnreadCount = async () => {
-      if (user && (user.role === 'admin' || user.role === 'superadmin')) {
+      if (user) {
         try {
           const data = await getUnreadCount()
           setUnreadCount(data.count)
@@ -118,6 +118,10 @@ const LeftSidebar = () => {
         return <FaHeart className="text-red-500" size={20} />
       case 'comment':
         return <FaComment className="text-green-500" size={20} />
+      case 'comment_like':
+        return <FaHeart className="text-pink-500" size={20} />
+      case 'comment_reply':
+        return <FaComment className="text-purple-500" size={20} />
       default:
         return <FaUserCircle className="text-gray-500" size={20} />
     }
@@ -182,15 +186,13 @@ const LeftSidebar = () => {
             <>
               <NavItem to="/messages" icon={FiMessageCircle} label="Messages" />
 
-              {(user.role === 'admin' || user.role === 'superadmin') && (
-                <NavItem
-                  icon={FiBell}
-                  label="Notifications"
-                  onClick={handleNotificationsClick}
-                  badge={unreadCount}
-                  isButton={true}
-                />
-              )}
+              <NavItem
+                icon={FiBell}
+                label="Notifications"
+                onClick={handleNotificationsClick}
+                badge={unreadCount}
+                isButton={true}
+              />
 
               {user.role === 'admin' && (
                 <NavItem to="/create" icon={FiPlusSquare} label="Create" />
@@ -287,10 +289,12 @@ const LeftSidebar = () => {
                           {notification.message}
                         </p>
 
-                        {/* Confession name */}
-                        <p className="text-xs text-gray-500 mb-1 truncate">
-                          in {notification.confession.name}
-                        </p>
+                        {/* Confession name (if available) */}
+                        {notification.confession && (
+                          <p className="text-xs text-gray-500 mb-1 truncate">
+                            in {notification.confession.name}
+                          </p>
+                        )}
 
                         {/* Time */}
                         <p className="text-xs text-gray-400">

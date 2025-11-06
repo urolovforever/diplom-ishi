@@ -178,11 +178,13 @@ class NotificationSerializer(serializers.ModelSerializer):
 
     def get_confession(self, obj):
         """Return minimal confession info"""
-        return {
-            'id': obj.confession.id,
-            'name': obj.confession.name,
-            'slug': obj.confession.slug,
-        }
+        if obj.confession:
+            return {
+                'id': obj.confession.id,
+                'name': obj.confession.name,
+                'slug': obj.confession.slug,
+            }
+        return None
 
     def get_post(self, obj):
         """Return post info if available"""
@@ -205,16 +207,29 @@ class NotificationSerializer(serializers.ModelSerializer):
         elif obj.notification_type == 'comment':
             post_title = obj.post.title if obj.post else 'your post'
             return f"@{actor_username} commented on your post '{post_title}'."
+        elif obj.notification_type == 'comment_like':
+            post_title = obj.post.title if obj.post else 'a post'
+            return f"@{actor_username} liked your comment on '{post_title}'."
+        elif obj.notification_type == 'comment_reply':
+            post_title = obj.post.title if obj.post else 'a post'
+            return f"@{actor_username} replied to your comment on '{post_title}'."
 
         return f"@{actor_username} interacted with your confession."
 
     def get_link(self, obj):
         """Generate link to the related content"""
         if obj.notification_type == 'subscribe':
-            return f"/confession/{obj.confession.slug}"
+            if obj.confession:
+                return f"/confession/{obj.confession.slug}"
         elif obj.post:
+            # For comment-related notifications, include comment anchor
+            if obj.notification_type in ['comment_like', 'comment_reply'] and obj.comment:
+                return f"/post/{obj.post.id}#comment-{obj.comment.id}"
             return f"/post/{obj.post.id}"
-        return f"/confession/{obj.confession.slug}"
+        elif obj.confession:
+            return f"/confession/{obj.confession.slug}"
+        # Fallback to home if no valid link can be generated
+        return "/"
 
     def get_time_ago(self, obj):
         """Calculate human-readable time difference"""
