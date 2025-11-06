@@ -9,10 +9,12 @@ import {
   FiPlusSquare,
   FiUser,
   FiLogOut,
-  FiSettings
+  FiSettings,
+  FiArrowLeft
 } from 'react-icons/fi'
-import NotificationsSidebar from '../NotificationsSidebar'
-import { getUnreadCount } from '../../api/notification'
+import { FaUserCircle, FaHeart, FaComment, FaUsers } from 'react-icons/fa'
+import { getUnreadCount, getNotifications, markNotificationAsRead, markAllNotificationsAsRead } from '../../api/notification'
+import { toast } from 'react-toastify'
 
 const LeftSidebar = () => {
   const { user, logout } = useAuthStore()
@@ -20,6 +22,8 @@ const LeftSidebar = () => {
   const navigate = useNavigate()
   const [showNotifications, setShowNotifications] = useState(false)
   const [unreadCount, setUnreadCount] = useState(0)
+  const [notifications, setNotifications] = useState([])
+  const [loadingNotifications, setLoadingNotifications] = useState(false)
 
   // Fetch unread count
   useEffect(() => {
@@ -51,17 +55,71 @@ const LeftSidebar = () => {
     return location.pathname === path
   }
 
-  const handleNotificationsClick = () => {
+  const handleNotificationsClick = async () => {
     setShowNotifications(true)
+    setLoadingNotifications(true)
+    try {
+      const data = await getNotifications()
+      setNotifications(data.results || data)
+    } catch (error) {
+      console.error('Failed to fetch notifications:', error)
+      toast.error('Failed to load notifications')
+    } finally {
+      setLoadingNotifications(false)
+    }
   }
 
-  const handleNotificationsRead = async () => {
-    // Refresh unread count
+  const handleBackClick = () => {
+    setShowNotifications(false)
+  }
+
+  const handleNotificationClick = async (notification) => {
     try {
+      // Mark as read
+      if (!notification.is_read) {
+        await markNotificationAsRead(notification.id)
+        setNotifications(notifications.map(n =>
+          n.id === notification.id ? { ...n, is_read: true } : n
+        ))
+        // Refresh unread count
+        const data = await getUnreadCount()
+        setUnreadCount(data.count)
+      }
+
+      // Navigate to the link
+      if (notification.link) {
+        navigate(notification.link)
+        setShowNotifications(false)
+      }
+    } catch (error) {
+      console.error('Failed to mark notification as read:', error)
+    }
+  }
+
+  const handleMarkAllRead = async () => {
+    try {
+      await markAllNotificationsAsRead()
+      setNotifications(notifications.map(n => ({ ...n, is_read: true })))
+      // Refresh unread count
       const data = await getUnreadCount()
       setUnreadCount(data.count)
+      toast.success('All notifications marked as read')
     } catch (error) {
-      console.error('Failed to refresh unread count:', error)
+      console.error('Failed to mark all as read:', error)
+      toast.error('Failed to mark all as read')
+    }
+  }
+
+  const getNotificationIcon = (type) => {
+    switch (type) {
+      case 'subscribe':
+        return <FaUsers className="text-blue-500" size={20} />
+      case 'like':
+        return <FaHeart className="text-red-500" size={20} />
+      case 'comment':
+        return <FaComment className="text-green-500" size={20} />
+      default:
+        return <FaUserCircle className="text-gray-500" size={20} />
     }
   }
 
@@ -113,37 +171,140 @@ const LeftSidebar = () => {
         </span>
       </Link>
 
-      {/* Navigation */}
-      <nav className="flex-1 px-4 py-6 space-y-1">
-        <NavItem to="/" icon={FiHome} label="Home" />
-        <NavItem to="/explore" icon={FiCompass} label="Explore" />
+      {/* Navigation or Notifications View */}
+      {!showNotifications ? (
+        // Regular Navigation
+        <nav className="flex-1 px-4 py-6 space-y-1">
+          <NavItem to="/" icon={FiHome} label="Home" />
+          <NavItem to="/explore" icon={FiCompass} label="Explore" />
 
-        {user && (
-          <>
-            <NavItem to="/messages" icon={FiMessageCircle} label="Messages" />
+          {user && (
+            <>
+              <NavItem to="/messages" icon={FiMessageCircle} label="Messages" />
 
-            {(user.role === 'admin' || user.role === 'superadmin') && (
-              <NavItem
-                icon={FiBell}
-                label="Notifications"
-                onClick={handleNotificationsClick}
-                badge={unreadCount}
-                isButton={true}
-              />
+              {(user.role === 'admin' || user.role === 'superadmin') && (
+                <NavItem
+                  icon={FiBell}
+                  label="Notifications"
+                  onClick={handleNotificationsClick}
+                  badge={unreadCount}
+                  isButton={true}
+                />
+              )}
+
+              {user.role === 'admin' && (
+                <NavItem to="/create" icon={FiPlusSquare} label="Create" />
+              )}
+
+              <NavItem to="/profile" icon={FiUser} label="Profile" />
+
+              {user.role === 'superadmin' && (
+                <NavItem to="/admin" icon={FiSettings} label="Admin Panel" />
+              )}
+            </>
+          )}
+        </nav>
+      ) : (
+        // Notifications View
+        <div className="flex-1 flex flex-col">
+          {/* Back Button */}
+          <div className="px-4 py-4 border-b border-gray-200">
+            <button
+              onClick={handleBackClick}
+              className="flex items-center space-x-3 text-gray-700 hover:text-blue-600 transition-colors"
+            >
+              <FiArrowLeft size={24} />
+              <span className="text-lg font-semibold">Notifications</span>
+            </button>
+          </div>
+
+          {/* Mark all read button */}
+          {notifications.some(n => !n.is_read) && (
+            <div className="px-4 py-3 border-b border-gray-200">
+              <button
+                onClick={handleMarkAllRead}
+                className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+              >
+                Mark all as read
+              </button>
+            </div>
+          )}
+
+          {/* Notifications List */}
+          <div className="flex-1 overflow-y-auto">
+            {loadingNotifications ? (
+              <div className="flex items-center justify-center h-full">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+              </div>
+            ) : notifications.length === 0 ? (
+              <div className="flex flex-col items-center justify-center h-full text-gray-500 px-4">
+                <FaUserCircle size={48} className="mb-4 opacity-50" />
+                <p>No notifications yet</p>
+              </div>
+            ) : (
+              <div className="divide-y divide-gray-200">
+                {notifications.map((notification) => (
+                  <div
+                    key={notification.id}
+                    onClick={() => handleNotificationClick(notification)}
+                    className={`p-4 cursor-pointer transition hover:bg-gray-50 relative ${
+                      notification.is_read ? 'bg-white' : 'bg-blue-50'
+                    }`}
+                  >
+                    <div className="flex items-start space-x-3">
+                      {/* Icon */}
+                      <div className="flex-shrink-0 mt-1">
+                        {getNotificationIcon(notification.notification_type)}
+                      </div>
+
+                      {/* Content */}
+                      <div className="flex-1 min-w-0">
+                        {/* Actor info */}
+                        <div className="flex items-center space-x-2 mb-1">
+                          {notification.actor.avatar ? (
+                            <img
+                              src={notification.actor.avatar}
+                              alt={notification.actor.username}
+                              className="w-6 h-6 rounded-full"
+                            />
+                          ) : (
+                            <FaUserCircle className="w-6 h-6 text-gray-400" />
+                          )}
+                          <span className="text-sm font-medium text-gray-900 truncate">
+                            @{notification.actor.username}
+                          </span>
+                        </div>
+
+                        {/* Message */}
+                        <p className="text-sm text-gray-700 mb-1 line-clamp-2">
+                          {notification.message}
+                        </p>
+
+                        {/* Confession name */}
+                        <p className="text-xs text-gray-500 mb-1 truncate">
+                          in {notification.confession.name}
+                        </p>
+
+                        {/* Time */}
+                        <p className="text-xs text-gray-400">
+                          {notification.time_ago}
+                        </p>
+
+                        {/* Unread indicator */}
+                        {!notification.is_read && (
+                          <div className="absolute top-4 right-4">
+                            <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             )}
-
-            {user.role === 'admin' && (
-              <NavItem to="/create" icon={FiPlusSquare} label="Create" />
-            )}
-
-            <NavItem to="/profile" icon={FiUser} label="Profile" />
-
-            {user.role === 'superadmin' && (
-              <NavItem to="/admin" icon={FiSettings} label="Admin Panel" />
-            )}
-          </>
-        )}
-      </nav>
+          </div>
+        </div>
+      )}
 
       {/* User section */}
       {user ? (
@@ -189,15 +350,6 @@ const LeftSidebar = () => {
             Register
           </Link>
         </div>
-      )}
-
-      {/* Notifications Sidebar */}
-      {(user?.role === 'admin' || user?.role === 'superadmin') && (
-        <NotificationsSidebar
-          isOpen={showNotifications}
-          onClose={() => setShowNotifications(false)}
-          onNotificationsRead={handleNotificationsRead}
-        />
       )}
     </div>
   )
