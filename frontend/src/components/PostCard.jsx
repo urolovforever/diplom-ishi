@@ -93,17 +93,18 @@ const PostCard = ({ post, onLike, onUnlike, onDelete, isConfessionAdmin }) => {
           <p className="text-gray-600 mb-4 line-clamp-3">
             {post.content}
           </p>
+        </div>
 
-          {/* Image */}
-          {post.image && (
+        {/* Image with 4:3 aspect ratio */}
+        {post.image && (
+          <div className="relative w-full aspect-[4/3] bg-gray-100">
             <img
               src={post.image}
               alt={post.title}
-              className="w-full h-64 object-cover rounded-lg mb-4"
+              className="absolute inset-0 w-full h-full object-cover"
             />
-          )}
-
-        </div>
+          </div>
+        )}
       </Link>
 
       {/* Actions */}
