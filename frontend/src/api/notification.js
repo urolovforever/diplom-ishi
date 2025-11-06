@@ -8,7 +8,7 @@ import api from './axios';
  * Get all notifications for the current admin user
  */
 export const getNotifications = async () => {
-  const response = await api.get('/confessions/notifications/');
+  const response = await api.get('/notifications/');
   return response.data;
 };
 
@@ -16,7 +16,7 @@ export const getNotifications = async () => {
  * Get unread notification count
  */
 export const getUnreadCount = async () => {
-  const response = await api.get('/confessions/notifications/unread_count/');
+  const response = await api.get('/notifications/unread_count/');
   return response.data;
 };
 
@@ -24,7 +24,7 @@ export const getUnreadCount = async () => {
  * Mark a single notification as read
  */
 export const markNotificationAsRead = async (notificationId) => {
-  const response = await api.post(`/confessions/notifications/${notificationId}/mark_read/`);
+  const response = await api.post(`/notifications/${notificationId}/mark_read/`);
   return response.data;
 };
 
@@ -32,6 +32,6 @@ export const markNotificationAsRead = async (notificationId) => {
  * Mark all notifications as read
  */
 export const markAllNotificationsAsRead = async () => {
-  const response = await api.post('/confessions/notifications/mark_all_read/');
+  const response = await api.post('/notifications/mark_all_read/');
   return response.data;
 };
