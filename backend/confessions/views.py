@@ -209,20 +209,23 @@ class CommentViewSet(viewsets.ModelViewSet):
         # Determine who to notify
         post = comment.post
         recipient = None
+        notif_type = 'comment'
 
         if comment.parent:
             # If this is a reply, notify the parent comment author
             recipient = comment.parent.author
+            notif_type = 'comment_reply'
         elif post.confession.admin and post.confession.admin != self.request.user:
             # If this is a top-level comment, notify the confession admin
             recipient = post.confession.admin
+            notif_type = 'comment'
 
         # Create notification
         if recipient and recipient != self.request.user:
             Notification.objects.create(
                 recipient=recipient,
                 actor=self.request.user,
-                notification_type='comment',
+                notification_type=notif_type,
                 confession=post.confession,
                 post=post,
                 comment=comment
@@ -235,6 +238,16 @@ class CommentViewSet(viewsets.ModelViewSet):
         like, created = CommentLike.objects.get_or_create(user=request.user, comment=comment)
 
         if created:
+            # Create notification for comment author (not for yourself)
+            if comment.author != request.user:
+                Notification.objects.create(
+                    recipient=comment.author,
+                    actor=request.user,
+                    notification_type='comment_like',
+                    confession=comment.post.confession,
+                    post=comment.post,
+                    comment=comment
+                )
             return Response({'message': 'Comment liked'}, status=status.HTTP_201_CREATED)
         return Response({'message': 'Already liked'}, status=status.HTTP_200_OK)
 
@@ -245,6 +258,13 @@ class CommentViewSet(viewsets.ModelViewSet):
         deleted, _ = CommentLike.objects.filter(user=request.user, comment=comment).delete()
 
         if deleted:
+            # Delete comment like notification
+            Notification.objects.filter(
+                recipient=comment.author,
+                actor=request.user,
+                notification_type='comment_like',
+                comment=comment
+            ).delete()
             return Response({'message': 'Comment unliked'}, status=status.HTTP_200_OK)
         return Response({'message': 'Not liked'}, status=status.HTTP_400_BAD_REQUEST)
 
