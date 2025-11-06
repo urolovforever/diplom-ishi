@@ -100,6 +100,21 @@ export const confessionAPI = {
     return response.data
   },
 
+  likeComment: async (id) => {
+    const response = await api.post(`/comments/${id}/like/`)
+    return response.data
+  },
+
+  unlikeComment: async (id) => {
+    const response = await api.post(`/comments/${id}/unlike/`)
+    return response.data
+  },
+
+  getReplies: async (commentId) => {
+    const response = await api.get(`/comments/${commentId}/replies/`)
+    return response.data
+  },
+
   // Subscriptions
   getSubscriptions: async () => {
     const response = await api.get('/subscriptions/')
