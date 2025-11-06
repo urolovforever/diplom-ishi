@@ -291,11 +291,19 @@ const ConfessionPage = () => {
               >
                 {/* Post Image or Gradient */}
                 {post.image ? (
-                  <img
-                    src={post.image}
-                    alt={post.title}
-                    className="w-full h-full object-cover"
-                  />
+                  <>
+                    <img
+                      src={post.image}
+                      alt={post.title}
+                      className="w-full h-full object-cover"
+                    />
+                    {/* Title Overlay on Image */}
+                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2 md:p-3">
+                      <h3 className="text-white text-xs md:text-sm font-semibold line-clamp-2">
+                        {post.title}
+                      </h3>
+                    </div>
+                  </>
                 ) : (
                   <div className="w-full h-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center p-4">
                     <h3 className="text-white text-center font-semibold text-sm md:text-base line-clamp-3">
