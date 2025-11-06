@@ -206,9 +206,9 @@ const LeftSidebar = () => {
         </nav>
       ) : (
         // Notifications View
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col min-h-0">
           {/* Back Button */}
-          <div className="px-4 py-4 border-b border-gray-200">
+          <div className="px-4 py-4 border-b border-gray-200 flex-shrink-0">
             <button
               onClick={handleBackClick}
               className="flex items-center space-x-3 text-gray-700 hover:text-blue-600 transition-colors"
@@ -220,7 +220,7 @@ const LeftSidebar = () => {
 
           {/* Mark all read button */}
           {notifications.some(n => !n.is_read) && (
-            <div className="px-4 py-3 border-b border-gray-200">
+            <div className="px-4 py-3 border-b border-gray-200 flex-shrink-0">
               <button
                 onClick={handleMarkAllRead}
                 className="text-sm text-blue-600 hover:text-blue-800 font-medium"
@@ -231,7 +231,7 @@ const LeftSidebar = () => {
           )}
 
           {/* Notifications List */}
-          <div className="flex-1 overflow-y-auto">
+          <div className="flex-1 overflow-y-auto min-h-0">
             {loadingNotifications ? (
               <div className="flex items-center justify-center h-full">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
