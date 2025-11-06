@@ -14,16 +14,20 @@ const ConfessionsStories = ({ onConfessionSelect }) => {
 
   useEffect(() => {
     fetchConfessions()
-  }, [])
+  }, [user])
 
   const fetchConfessions = async () => {
     try {
-      const data = await confessionAPI.getConfessions()
-      setConfessions(data.results || data)
-
       if (user) {
+        // For logged in users, only show subscribed confessions
         const subsData = await confessionAPI.getSubscriptions()
-        setSubscriptions(subsData.map(s => s.confession.id))
+        const subscribedConfessions = subsData.map(s => s.confession)
+        setConfessions(subscribedConfessions)
+        setSubscriptions(subscribedConfessions.map(c => c.id))
+      } else {
+        // For guests, show all confessions
+        const data = await confessionAPI.getConfessions()
+        setConfessions(data.results || data)
       }
     } catch (error) {
       console.error('Failed to fetch confessions:', error)

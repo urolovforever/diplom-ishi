@@ -5,7 +5,7 @@ import { confessionAPI } from '../api/confession'
 import { useAuthStore } from '../store/authStore'
 import MainLayout from '../components/layout/MainLayout'
 import Loading from '../components/Loading'
-import { FiUsers, FiFileText, FiUserPlus, FiUserMinus, FiEdit2, FiX, FiImage, FiTrash2, FiEye, FiHeart, FiMessageCircle } from 'react-icons/fi'
+import { FiUsers, FiFileText, FiUserPlus, FiUserMinus, FiEdit2, FiX, FiImage, FiTrash2, FiEye, FiHeart, FiMessageCircle, FiArrowLeft } from 'react-icons/fi'
 
 const ConfessionPage = () => {
   const { slug } = useParams()
@@ -212,6 +212,15 @@ const ConfessionPage = () => {
   return (
     <MainLayout>
       <div>
+      {/* Back Button */}
+      <button
+        onClick={() => navigate(-1)}
+        className="inline-flex items-center space-x-2 text-blue-600 hover:text-blue-700 mb-4"
+      >
+        <FiArrowLeft />
+        <span>Back</span>
+      </button>
+
       {/* Header */}
       <div className="bg-white rounded-xl shadow-md p-8 mb-8">
         <div className="flex items-start justify-between">

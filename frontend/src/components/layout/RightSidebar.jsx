@@ -32,10 +32,10 @@ const RightSidebar = () => {
         const subscribedConfessions = allConfessions.filter(c => subIds.includes(c.id))
         setActiveConfessions(subscribedConfessions.slice(0, 5))
 
-        // Suggestions: unsubscribed confessions sorted by followers
+        // Suggestions: ALL unsubscribed confessions sorted by followers
         const unsubscribed = allConfessions.filter(c => !subIds.includes(c.id))
         unsubscribed.sort((a, b) => (b.subscribers_count || 0) - (a.subscribers_count || 0))
-        setSuggestions(unsubscribed.slice(0, 5))
+        setSuggestions(unsubscribed)
       } else {
         // For guests: show top confessions
         const sorted = [...allConfessions].sort((a, b) => (b.subscribers_count || 0) - (a.subscribers_count || 0))
