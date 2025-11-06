@@ -27,6 +27,7 @@ wheels/
 *.log
 local_settings.py
 db.sqlite3
+backend/db.sqlite3
 db.sqlite3-journal
 media/
 
