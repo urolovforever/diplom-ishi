@@ -71,6 +71,21 @@ const ConfessionsStories = ({ onConfessionSelect }) => {
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-6 relative">
+      {/* Empty State Message */}
+      {user && confessions.length === 0 && (
+        <div className="text-center py-4">
+          <p className="text-gray-600 text-sm mb-2">
+            You haven't subscribed to any confessions yet
+          </p>
+          <Link
+            to="/explore"
+            className="text-blue-600 hover:text-blue-700 text-sm font-semibold"
+          >
+            Explore Confessions →
+          </Link>
+        </div>
+      )}
+
       {/* Navigation Buttons */}
       {confessions.length > 6 && (
         <>
@@ -90,32 +105,35 @@ const ConfessionsStories = ({ onConfessionSelect }) => {
       )}
 
       {/* Confessions Carousel */}
-      <div
-        ref={scrollRef}
-        className="flex space-x-6 overflow-x-auto scrollbar-hide scroll-smooth px-2"
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-      >
-        {/* All Posts Option */}
-        <button
-          onClick={() => handleConfessionClick({ id: null })}
-          className="flex flex-col items-center flex-shrink-0 space-y-2"
+      {confessions.length > 0 && (
+        <div
+          ref={scrollRef}
+          className="flex space-x-6 overflow-x-auto scrollbar-hide scroll-smooth px-2"
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
-          <div
-            className={`w-16 h-16 rounded-full flex items-center justify-center transition-all ${
-              selectedConfession === null
-                ? 'bg-gradient-to-r from-blue-500 to-purple-600 scale-110'
-                : 'bg-gray-200 hover:bg-gray-300'
-            }`}
-          >
-            <span className="text-white font-bold text-xl">All</span>
-          </div>
-          <span className="text-xs text-gray-600 font-medium text-center w-20 truncate">
-            All Posts
-          </span>
-        </button>
+          {/* All Posts Option */}
+          {user && (
+            <button
+              onClick={() => handleConfessionClick({ id: null })}
+              className="flex flex-col items-center flex-shrink-0 space-y-2"
+            >
+              <div
+                className={`w-16 h-16 rounded-full flex items-center justify-center transition-all ${
+                  selectedConfession === null
+                    ? 'bg-gradient-to-r from-blue-500 to-purple-600 scale-110'
+                    : 'bg-gray-200 hover:bg-gray-300'
+                }`}
+              >
+                <span className="text-white font-bold text-xl">All</span>
+              </div>
+              <span className="text-xs text-gray-600 font-medium text-center w-20 truncate">
+                All Posts
+              </span>
+            </button>
+          )}
 
-        {/* Confessions */}
-        {confessions.map((confession) => {
+          {/* Confessions */}
+          {confessions.map((confession) => {
           const isSubscribed = subscriptions.includes(confession.id)
           const isSelected = selectedConfession === confession.id
 
@@ -156,7 +174,8 @@ const ConfessionsStories = ({ onConfessionSelect }) => {
             </button>
           )
         })}
-      </div>
+        </div>
+      )}
 
       <style jsx>{`
         .scrollbar-hide::-webkit-scrollbar {
