@@ -5,10 +5,11 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticate
 from django_filters.rest_framework import DjangoFilterBackend
 from django.shortcuts import get_object_or_404
 
-from .models import Confession, Post, Comment, Like, Subscription
+from .models import Confession, Post, Comment, Like, Subscription, Notification
 from .serializers import (
     ConfessionSerializer, PostSerializer, PostCreateSerializer,
-    CommentSerializer, SubscriptionSerializer, UserMinimalSerializer
+    CommentSerializer, SubscriptionSerializer, UserMinimalSerializer,
+    NotificationSerializer
 )
 from .permissions import IsConfessionAdminOrReadOnly, IsCommentAuthorOrReadOnly, IsSuperAdminOnly, IsConfessionAdminOrSuperAdmin
 
@@ -41,6 +42,14 @@ class ConfessionViewSet(viewsets.ModelViewSet):
             confession=confession
         )
         if created:
+            # Create notification for confession admin
+            if confession.admin and confession.admin != request.user:
+                Notification.objects.create(
+                    recipient=confession.admin,
+                    actor=request.user,
+                    notification_type='subscribe',
+                    confession=confession
+                )
             return Response({'message': 'Subscribed successfully'}, status=status.HTTP_201_CREATED)
         return Response({'message': 'Already subscribed'}, status=status.HTTP_200_OK)
 
@@ -139,6 +148,15 @@ class PostViewSet(viewsets.ModelViewSet):
         post = self.get_object()
         like, created = Like.objects.get_or_create(user=request.user, post=post)
         if created:
+            # Create notification for confession admin
+            if post.confession.admin and post.confession.admin != request.user:
+                Notification.objects.create(
+                    recipient=post.confession.admin,
+                    actor=request.user,
+                    notification_type='like',
+                    confession=post.confession,
+                    post=post
+                )
             return Response({'message': 'Liked'}, status=status.HTTP_201_CREATED)
         return Response({'message': 'Already liked'}, status=status.HTTP_200_OK)
 
@@ -163,7 +181,18 @@ class CommentViewSet(viewsets.ModelViewSet):
     filterset_fields = ['post']
 
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
+        comment = serializer.save(author=self.request.user)
+        # Create notification for confession admin
+        post = comment.post
+        if post.confession.admin and post.confession.admin != self.request.user:
+            Notification.objects.create(
+                recipient=post.confession.admin,
+                actor=self.request.user,
+                notification_type='comment',
+                confession=post.confession,
+                post=post,
+                comment=comment
+            )
 
 
 class SubscriptionViewSet(viewsets.ReadOnlyModelViewSet):
@@ -175,3 +204,50 @@ class SubscriptionViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         return Subscription.objects.filter(user=self.request.user).select_related('confession')
+
+
+class NotificationViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    Notifications for confession admins
+    """
+    serializer_class = NotificationSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        """Only show notifications for admin users"""
+        user = self.request.user
+        if user.role in ['admin', 'superadmin']:
+            return Notification.objects.filter(recipient=user).select_related(
+                'actor', 'confession', 'post', 'comment'
+            )
+        return Notification.objects.none()
+
+    @action(detail=False, methods=['post'])
+    def mark_all_read(self, request):
+        """Mark all notifications as read"""
+        updated = Notification.objects.filter(
+            recipient=request.user,
+            is_read=False
+        ).update(is_read=True)
+        return Response({
+            'message': f'{updated} notifications marked as read'
+        }, status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=['post'])
+    def mark_read(self, request, pk=None):
+        """Mark a single notification as read"""
+        notification = self.get_object()
+        notification.is_read = True
+        notification.save()
+        return Response({
+            'message': 'Notification marked as read'
+        }, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=['get'])
+    def unread_count(self, request):
+        """Get count of unread notifications"""
+        count = Notification.objects.filter(
+            recipient=request.user,
+            is_read=False
+        ).count()
+        return Response({'count': count}, status=status.HTTP_200_OK)

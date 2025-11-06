@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import Confession, Post, Comment, Like, Subscription
+from .models import Confession, Post, Comment, Like, Subscription, Notification
 
 
 @admin.register(Confession)
@@ -99,3 +99,24 @@ class SubscriptionAdmin(admin.ModelAdmin):
     list_filter = ['confession', 'subscribed_at']
     search_fields = ['user__username', 'confession__name']
     readonly_fields = ['subscribed_at']
+
+
+@admin.register(Notification)
+class NotificationAdmin(admin.ModelAdmin):
+    list_display = ['recipient', 'actor', 'notification_type', 'confession', 'is_read', 'created_at']
+    list_filter = ['notification_type', 'is_read', 'created_at']
+    search_fields = ['recipient__username', 'actor__username', 'confession__name']
+    readonly_fields = ['created_at']
+    list_editable = ['is_read']
+
+    fieldsets = (
+        ('Recipients & Actors', {
+            'fields': ('recipient', 'actor')
+        }),
+        ('Notification Details', {
+            'fields': ('notification_type', 'confession', 'post', 'comment')
+        }),
+        ('Status', {
+            'fields': ('is_read', 'created_at')
+        }),
+    )

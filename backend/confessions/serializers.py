@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from .models import Confession, Post, Like, Comment, Subscription
+from .models import Confession, Post, Like, Comment, Subscription, Notification
 
 User = get_user_model()
 
@@ -97,3 +97,66 @@ class SubscriptionSerializer(serializers.ModelSerializer):
         model = Subscription
         fields = ['id', 'confession', 'subscribed_at']
         read_only_fields = ['id', 'subscribed_at']
+
+
+class NotificationSerializer(serializers.ModelSerializer):
+    """Notification serializer for confession admins"""
+    actor = UserMinimalSerializer(read_only=True)
+    confession = serializers.SerializerMethodField()
+    post = serializers.SerializerMethodField()
+    message = serializers.SerializerMethodField()
+    link = serializers.SerializerMethodField()
+    time_ago = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Notification
+        fields = [
+            'id', 'actor', 'notification_type', 'confession', 'post',
+            'message', 'link', 'is_read', 'created_at', 'time_ago'
+        ]
+        read_only_fields = ['id', 'created_at']
+
+    def get_confession(self, obj):
+        """Return minimal confession info"""
+        return {
+            'id': obj.confession.id,
+            'name': obj.confession.name,
+            'slug': obj.confession.slug,
+        }
+
+    def get_post(self, obj):
+        """Return post info if available"""
+        if obj.post:
+            return {
+                'id': obj.post.id,
+                'title': obj.post.title,
+            }
+        return None
+
+    def get_message(self, obj):
+        """Generate notification message"""
+        actor_username = obj.actor.username
+
+        if obj.notification_type == 'subscribe':
+            return f"@{actor_username} followed your confession."
+        elif obj.notification_type == 'like':
+            post_title = obj.post.title if obj.post else 'your post'
+            return f"@{actor_username} liked your post '{post_title}'."
+        elif obj.notification_type == 'comment':
+            post_title = obj.post.title if obj.post else 'your post'
+            return f"@{actor_username} commented on your post '{post_title}'."
+
+        return f"@{actor_username} interacted with your confession."
+
+    def get_link(self, obj):
+        """Generate link to the related content"""
+        if obj.notification_type == 'subscribe':
+            return f"/confession/{obj.confession.slug}"
+        elif obj.post:
+            return f"/post/{obj.post.id}"
+        return f"/confession/{obj.confession.slug}"
+
+    def get_time_ago(self, obj):
+        """Calculate human-readable time difference"""
+        from django.utils.timesince import timesince
+        return timesince(obj.created_at) + " ago"
