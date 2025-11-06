@@ -12,10 +12,11 @@ cd backend
 # or
 # venv\Scripts\activate  # Windows
 
-# Create and run migrations
-python manage.py makemigrations
+# Apply migrations (migration 0004 already created)
 python manage.py migrate
 ```
+
+**Note:** Migration `0004_alter_comment_options_comment_is_edited_and_more.py` has been created and is included in the repository. You only need to run `migrate` to apply it to your database.
 
 ---
 
