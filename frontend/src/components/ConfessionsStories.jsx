@@ -21,9 +21,16 @@ const ConfessionsStories = ({ onConfessionSelect }) => {
       if (user) {
         // For logged in users, only show subscribed confessions
         const subsData = await confessionAPI.getSubscriptions()
-        const subscribedConfessions = subsData.map(s => s.confession)
-        setConfessions(subscribedConfessions)
-        setSubscriptions(subscribedConfessions.map(c => c.id))
+        const subscriptionsList = subsData.results || subsData
+
+        if (!subscriptionsList || subscriptionsList.length === 0) {
+          setConfessions([])
+          setSubscriptions([])
+        } else {
+          const subscribedConfessions = subscriptionsList.map(s => s.confession)
+          setConfessions(subscribedConfessions)
+          setSubscriptions(subscribedConfessions.map(c => c.id))
+        }
       } else {
         // For guests, show all confessions
         const data = await confessionAPI.getConfessions()
