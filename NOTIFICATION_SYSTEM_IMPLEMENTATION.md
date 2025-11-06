@@ -53,11 +53,11 @@ Created `NotificationViewSet` with the following endpoints:
 
 | Endpoint | Method | Description |
 |----------|--------|-------------|
-| `/api/confessions/notifications/` | GET | List all notifications for admin |
-| `/api/confessions/notifications/{id}/` | GET | Get specific notification |
-| `/api/confessions/notifications/unread_count/` | GET | Get count of unread notifications |
-| `/api/confessions/notifications/{id}/mark_read/` | POST | Mark single notification as read |
-| `/api/confessions/notifications/mark_all_read/` | POST | Mark all notifications as read |
+| `/api/notifications/` | GET | List all notifications for admin |
+| `/api/notifications/{id}/` | GET | Get specific notification |
+| `/api/notifications/unread_count/` | GET | Get count of unread notifications |
+| `/api/notifications/{id}/mark_read/` | POST | Mark single notification as read |
+| `/api/notifications/mark_all_read/` | POST | Mark all notifications as read |
 
 **Notification Triggers Added:**
 
@@ -184,7 +184,7 @@ python manage.py migrate
 
 ### Get Notifications
 ```bash
-GET /api/confessions/notifications/
+GET /api/notifications/
 Authorization: Bearer <token>
 
 Response:
@@ -216,7 +216,7 @@ Response:
 
 ### Get Unread Count
 ```bash
-GET /api/confessions/notifications/unread_count/
+GET /api/notifications/unread_count/
 Authorization: Bearer <token>
 
 Response:
@@ -227,7 +227,7 @@ Response:
 
 ### Mark as Read
 ```bash
-POST /api/confessions/notifications/1/mark_read/
+POST /api/notifications/1/mark_read/
 Authorization: Bearer <token>
 
 Response:
