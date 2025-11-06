@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { confessionAPI } from '../api/confession'
+import { useAuthStore } from '../store/authStore'
 import MainLayout from '../components/layout/MainLayout'
 import Loading from '../components/Loading'
-import { FiArrowLeft, FiUser } from 'react-icons/fi'
+import { FiArrowLeft, FiUser, FiLock } from 'react-icons/fi'
 
 const ConfessionFollowers = () => {
   const { slug } = useParams()
+  const navigate = useNavigate()
+  const { user } = useAuthStore()
   const [confession, setConfession] = useState(null)
   const [followers, setFollowers] = useState([])
   const [loading, setLoading] = useState(true)
+  const [canViewFollowers, setCanViewFollowers] = useState(false)
 
   useEffect(() => {
     fetchData()
@@ -23,9 +27,23 @@ const ConfessionFollowers = () => {
       const confessionData = await confessionAPI.getConfession(slug)
       setConfession(confessionData)
 
-      // Fetch followers
-      const followersData = await confessionAPI.getFollowers(slug)
-      setFollowers(followersData)
+      // Check if user can view followers
+      const isConfessionAdmin = user && confessionData.admin?.id === user.id
+      const isSuperAdmin = user && user.role === 'superadmin'
+      const isSubscribed = confessionData.is_subscribed
+
+      if (!user) {
+        setCanViewFollowers(false)
+        toast.error('Please login to view followers')
+      } else if (isSubscribed || isConfessionAdmin || isSuperAdmin) {
+        setCanViewFollowers(true)
+        // Fetch followers
+        const followersData = await confessionAPI.getFollowers(slug)
+        setFollowers(followersData)
+      } else {
+        setCanViewFollowers(false)
+        toast.error('Subscribe to this confession to view followers')
+      }
     } catch (error) {
       toast.error('Failed to load followers')
       console.error(error)
@@ -73,47 +91,61 @@ const ConfessionFollowers = () => {
             )}
             <div>
               <h1 className="text-2xl font-bold text-gray-800">{confession.name}</h1>
-              <p className="text-gray-600">{followers.length} followers</p>
+              <p className="text-gray-600">{confession.subscribers_count} followers</p>
             </div>
           </div>
 
           {/* Followers List */}
-          <div className="divide-y divide-gray-100">
-            {followers.length === 0 ? (
-              <div className="text-center py-12">
-                <FiUser size={48} className="mx-auto text-gray-300 mb-4" />
-                <p className="text-gray-500 text-lg">No followers yet</p>
-              </div>
-            ) : (
-              followers.map(follower => (
-                <Link
-                  key={follower.id}
-                  to={`/user/${follower.username}`}
-                  className="flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
-                >
-                  <div className="flex items-center space-x-3">
-                    {follower.avatar ? (
-                      <img
-                        src={follower.avatar}
-                        alt={follower.username}
-                        className="w-12 h-12 rounded-full object-cover"
-                      />
-                    ) : (
-                      <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
-                        <span className="text-white font-bold text-lg">
-                          {follower.username[0].toUpperCase()}
-                        </span>
+          {!canViewFollowers ? (
+            <div className="text-center py-12">
+              <FiLock size={48} className="mx-auto text-gray-300 mb-4" />
+              <p className="text-gray-700 text-lg font-semibold mb-2">Followers list is private</p>
+              <p className="text-gray-500 mb-4">Subscribe to this confession to view followers</p>
+              <Link
+                to={`/confession/${slug}`}
+                className="inline-block px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                Go to Confession
+              </Link>
+            </div>
+          ) : (
+            <div className="divide-y divide-gray-100">
+              {followers.length === 0 ? (
+                <div className="text-center py-12">
+                  <FiUser size={48} className="mx-auto text-gray-300 mb-4" />
+                  <p className="text-gray-500 text-lg">No followers yet</p>
+                </div>
+              ) : (
+                followers.map(follower => (
+                  <Link
+                    key={follower.id}
+                    to={`/user/${follower.username}`}
+                    className="flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
+                  >
+                    <div className="flex items-center space-x-3">
+                      {follower.avatar ? (
+                        <img
+                          src={follower.avatar}
+                          alt={follower.username}
+                          className="w-12 h-12 rounded-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
+                          <span className="text-white font-bold text-lg">
+                            {follower.username[0].toUpperCase()}
+                          </span>
+                        </div>
+                      )}
+                      <div>
+                        <p className="font-semibold text-gray-800">{follower.username}</p>
+                        <p className="text-sm text-gray-500">View profile</p>
                       </div>
-                    )}
-                    <div>
-                      <p className="font-semibold text-gray-800">{follower.username}</p>
-                      <p className="text-sm text-gray-500">View profile</p>
                     </div>
-                  </div>
-                </Link>
-              ))
-            )}
-          </div>
+                  </Link>
+                ))
+              )}
+            </div>
+          )}
         </div>
       </div>
     </MainLayout>
