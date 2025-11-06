@@ -173,6 +173,13 @@ class PostViewSet(viewsets.ModelViewSet):
         post = self.get_object()
         deleted, _ = Like.objects.filter(user=request.user, post=post).delete()
         if deleted:
+            # Delete like notification (same as unsubscribe)
+            Notification.objects.filter(
+                recipient=post.confession.admin,
+                actor=request.user,
+                notification_type='like',
+                post=post
+            ).delete()
             return Response({'message': 'Unliked'}, status=status.HTTP_200_OK)
         return Response({'message': 'Not liked'}, status=status.HTTP_400_BAD_REQUEST)
 
