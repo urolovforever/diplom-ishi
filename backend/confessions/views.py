@@ -5,10 +5,10 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticate
 from django_filters.rest_framework import DjangoFilterBackend
 from django.shortcuts import get_object_or_404
 
-from .models import Confession, Post, Comment, Like, Subscription, Notification
+from .models import Confession, Post, Comment, Like, Subscription, Notification, CommentLike
 from .serializers import (
     ConfessionSerializer, PostSerializer, PostCreateSerializer,
-    CommentSerializer, SubscriptionSerializer, UserMinimalSerializer,
+    CommentSerializer, CommentReplySerializer, SubscriptionSerializer, UserMinimalSerializer,
     NotificationSerializer
 )
 from .permissions import IsConfessionAdminOrReadOnly, IsCommentAuthorOrReadOnly, IsSuperAdminOnly, IsConfessionAdminOrSuperAdmin
@@ -186,27 +186,75 @@ class PostViewSet(viewsets.ModelViewSet):
 
 class CommentViewSet(viewsets.ModelViewSet):
     """
-    Kommentlar CRUD
+    Kommentlar CRUD with nested replies and likes
     """
-    queryset = Comment.objects.select_related('author', 'post')
     serializer_class = CommentSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, IsCommentAuthorOrReadOnly]
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['post']
+    filterset_fields = ['post', 'parent']
+
+    def get_queryset(self):
+        """Return top-level comments by default, or filtered by parent"""
+        queryset = Comment.objects.select_related('author', 'post').prefetch_related('replies')
+
+        # If filtering by post, only return top-level comments (parent=None)
+        if self.request.query_params.get('post') and not self.request.query_params.get('parent'):
+            queryset = queryset.filter(parent__isnull=True)
+
+        return queryset
 
     def perform_create(self, serializer):
         comment = serializer.save(author=self.request.user)
-        # Create notification for confession admin
+
+        # Determine who to notify
         post = comment.post
-        if post.confession.admin and post.confession.admin != self.request.user:
+        recipient = None
+
+        if comment.parent:
+            # If this is a reply, notify the parent comment author
+            recipient = comment.parent.author
+        elif post.confession.admin and post.confession.admin != self.request.user:
+            # If this is a top-level comment, notify the confession admin
+            recipient = post.confession.admin
+
+        # Create notification
+        if recipient and recipient != self.request.user:
             Notification.objects.create(
-                recipient=post.confession.admin,
+                recipient=recipient,
                 actor=self.request.user,
                 notification_type='comment',
                 confession=post.confession,
                 post=post,
                 comment=comment
             )
+
+    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
+    def like(self, request, pk=None):
+        """Like a comment"""
+        comment = self.get_object()
+        like, created = CommentLike.objects.get_or_create(user=request.user, comment=comment)
+
+        if created:
+            return Response({'message': 'Comment liked'}, status=status.HTTP_201_CREATED)
+        return Response({'message': 'Already liked'}, status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
+    def unlike(self, request, pk=None):
+        """Unlike a comment"""
+        comment = self.get_object()
+        deleted, _ = CommentLike.objects.filter(user=request.user, comment=comment).delete()
+
+        if deleted:
+            return Response({'message': 'Comment unliked'}, status=status.HTTP_200_OK)
+        return Response({'message': 'Not liked'}, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=True, methods=['get'])
+    def replies(self, request, pk=None):
+        """Get all replies for a comment"""
+        comment = self.get_object()
+        replies = comment.replies.all()
+        serializer = CommentReplySerializer(replies, many=True, context={'request': request})
+        return Response(serializer.data)
 
 
 class SubscriptionViewSet(viewsets.ReadOnlyModelViewSet):
