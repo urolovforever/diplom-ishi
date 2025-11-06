@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { confessionAPI } from '../api/confession'
 import { useAuthStore } from '../store/authStore'
@@ -29,6 +30,7 @@ const linkify = (text) => {
 }
 
 const CommentItem = ({ comment, post, user, onDelete, onLikeToggle, onReply, onEdit, onPin, level = 0 }) => {
+  const navigate = useNavigate()
   const [showReplyForm, setShowReplyForm] = useState(false)
   const [replyText, setReplyText] = useState('')
   const [submitting, setSubmitting] = useState(false)
@@ -117,9 +119,12 @@ const CommentItem = ({ comment, post, user, onDelete, onLikeToggle, onReply, onE
         <div className="flex-1 min-w-0">
           {/* Username, time, and pin indicator */}
           <div className="flex items-center space-x-2 mb-1">
-            <span className="font-semibold text-sm text-gray-900">
+            <button
+              onClick={() => navigate(`/user/${comment.author.username}`)}
+              className="font-semibold text-sm text-gray-900 hover:text-blue-600 hover:underline transition-colors"
+            >
               {comment.author.username}
-            </span>
+            </button>
             <span className="text-xs text-gray-500">
               {formatDistanceToNow(new Date(comment.created_at), { addSuffix: true })}
             </span>
