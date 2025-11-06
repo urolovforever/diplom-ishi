@@ -13,6 +13,28 @@ const Home = () => {
   const [posts, setPosts] = useState([])
   const [loading, setLoading] = useState(true)
   const [selectedConfession, setSelectedConfession] = useState(null)
+  const [subscriptions, setSubscriptions] = useState([])
+
+  // Fetch subscriptions to check if selected confession is still subscribed
+  useEffect(() => {
+    const fetchSubscriptions = async () => {
+      if (user) {
+        try {
+          const data = await confessionAPI.getSubscriptions()
+          const subscriptionsList = data.results || data
+          setSubscriptions(subscriptionsList.map(s => s.confession.id))
+
+          // If selected confession is not in subscriptions, reset it
+          if (selectedConfession && !subscriptionsList.find(s => s.confession.id === selectedConfession)) {
+            setSelectedConfession(null)
+          }
+        } catch (error) {
+          console.error('Failed to fetch subscriptions:', error)
+        }
+      }
+    }
+    fetchSubscriptions()
+  }, [user])
 
   useEffect(() => {
     fetchPosts()

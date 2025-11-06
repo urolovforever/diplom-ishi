@@ -62,6 +62,13 @@ class ConfessionViewSet(viewsets.ModelViewSet):
             confession=confession
         ).delete()
         if deleted:
+            # Delete subscribe notification (like unlike does)
+            Notification.objects.filter(
+                recipient=confession.admin,
+                actor=request.user,
+                notification_type='subscribe',
+                confession=confession
+            ).delete()
             return Response({'message': 'Unsubscribed successfully'}, status=status.HTTP_200_OK)
         return Response({'message': 'Not subscribed'}, status=status.HTTP_400_BAD_REQUEST)
 
