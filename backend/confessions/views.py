@@ -256,6 +256,34 @@ class CommentViewSet(viewsets.ModelViewSet):
         serializer = CommentReplySerializer(replies, many=True, context={'request': request})
         return Response(serializer.data)
 
+    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
+    def pin(self, request, pk=None):
+        """Pin a comment (confession admin only)"""
+        comment = self.get_object()
+        post = comment.post
+
+        # Only confession admin can pin
+        if post.confession.admin != request.user and request.user.role != 'superadmin':
+            return Response({'error': 'Only confession admin can pin comments'}, status=status.HTTP_403_FORBIDDEN)
+
+        comment.is_pinned = True
+        comment.save()
+        return Response({'message': 'Comment pinned'}, status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
+    def unpin(self, request, pk=None):
+        """Unpin a comment (confession admin only)"""
+        comment = self.get_object()
+        post = comment.post
+
+        # Only confession admin can unpin
+        if post.confession.admin != request.user and request.user.role != 'superadmin':
+            return Response({'error': 'Only confession admin can unpin comments'}, status=status.HTTP_403_FORBIDDEN)
+
+        comment.is_pinned = False
+        comment.save()
+        return Response({'message': 'Comment unpinned'}, status=status.HTTP_200_OK)
+
 
 class SubscriptionViewSet(viewsets.ReadOnlyModelViewSet):
     """

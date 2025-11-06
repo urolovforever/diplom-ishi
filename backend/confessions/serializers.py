@@ -52,9 +52,9 @@ class CommentSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'post', 'parent', 'author', 'content',
             'likes_count', 'replies_count', 'is_liked', 'replies',
-            'created_at', 'updated_at'
+            'is_pinned', 'is_edited', 'created_at', 'updated_at'
         ]
-        read_only_fields = ['id', 'author', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'author', 'is_edited', 'created_at', 'updated_at']
 
     def get_is_liked(self, obj):
         request = self.context.get('request')
@@ -63,33 +63,50 @@ class CommentSerializer(serializers.ModelSerializer):
         return False
 
     def get_replies(self, obj):
-        # Only get replies for top-level comments to avoid infinite recursion
+        # Get replies recursively for all comments
         if obj.parent is None:
             replies = obj.replies.all()
             serializer = CommentReplySerializer(replies, many=True, context=self.context)
             return serializer.data
         return []
 
+    def update(self, instance, validated_data):
+        # Mark as edited when content changes
+        if 'content' in validated_data and validated_data['content'] != instance.content:
+            instance.is_edited = True
+        return super().update(instance, validated_data)
+
 
 class CommentReplySerializer(serializers.ModelSerializer):
-    """Serializer for nested comment replies"""
+    """Serializer for nested comment replies - supports unlimited depth"""
     author = UserMinimalSerializer(read_only=True)
     likes_count = serializers.ReadOnlyField()
+    replies_count = serializers.ReadOnlyField()
     is_liked = serializers.SerializerMethodField()
+    replies = serializers.SerializerMethodField()
 
     class Meta:
         model = Comment
         fields = [
             'id', 'post', 'parent', 'author', 'content',
-            'likes_count', 'is_liked', 'created_at', 'updated_at'
+            'likes_count', 'replies_count', 'is_liked', 'replies',
+            'is_pinned', 'is_edited', 'created_at', 'updated_at'
         ]
-        read_only_fields = ['id', 'author', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'author', 'is_edited', 'created_at', 'updated_at']
 
     def get_is_liked(self, obj):
         request = self.context.get('request')
         if request and request.user.is_authenticated:
             return CommentLike.objects.filter(user=request.user, comment=obj).exists()
         return False
+
+    def get_replies(self, obj):
+        # Recursively get all nested replies
+        replies = obj.replies.all()
+        if replies.exists():
+            serializer = CommentReplySerializer(replies, many=True, context=self.context)
+            return serializer.data
+        return []
 
 
 class PostSerializer(serializers.ModelSerializer):

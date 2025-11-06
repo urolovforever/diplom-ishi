@@ -105,6 +105,14 @@ class Comment(models.Model):
         null=True,
         help_text="Parent comment if this is a reply"
     )
+    is_pinned = models.BooleanField(
+        default=False,
+        help_text="Pinned by confession admin"
+    )
+    is_edited = models.BooleanField(
+        default=False,
+        help_text="Comment has been edited"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -120,7 +128,7 @@ class Comment(models.Model):
         return self.replies.count()
 
     class Meta:
-        ordering = ['-created_at']
+        ordering = ['-is_pinned', '-created_at']
         verbose_name = 'Comment'
         verbose_name_plural = 'Comments'
 

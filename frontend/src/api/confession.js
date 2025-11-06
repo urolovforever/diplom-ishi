@@ -95,6 +95,11 @@ export const confessionAPI = {
     return response.data
   },
 
+  updateComment: async (id, commentData) => {
+    const response = await api.patch(`/comments/${id}/`, commentData)
+    return response.data
+  },
+
   deleteComment: async (id) => {
     const response = await api.delete(`/comments/${id}/`)
     return response.data
@@ -107,6 +112,16 @@ export const confessionAPI = {
 
   unlikeComment: async (id) => {
     const response = await api.post(`/comments/${id}/unlike/`)
+    return response.data
+  },
+
+  pinComment: async (id) => {
+    const response = await api.post(`/comments/${id}/pin/`)
+    return response.data
+  },
+
+  unpinComment: async (id) => {
+    const response = await api.post(`/comments/${id}/unpin/`)
     return response.data
   },
 
