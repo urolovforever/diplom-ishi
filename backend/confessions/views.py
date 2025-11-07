@@ -5,6 +5,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticate
 from django_filters.rest_framework import DjangoFilterBackend
 from django.shortcuts import get_object_or_404
 
+from core.pagination import StandardResultsSetPagination
 from .models import Confession, Post, Comment, Like, Subscription, Notification, CommentLike, PostView
 from .serializers import (
     ConfessionSerializer, PostSerializer, PostCreateSerializer,
@@ -25,6 +26,7 @@ class ConfessionViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['name', 'description']
     ordering_fields = ['name', 'created_at']
+    pagination_class = StandardResultsSetPagination
 
     def get_permissions(self):
         if self.action in ['create', 'destroy']:
