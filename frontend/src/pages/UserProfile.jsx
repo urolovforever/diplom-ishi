@@ -1,19 +1,29 @@
 import React, { useState, useEffect } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { authAPI } from '../api/auth'
+import { confessionAPI } from '../api/confession'
+import messagingAPI from '../api/messaging'
+import { useAuthStore } from '../store/authStore'
 import MainLayout from '../components/layout/MainLayout'
 import Loading from '../components/Loading'
-import { FiArrowLeft, FiMail, FiUser } from 'react-icons/fi'
+import { FiArrowLeft, FiMail, FiUser, FiMessageCircle } from 'react-icons/fi'
 
 const UserProfile = () => {
   const { username } = useParams()
+  const navigate = useNavigate()
+  const { user: currentUser } = useAuthStore()
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [subscriptions, setSubscriptions] = useState([])
+  const [sendingMessage, setSendingMessage] = useState(false)
 
   useEffect(() => {
     fetchUser()
-  }, [username])
+    if (currentUser) {
+      fetchSubscriptions()
+    }
+  }, [username, currentUser])
 
   const fetchUser = async () => {
     setLoading(true)
@@ -26,6 +36,48 @@ const UserProfile = () => {
     } finally {
       setLoading(false)
     }
+  }
+
+  const fetchSubscriptions = async () => {
+    try {
+      const data = await confessionAPI.getSubscriptions()
+      const subscriptionsList = data.results || data
+      setSubscriptions(subscriptionsList)
+    } catch (error) {
+      console.error('Failed to fetch subscriptions:', error)
+    }
+  }
+
+  const handleSendMessage = async (confessionId) => {
+    if (!currentUser) {
+      toast.error('Please login to send messages')
+      navigate('/login')
+      return
+    }
+
+    setSendingMessage(true)
+    try {
+      // Get or create conversation with this admin for the specific confession
+      const conversation = await messagingAPI.getOrCreateConversation(user.id, confessionId)
+
+      // Navigate to the conversation
+      navigate(`/messages/${conversation.id}`)
+      toast.success('Opening conversation...')
+    } catch (error) {
+      console.error('Failed to create conversation:', error)
+      toast.error('Failed to open conversation')
+    } finally {
+      setSendingMessage(false)
+    }
+  }
+
+  // Check if user can send message to this confession admin
+  const canSendMessage = (confessionId) => {
+    if (!currentUser || !user) return false
+    if (currentUser.id === user.id) return false // Can't message yourself
+
+    // Check if current user is subscribed to this confession
+    return subscriptions.some(sub => sub.confession.id === confessionId)
   }
 
   if (loading) return (
@@ -89,6 +141,45 @@ const UserProfile = () => {
                   <span className="font-medium capitalize">{user.role}</span>
                 </div>
               </div>
+
+              {/* Message Buttons for Confession Admins */}
+              {user.managed_confessions && user.managed_confessions.length > 0 && currentUser && (
+                <div className="mt-6 w-full max-w-2xl">
+                  <div className="bg-blue-50 rounded-lg p-6 border border-blue-200">
+                    <h3 className="text-sm font-semibold text-gray-700 mb-3 flex items-center">
+                      <FiMessageCircle className="mr-2" />
+                      Send Message to Admin
+                    </h3>
+                    <p className="text-sm text-gray-600 mb-4">
+                      You can send a message to this admin for confessions you are subscribed to:
+                    </p>
+                    <div className="space-y-2">
+                      {user.managed_confessions.map((confession) => (
+                        <div key={confession.id} className="flex items-center justify-between bg-white rounded-lg p-3 border border-gray-200">
+                          <div>
+                            <p className="font-medium text-gray-800">{confession.name}</p>
+                            {canSendMessage(confession.id) ? (
+                              <p className="text-xs text-green-600">✓ You are subscribed</p>
+                            ) : (
+                              <p className="text-xs text-gray-500">Subscribe to send messages</p>
+                            )}
+                          </div>
+                          {canSendMessage(confession.id) && (
+                            <button
+                              onClick={() => handleSendMessage(confession.id)}
+                              disabled={sendingMessage}
+                              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                              <FiMessageCircle size={16} />
+                              <span>{sendingMessage ? 'Opening...' : 'Message'}</span>
+                            </button>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* Bio Section */}
               {user.bio && (

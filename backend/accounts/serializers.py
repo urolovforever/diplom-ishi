@@ -6,10 +6,18 @@ User = get_user_model()
 
 
 class UserSerializer(serializers.ModelSerializer):
+    managed_confessions = serializers.SerializerMethodField()
+
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'role', 'bio', 'avatar', 'date_joined']
-        read_only_fields = ['id', 'username', 'email', 'role', 'date_joined']
+        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'role', 'bio', 'avatar', 'date_joined', 'managed_confessions']
+        read_only_fields = ['id', 'username', 'email', 'role', 'date_joined', 'managed_confessions']
+
+    def get_managed_confessions(self, obj):
+        """Return list of confessions where this user is admin"""
+        from confessions.models import Confession
+        confessions = Confession.objects.filter(admin=obj).values('id', 'name', 'slug')
+        return list(confessions)
 
 
 class RegisterSerializer(serializers.ModelSerializer):
