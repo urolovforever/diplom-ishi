@@ -220,6 +220,7 @@ const Messages = () => {
             selectedConversationId={selectedConversationId}
             onSelectConversation={handleSelectConversation}
             isLoading={isLoading}
+            currentUser={user}
           />
         )}
       </div>
