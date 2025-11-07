@@ -64,14 +64,23 @@ WSGI_APPLICATION = 'religion_platform.wsgi.application'
 ASGI_APPLICATION = 'religion_platform.asgi.application'
 
 # Channels configuration
+# For development: using InMemoryChannelLayer (no Redis required)
+# For production: uncomment Redis configuration below
 CHANNEL_LAYERS = {
     'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            "hosts": [config('REDIS_URL', default='redis://127.0.0.1:6379/0')],
-        },
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
     },
 }
+
+# Production Redis configuration (uncomment when Redis is available)
+# CHANNEL_LAYERS = {
+#     'default': {
+#         'BACKEND': 'channels_redis.core.RedisChannelLayer',
+#         'CONFIG': {
+#             "hosts": [config('REDIS_URL', default='redis://127.0.0.1:6379/0')],
+#         },
+#     },
+# }
 
 DATABASES = {
     'default': {
