@@ -252,6 +252,13 @@ class MessageViewSet(viewsets.ModelViewSet):
                     status=status.HTTP_403_FORBIDDEN
                 )
 
+            # If pinning this message, unpin all others in the conversation
+            if request.data.get('is_pinned'):
+                Message.objects.filter(
+                    conversation=message.conversation,
+                    is_pinned=True
+                ).exclude(id=message.id).update(is_pinned=False)
+
         return super().update(request, *args, **kwargs)
 
     def destroy(self, request, *args, **kwargs):
@@ -301,6 +308,12 @@ class MessageViewSet(viewsets.ModelViewSet):
                 {'error': 'You can only pin your own messages or admin can pin any message.'},
                 status=status.HTTP_403_FORBIDDEN
             )
+
+        # Unpin all other messages in the same conversation (only one pinned message allowed)
+        Message.objects.filter(
+            conversation=message.conversation,
+            is_pinned=True
+        ).exclude(id=message.id).update(is_pinned=False)
 
         message.is_pinned = True
         message.save(update_fields=['is_pinned'])
