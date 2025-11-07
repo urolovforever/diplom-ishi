@@ -137,13 +137,16 @@ const PostCard = ({ post, onLike, onUnlike, onDelete, isConfessionAdmin }) => {
             <span className="font-medium">{post.likes_count}</span>
           </button>
 
-          <Link
-            to={`/post/${post.id}`}
-            className="flex items-center space-x-2 text-gray-600 hover:bg-gray-100 px-3 py-2 rounded-lg transition-colors"
-          >
-            <FiMessageCircle size={18} />
-            <span className="font-medium">{post.comments_count}</span>
-          </Link>
+          {/* Only show comment icon if comments are enabled */}
+          {post.comments_enabled !== false && (
+            <Link
+              to={`/post/${post.id}`}
+              className="flex items-center space-x-2 text-gray-600 hover:bg-gray-100 px-3 py-2 rounded-lg transition-colors"
+            >
+              <FiMessageCircle size={18} />
+              <span className="font-medium">{post.comments_count}</span>
+            </Link>
+          )}
         </div>
 
         <div className="flex items-center space-x-2 text-gray-500 text-sm">

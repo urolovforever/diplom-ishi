@@ -5,7 +5,7 @@ import { confessionAPI } from '../api/confession'
 import { useAuthStore } from '../store/authStore'
 import MainLayout from '../components/layout/MainLayout'
 import Loading from '../components/Loading'
-import { FiImage, FiX, FiVideo, FiUpload } from 'react-icons/fi'
+import { FiImage, FiX, FiVideo, FiUpload, FiPlus } from 'react-icons/fi'
 
 const CreatePost = () => {
   const navigate = useNavigate()
@@ -24,8 +24,8 @@ const CreatePost = () => {
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
   const [imagePreview, setImagePreview] = useState(null)
-  const [mediaFiles, setMediaFiles] = useState([])
-  const [mediaType, setMediaType] = useState(null) // 'images' or 'video'
+  const [images, setImages] = useState([])
+  const [video, setVideo] = useState(null)
 
   useEffect(() => {
     fetchConfessions()
@@ -62,7 +62,7 @@ const CreatePost = () => {
     }))
   }
 
-  const handleImageChange = (e) => {
+  const handleLegacyImageChange = (e) => {
     const file = e.target.files[0]
     if (file) {
       setFormData(prev => ({ ...prev, image: file }))
@@ -74,49 +74,45 @@ const CreatePost = () => {
     }
   }
 
-  const handleMediaFilesChange = (e) => {
+  const handleImageChange = (e) => {
     const files = Array.from(e.target.files)
-
     if (files.length === 0) return
 
-    // Check if files are videos or images
-    const firstFile = files[0]
-    const isVideo = firstFile.type.startsWith('video/')
-    const isImage = firstFile.type.startsWith('image/')
-
-    if (isVideo && files.length > 1) {
-      toast.error('Only one video can be uploaded per post')
+    // Check all files are images
+    const allImages = files.every(file => file.type.startsWith('image/'))
+    if (!allImages) {
+      toast.error('Please upload only image files')
       return
     }
 
-    if (isVideo) {
-      setMediaType('video')
-      setMediaFiles([firstFile])
-    } else if (isImage) {
-      setMediaType('images')
-      setMediaFiles(files)
-    } else {
-      toast.error('Please upload only images or video files')
+    setImages(prev => [...prev, ...files])
+  }
+
+  const handleVideoChange = (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+
+    if (!file.type.startsWith('video/')) {
+      toast.error('Please upload only video files')
       return
     }
+
+    setVideo(file)
   }
 
-  const removeMediaFile = (index) => {
-    setMediaFiles(prev => {
-      const updated = prev.filter((_, i) => i !== index)
-      if (updated.length === 0) {
-        setMediaType(null)
-      }
-      return updated
-    })
+  const removeImage = (index) => {
+    setImages(prev => prev.filter((_, i) => i !== index))
   }
 
-  const clearAllMedia = () => {
-    setMediaFiles([])
-    setMediaType(null)
+  const removeVideo = () => {
+    setVideo(null)
   }
 
-  const removeImage = () => {
+  const clearAllImages = () => {
+    setImages([])
+  }
+
+  const removeLegacyImage = () => {
     setFormData(prev => ({ ...prev, image: null }))
     setImagePreview(null)
   }
@@ -139,10 +135,12 @@ const CreatePost = () => {
       postFormData.append('comments_enabled', formData.comments_enabled)
 
       // Add new media files if present
-      if (mediaFiles.length > 0) {
-        mediaFiles.forEach((file) => {
+      if (images.length > 0) {
+        images.forEach((file) => {
           postFormData.append('media_files_data', file)
         })
+      } else if (video) {
+        postFormData.append('media_files_data', video)
       } else if (formData.image) {
         // Fallback to old single image field
         postFormData.append('image', formData.image)
@@ -226,64 +224,37 @@ const CreatePost = () => {
             />
           </div>
 
-          {/* Media Upload - New System */}
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              Media (Images or Video)
-            </label>
+          {/* Images Section */}
+          <div className={`space-y-3 ${video ? 'opacity-50 pointer-events-none' : ''}`}>
+            <div className="flex items-center justify-between">
+              <label className="block text-sm font-semibold text-gray-700">
+                📸 Images {images.length > 0 && `(${images.length})`}
+              </label>
+              {images.length > 0 && (
+                <button
+                  type="button"
+                  onClick={clearAllImages}
+                  className="text-sm text-red-600 hover:text-red-700 font-medium"
+                >
+                  Clear All
+                </button>
+              )}
+            </div>
 
-            {mediaFiles.length > 0 ? (
+            {images.length > 0 ? (
               <div className="space-y-3">
-                {/* Media Type Badge */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    {mediaType === 'video' ? (
-                      <>
-                        <FiVideo className="text-purple-600" size={20} />
-                        <span className="text-sm font-medium text-gray-700">Video Selected</span>
-                      </>
-                    ) : (
-                      <>
-                        <FiImage className="text-blue-600" size={20} />
-                        <span className="text-sm font-medium text-gray-700">
-                          {mediaFiles.length} Image{mediaFiles.length > 1 ? 's' : ''} Selected
-                        </span>
-                      </>
-                    )}
-                  </div>
-                  <button
-                    type="button"
-                    onClick={clearAllMedia}
-                    className="text-sm text-red-600 hover:text-red-700 font-medium"
-                  >
-                    Clear All
-                  </button>
-                </div>
-
-                {/* Media Previews */}
+                {/* Images Grid */}
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                  {mediaFiles.map((file, index) => (
+                  {images.map((file, index) => (
                     <div key={index} className="relative group">
-                      {file.type.startsWith('video/') ? (
-                        <div className="relative aspect-video bg-gray-900 rounded-lg overflow-hidden">
-                          <video
-                            src={URL.createObjectURL(file)}
-                            className="w-full h-full object-contain"
-                          />
-                          <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-                            <FiVideo size={32} className="text-white" />
-                          </div>
-                        </div>
-                      ) : (
-                        <img
-                          src={URL.createObjectURL(file)}
-                          alt={`Preview ${index + 1}`}
-                          className="w-full aspect-square object-cover rounded-lg"
-                        />
-                      )}
+                      <img
+                        src={URL.createObjectURL(file)}
+                        alt={`Image ${index + 1}`}
+                        className="w-full aspect-square object-cover rounded-lg"
+                      />
                       <button
                         type="button"
-                        onClick={() => removeMediaFile(index)}
+                        onClick={() => removeImage(index)}
                         className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors opacity-0 group-hover:opacity-100"
                       >
                         <FiX size={16} />
@@ -293,46 +264,87 @@ const CreatePost = () => {
                       </div>
                     </div>
                   ))}
+
+                  {/* Add More Button */}
+                  <label className="flex flex-col items-center justify-center aspect-square border-2 border-dashed border-blue-300 rounded-lg cursor-pointer hover:bg-blue-50 transition-colors group">
+                    <FiPlus size={32} className="text-blue-400 mb-1 group-hover:text-blue-600" />
+                    <span className="text-xs text-gray-600 font-medium">Add More</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      onChange={handleImageChange}
+                      className="hidden"
+                    />
+                  </label>
                 </div>
               </div>
             ) : (
-              <div className="space-y-3">
-                {/* Upload Button for Images */}
-                <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-blue-300 rounded-lg cursor-pointer hover:bg-blue-50 transition-colors group">
-                  <FiImage size={32} className="text-blue-400 mb-2 group-hover:text-blue-600" />
-                  <span className="text-sm text-gray-600 font-medium">Upload Images (Multiple)</span>
-                  <span className="text-xs text-gray-500 mt-1">JPG, PNG, GIF, WEBP</span>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    onChange={handleMediaFilesChange}
-                    className="hidden"
-                  />
-                </label>
-
-                {/* Upload Button for Video */}
-                <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-purple-300 rounded-lg cursor-pointer hover:bg-purple-50 transition-colors group">
-                  <FiVideo size={32} className="text-purple-400 mb-2 group-hover:text-purple-600" />
-                  <span className="text-sm text-gray-600 font-medium">Upload Video (Single)</span>
-                  <span className="text-xs text-gray-500 mt-1">MP4, MOV, AVI, WEBM</span>
-                  <input
-                    type="file"
-                    accept="video/*"
-                    onChange={handleMediaFilesChange}
-                    className="hidden"
-                  />
-                </label>
-
-                <p className="text-xs text-gray-500 text-center">
-                  Upload multiple images OR one video per post
-                </p>
-              </div>
+              <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-blue-300 rounded-lg cursor-pointer hover:bg-blue-50 transition-colors group">
+                <FiImage size={32} className="text-blue-400 mb-2 group-hover:text-blue-600" />
+                <span className="text-sm text-gray-600 font-medium">Upload Images</span>
+                <span className="text-xs text-gray-500 mt-1">Multiple files allowed • JPG, PNG, GIF, WEBP</span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleImageChange}
+                  className="hidden"
+                  disabled={video !== null}
+                />
+              </label>
             )}
           </div>
 
-          {/* Old Image Upload - Fallback (hidden if new media system is used) */}
-          {mediaFiles.length === 0 && (
+          {/* Video Section */}
+          <div className={`space-y-3 ${images.length > 0 ? 'opacity-50 pointer-events-none' : ''}`}>
+            <div className="flex items-center justify-between">
+              <label className="block text-sm font-semibold text-gray-700">
+                🎥 Video {video && '(1)'}
+              </label>
+              {video && (
+                <button
+                  type="button"
+                  onClick={removeVideo}
+                  className="text-sm text-red-600 hover:text-red-700 font-medium"
+                >
+                  Remove
+                </button>
+              )}
+            </div>
+
+            {video ? (
+              <div className="relative">
+                <div className="relative aspect-video bg-gray-900 rounded-lg overflow-hidden">
+                  <video
+                    src={URL.createObjectURL(video)}
+                    className="w-full h-full object-contain"
+                    controls
+                  />
+                </div>
+                <div className="mt-2 flex items-center justify-between px-2">
+                  <span className="text-sm text-gray-600">{video.name}</span>
+                  <span className="text-sm text-gray-500">{(video.size / 1024 / 1024).toFixed(1)} MB</span>
+                </div>
+              </div>
+            ) : (
+              <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-purple-300 rounded-lg cursor-pointer hover:bg-purple-50 transition-colors group">
+                <FiVideo size={32} className="text-purple-400 mb-2 group-hover:text-purple-600" />
+                <span className="text-sm text-gray-600 font-medium">Upload Video</span>
+                <span className="text-xs text-gray-500 mt-1">One file only • MP4, MOV, AVI, WEBM</span>
+                <input
+                  type="file"
+                  accept="video/*"
+                  onChange={handleVideoChange}
+                  className="hidden"
+                  disabled={images.length > 0}
+                />
+              </label>
+            )}
+          </div>
+
+          {/* Old Image Upload - Fallback */}
+          {images.length === 0 && !video && (
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
                 Or upload single image (Legacy)
@@ -342,7 +354,7 @@ const CreatePost = () => {
                   <img src={imagePreview} alt="Preview" className="w-full h-64 object-cover rounded-lg" />
                   <button
                     type="button"
-                    onClick={removeImage}
+                    onClick={removeLegacyImage}
                     className="absolute top-2 right-2 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
                   >
                     <FiX size={20} />
@@ -355,7 +367,7 @@ const CreatePost = () => {
                   <input
                     type="file"
                     accept="image/*"
-                    onChange={handleImageChange}
+                    onChange={handleLegacyImageChange}
                     className="hidden"
                   />
                 </label>

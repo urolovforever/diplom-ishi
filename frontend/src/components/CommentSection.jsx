@@ -4,7 +4,7 @@ import { toast } from 'react-toastify'
 import { confessionAPI } from '../api/confession'
 import { useAuthStore } from '../store/authStore'
 import { formatDistanceToNow } from 'date-fns'
-import { FiTrash2, FiSend, FiHeart, FiEdit3, FiCheck, FiX, FiChevronDown, FiChevronUp } from 'react-icons/fi'
+import { FiTrash2, FiSend, FiHeart, FiEdit3, FiCheck, FiX, FiChevronDown, FiChevronUp, FiMessageCircle } from 'react-icons/fi'
 import { FaHeart, FaHeart as FaHeartSolid } from 'react-icons/fa'
 import { BsPinFill, BsPin } from 'react-icons/bs'
 
