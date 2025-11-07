@@ -71,7 +71,7 @@ class ConversationViewSet(viewsets.ModelViewSet):
             if confession_id:
                 try:
                     confession = Confession.objects.get(id=confession_id)
-                    if not confession.subscribers.filter(id=request.user.id).exists():
+                    if not confession.subscribers.filter(user=request.user).exists():
                         return Response(
                             {'error': 'You must be subscribed to this confession to message its admin.'},
                             status=status.HTTP_403_FORBIDDEN
@@ -145,7 +145,7 @@ class ConversationViewSet(viewsets.ModelViewSet):
             if confession_id:
                 try:
                     confession = Confession.objects.get(id=confession_id)
-                    if not confession.subscribers.filter(id=request.user.id).exists():
+                    if not confession.subscribers.filter(user=request.user).exists():
                         return Response(
                             {'error': 'You must be subscribed to this confession.'},
                             status=status.HTTP_403_FORBIDDEN
