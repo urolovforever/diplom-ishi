@@ -240,14 +240,17 @@ class MessageViewSet(viewsets.ModelViewSet):
                     status=status.HTTP_400_BAD_REQUEST
                 )
 
-        # Check if user is admin for pinning
+        # Check if user is admin or owner for pinning
         if 'is_pinned' in request.data:
-            if message.conversation.confession:
-                if message.conversation.confession.admin != request.user and request.user.role != 'superadmin':
-                    return Response(
-                        {'error': 'Only confession admin can pin messages.'},
-                        status=status.HTTP_403_FORBIDDEN
-                    )
+            is_owner = message.sender == request.user
+            is_admin = (message.conversation.confession and
+                       (message.conversation.confession.admin == request.user or request.user.role == 'superadmin'))
+
+            if not is_owner and not is_admin:
+                return Response(
+                    {'error': 'You can only pin your own messages or admin can pin any message.'},
+                    status=status.HTTP_403_FORBIDDEN
+                )
 
         return super().update(request, *args, **kwargs)
 
@@ -285,16 +288,19 @@ class MessageViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['post'])
     def pin(self, request, pk=None):
-        """Pin a message"""
+        """Pin a message - user can pin their own messages, or admin can pin any message in their confession"""
         message = self.get_object()
 
-        # Check permissions
-        if message.conversation.confession:
-            if message.conversation.confession.admin != request.user and request.user.role != 'superadmin':
-                return Response(
-                    {'error': 'Only confession admin can pin messages.'},
-                    status=status.HTTP_403_FORBIDDEN
-                )
+        # Check permissions: owner can always pin, or confession admin can pin
+        is_owner = message.sender == request.user
+        is_admin = (message.conversation.confession and
+                   (message.conversation.confession.admin == request.user or request.user.role == 'superadmin'))
+
+        if not is_owner and not is_admin:
+            return Response(
+                {'error': 'You can only pin your own messages or admin can pin any message.'},
+                status=status.HTTP_403_FORBIDDEN
+            )
 
         message.is_pinned = True
         message.save(update_fields=['is_pinned'])
@@ -303,16 +309,19 @@ class MessageViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['post'])
     def unpin(self, request, pk=None):
-        """Unpin a message"""
+        """Unpin a message - user can unpin their own messages, or admin can unpin any message in their confession"""
         message = self.get_object()
 
-        # Check permissions
-        if message.conversation.confession:
-            if message.conversation.confession.admin != request.user and request.user.role != 'superadmin':
-                return Response(
-                    {'error': 'Only confession admin can unpin messages.'},
-                    status=status.HTTP_403_FORBIDDEN
-                )
+        # Check permissions: owner can always unpin, or confession admin can unpin
+        is_owner = message.sender == request.user
+        is_admin = (message.conversation.confession and
+                   (message.conversation.confession.admin == request.user or request.user.role == 'superadmin'))
+
+        if not is_owner and not is_admin:
+            return Response(
+                {'error': 'You can only unpin your own messages or admin can unpin any message.'},
+                status=status.HTTP_403_FORBIDDEN
+            )
 
         message.is_pinned = False
         message.save(update_fields=['is_pinned'])

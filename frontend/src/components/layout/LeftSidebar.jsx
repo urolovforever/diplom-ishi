@@ -14,6 +14,7 @@ import {
 } from 'react-icons/fi'
 import { FaUserCircle, FaHeart, FaComment, FaUsers } from 'react-icons/fa'
 import { getUnreadCount, getNotifications, markNotificationAsRead, markAllNotificationsAsRead } from '../../api/notification'
+import messagingAPI from '../../api/messaging'
 import { toast } from 'react-toastify'
 
 const LeftSidebar = () => {
@@ -22,6 +23,7 @@ const LeftSidebar = () => {
   const navigate = useNavigate()
   const [showNotifications, setShowNotifications] = useState(false)
   const [unreadCount, setUnreadCount] = useState(0)
+  const [unreadMessagesCount, setUnreadMessagesCount] = useState(0)
   const [notifications, setNotifications] = useState([])
   const [loadingNotifications, setLoadingNotifications] = useState(false)
 
@@ -38,10 +40,25 @@ const LeftSidebar = () => {
       }
     }
 
-    fetchUnreadCount()
+    const fetchUnreadMessagesCount = async () => {
+      if (user) {
+        try {
+          const data = await messagingAPI.getUnreadCount()
+          setUnreadMessagesCount(data.unread_count)
+        } catch (error) {
+          console.error('Failed to fetch unread messages count:', error)
+        }
+      }
+    }
 
-    // Poll for new notifications every 30 seconds
-    const interval = setInterval(fetchUnreadCount, 30000)
+    fetchUnreadCount()
+    fetchUnreadMessagesCount()
+
+    // Poll for new notifications and messages every 30 seconds
+    const interval = setInterval(() => {
+      fetchUnreadCount()
+      fetchUnreadMessagesCount()
+    }, 30000)
 
     return () => clearInterval(interval)
   }, [user])
@@ -184,7 +201,7 @@ const LeftSidebar = () => {
 
           {user && (
             <>
-              <NavItem to="/messages" icon={FiMessageCircle} label="Messages" />
+              <NavItem to="/messages" icon={FiMessageCircle} label="Messages" badge={unreadMessagesCount} />
 
               <NavItem
                 icon={FiBell}
