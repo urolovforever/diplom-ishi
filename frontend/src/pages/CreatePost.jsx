@@ -5,7 +5,7 @@ import { confessionAPI } from '../api/confession'
 import { useAuthStore } from '../store/authStore'
 import MainLayout from '../components/layout/MainLayout'
 import Loading from '../components/Loading'
-import { FiImage, FiX, FiVideo, FiUpload, FiPlus } from 'react-icons/fi'
+import { FiImage, FiX, FiVideo, FiUpload, FiPlus, FiFileText } from 'react-icons/fi'
 
 const CreatePost = () => {
   const navigate = useNavigate()
@@ -15,7 +15,6 @@ const CreatePost = () => {
     title: '',
     content: '',
     confession: '',
-    image: null,
     is_pinned: false,
     comments_enabled: true
   })
@@ -23,9 +22,9 @@ const CreatePost = () => {
   const [confessions, setConfessions] = useState([])
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
-  const [imagePreview, setImagePreview] = useState(null)
   const [images, setImages] = useState([])
   const [video, setVideo] = useState(null)
+  const [pdf, setPdf] = useState(null)
 
   useEffect(() => {
     fetchConfessions()
@@ -60,18 +59,6 @@ const CreatePost = () => {
       ...prev,
       [name]: type === 'checkbox' ? checked : value
     }))
-  }
-
-  const handleLegacyImageChange = (e) => {
-    const file = e.target.files[0]
-    if (file) {
-      setFormData(prev => ({ ...prev, image: file }))
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        setImagePreview(reader.result)
-      }
-      reader.readAsDataURL(file)
-    }
   }
 
   const handleImageChange = (e) => {
@@ -112,9 +99,20 @@ const CreatePost = () => {
     setImages([])
   }
 
-  const removeLegacyImage = () => {
-    setFormData(prev => ({ ...prev, image: null }))
-    setImagePreview(null)
+  const handlePdfChange = (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+
+    if (!file.type.endsWith('pdf')) {
+      toast.error('Please upload only PDF files')
+      return
+    }
+
+    setPdf(file)
+  }
+
+  const removePdf = () => {
+    setPdf(null)
   }
 
   const handleSubmit = async (e) => {
@@ -141,9 +139,8 @@ const CreatePost = () => {
         })
       } else if (video) {
         postFormData.append('media_files_data', video)
-      } else if (formData.image) {
-        // Fallback to old single image field
-        postFormData.append('image', formData.image)
+      } else if (pdf) {
+        postFormData.append('media_files_data', pdf)
       }
 
       await confessionAPI.createPost(postFormData)
@@ -225,7 +222,7 @@ const CreatePost = () => {
           </div>
 
           {/* Images Section */}
-          <div className={`space-y-3 ${video ? 'opacity-50 pointer-events-none' : ''}`}>
+          <div className={`space-y-3 ${video || pdf ? 'opacity-50 pointer-events-none' : ''}`}>
             <div className="flex items-center justify-between">
               <label className="block text-sm font-semibold text-gray-700">
                 📸 Images {images.length > 0 && `(${images.length})`}
@@ -290,14 +287,14 @@ const CreatePost = () => {
                   multiple
                   onChange={handleImageChange}
                   className="hidden"
-                  disabled={video !== null}
+                  disabled={video !== null || pdf !== null}
                 />
               </label>
             )}
           </div>
 
           {/* Video Section */}
-          <div className={`space-y-3 ${images.length > 0 ? 'opacity-50 pointer-events-none' : ''}`}>
+          <div className={`space-y-3 ${images.length > 0 || pdf ? 'opacity-50 pointer-events-none' : ''}`}>
             <div className="flex items-center justify-between">
               <label className="block text-sm font-semibold text-gray-700">
                 🎥 Video {video && '(1)'}
@@ -337,43 +334,56 @@ const CreatePost = () => {
                   accept="video/*"
                   onChange={handleVideoChange}
                   className="hidden"
-                  disabled={images.length > 0}
+                  disabled={images.length > 0 || pdf !== null}
                 />
               </label>
             )}
           </div>
 
-          {/* Old Image Upload - Fallback */}
-          {images.length === 0 && !video && (
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Or upload single image (Legacy)
+          {/* PDF Section */}
+          <div className={`space-y-3 ${images.length > 0 || video ? 'opacity-50 pointer-events-none' : ''}`}>
+            <div className="flex items-center justify-between">
+              <label className="block text-sm font-semibold text-gray-700">
+                📄 PDF Document {pdf && '(1)'}
               </label>
-              {imagePreview ? (
-                <div className="relative">
-                  <img src={imagePreview} alt="Preview" className="w-full h-64 object-cover rounded-lg" />
-                  <button
-                    type="button"
-                    onClick={removeLegacyImage}
-                    className="absolute top-2 right-2 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
-                  >
-                    <FiX size={20} />
-                  </button>
-                </div>
-              ) : (
-                <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
-                  <FiImage size={32} className="text-gray-400 mb-2" />
-                  <span className="text-sm text-gray-500">Click to upload single image</span>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleLegacyImageChange}
-                    className="hidden"
-                  />
-                </label>
+              {pdf && (
+                <button
+                  type="button"
+                  onClick={removePdf}
+                  className="text-sm text-red-600 hover:text-red-700 font-medium"
+                >
+                  Remove
+                </button>
               )}
             </div>
-          )}
+
+            {pdf ? (
+              <div className="relative">
+                <div className="flex items-center space-x-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                  <div className="flex-shrink-0 w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+                    <FiFileText size={24} className="text-red-600" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-gray-900 truncate">{pdf.name}</p>
+                    <p className="text-xs text-gray-500">{(pdf.size / 1024 / 1024).toFixed(2)} MB</p>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-red-300 rounded-lg cursor-pointer hover:bg-red-50 transition-colors group">
+                <FiFileText size={32} className="text-red-400 mb-2 group-hover:text-red-600" />
+                <span className="text-sm text-gray-600 font-medium">Upload PDF</span>
+                <span className="text-xs text-gray-500 mt-1">One file only • PDF format</span>
+                <input
+                  type="file"
+                  accept=".pdf,application/pdf"
+                  onChange={handlePdfChange}
+                  className="hidden"
+                  disabled={images.length > 0 || video !== null}
+                />
+              </label>
+            )}
+          </div>
 
           {/* Comments Toggle */}
           <div className="flex items-center space-x-3 p-4 bg-gray-50 rounded-lg">

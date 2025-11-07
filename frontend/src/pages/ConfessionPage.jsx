@@ -301,7 +301,24 @@ const ConfessionPage = () => {
                 {/* Media Display - New system (media_files) or fallback */}
                 {post.media_files && post.media_files.length > 0 ? (
                   <>
-                    {post.media_files[0].media_type === 'video' ? (
+                    {post.media_files[0].media_type === 'pdf' ? (
+                      // PDF: Show PDF indicator
+                      <>
+                        <div className="w-full h-full bg-gradient-to-br from-red-50 to-red-100 flex items-center justify-center">
+                          <FiFileText size={48} className="text-red-600" />
+                        </div>
+                        {/* PDF Badge */}
+                        <div className="absolute top-2 right-2 bg-black/70 text-white px-2 py-1 rounded-full text-xs font-medium">
+                          PDF
+                        </div>
+                        {/* Title Overlay */}
+                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2 md:p-3">
+                          <h3 className="text-white text-xs md:text-sm font-semibold line-clamp-2">
+                            {post.title}
+                          </h3>
+                        </div>
+                      </>
+                    ) : post.media_files[0].media_type === 'video' ? (
                       // Video: Show video thumbnail or first frame
                       <>
                         <video

@@ -8,7 +8,7 @@ import CommentSection from '../components/CommentSection'
 import Loading from '../components/Loading'
 import MediaCarousel from '../components/MediaCarousel'
 import VideoPlayer from '../components/VideoPlayer'
-import { FiHeart, FiMessageCircle, FiArrowLeft, FiEye } from 'react-icons/fi'
+import { FiHeart, FiMessageCircle, FiArrowLeft, FiEye, FiFileText } from 'react-icons/fi'
 import { BsPinFill } from 'react-icons/bs'
 import { formatDistanceToNow } from 'date-fns'
 
@@ -130,7 +130,25 @@ const PostDetails = () => {
           {/* Media Display - New system (media_files) or fallback to old system (image) */}
           {post.media_files && post.media_files.length > 0 ? (
             <div className="mb-6">
-              {post.media_files.some(media => media.media_type === 'video') ? (
+              {post.media_files.some(media => media.media_type === 'pdf') ? (
+                // If there's a PDF, show PDF viewer
+                <div className="border border-gray-200 rounded-lg overflow-hidden">
+                  <div className="bg-red-50 p-4 border-b border-red-100 flex items-center space-x-3">
+                    <FiFileText size={24} className="text-red-600" />
+                    <div>
+                      <p className="font-medium text-gray-800">PDF Document</p>
+                      <p className="text-sm text-gray-500">
+                        {post.media_files.find(media => media.media_type === 'pdf')?.file.split('/').pop()}
+                      </p>
+                    </div>
+                  </div>
+                  <iframe
+                    src={post.media_files.find(media => media.media_type === 'pdf')?.file}
+                    className="w-full h-[600px]"
+                    title="PDF Viewer"
+                  />
+                </div>
+              ) : post.media_files.some(media => media.media_type === 'video') ? (
                 // If there's a video, show video player
                 <VideoPlayer videoFile={post.media_files.find(media => media.media_type === 'video')} />
               ) : (

@@ -181,6 +181,8 @@ class PostCreateSerializer(serializers.ModelSerializer):
                 media_type = 'image'
             elif file_name.endswith(('.mp4', '.mov', '.avi', '.webm', '.mkv')):
                 media_type = 'video'
+            elif file_name.endswith('.pdf'):
+                media_type = 'pdf'
             else:
                 continue  # Skip unsupported file types
 
