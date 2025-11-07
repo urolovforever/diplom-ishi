@@ -41,7 +41,7 @@ const ConversationList = ({
     <div className="flex-1 overflow-y-auto">
       {conversations.map((conversation) => {
         const otherParticipants = conversation.participants.filter(
-          (p) => p.id !== conversation.participants[0]?.id
+          (p) => currentUser && p.id !== currentUser.id
         );
         const displayName =
           otherParticipants.length > 0
@@ -91,8 +91,8 @@ const ConversationList = ({
               {conversation.last_message_preview && (
                 <p className="text-sm text-gray-600 truncate">
                   {currentUser && conversation.last_message_preview.sender === currentUser.username
-                    ? conversation.last_message_preview.content
-                    : `${conversation.last_message_preview.sender}: ${conversation.last_message_preview.content}`}
+                    ? `You: ${conversation.last_message_preview.content}`
+                    : conversation.last_message_preview.content}
                 </p>
               )}
 
