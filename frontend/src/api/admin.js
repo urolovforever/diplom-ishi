@@ -53,6 +53,16 @@ const adminAPI = {
     return response.data;
   },
 
+  manageUserPermissions: async (id, permissions) => {
+    const response = await api.post(`/accounts/admin/users/${id}/manage_permissions/`, { permissions });
+    return response.data;
+  },
+
+  getAvailablePermissions: async () => {
+    const response = await api.get('/accounts/admin/users/available_permissions/');
+    return response.data;
+  },
+
   // Confession Management
   getConfessions: async () => {
     const response = await api.get('/accounts/admin/confessions/');

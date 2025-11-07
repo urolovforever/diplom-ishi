@@ -17,5 +17,22 @@ class User(AbstractUser):
     def __str__(self):
         return f"{self.username} ({self.get_role_display()})"
 
+    @property
+    def has_admin_permissions(self):
+        """Check if user has admin permissions"""
+        return self.role in ['admin', 'superadmin']
+
+    @property
+    def has_superadmin_permissions(self):
+        """Check if user has superadmin permissions"""
+        return self.role == 'superadmin'
+
     class Meta:
         ordering = ['-date_joined']
+        permissions = [
+            ('can_manage_users', 'Can manage users'),
+            ('can_manage_confessions', 'Can manage confessions'),
+            ('can_view_analytics', 'Can view analytics'),
+            ('can_manage_posts', 'Can manage posts'),
+            ('can_moderate_comments', 'Can moderate comments'),
+        ]

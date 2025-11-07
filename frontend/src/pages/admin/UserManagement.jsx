@@ -62,9 +62,15 @@ const UserManagement = () => {
 
   const handleToggleActive = async (user) => {
     try {
-      await adminAPI.toggleUserActive(user.id);
+      const response = await adminAPI.toggleUserActive(user.id);
       toast.success(`User ${user.is_active ? 'deactivated' : 'activated'}`);
-      fetchUsers();
+
+      // Update the user in the local state
+      setUsers(prevUsers =>
+        prevUsers.map(u =>
+          u.id === user.id ? { ...u, is_active: !u.is_active } : u
+        )
+      );
     } catch (error) {
       console.error('Error toggling user status:', error);
       toast.error(error.response?.data?.error || 'Failed to update user status');
