@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import { FiHeart, FiMessageCircle, FiEdit2, FiTrash2, FiEye } from 'react-icons/fi'
 import { BsPinFill } from 'react-icons/bs'
 import { formatDistanceToNow } from 'date-fns'
+import MediaCarousel from './MediaCarousel'
+import VideoPlayer from './VideoPlayer'
 
 const PostCard = ({ post, onLike, onUnlike, onDelete, isConfessionAdmin }) => {
   const navigate = useNavigate()
@@ -95,8 +97,18 @@ const PostCard = ({ post, onLike, onUnlike, onDelete, isConfessionAdmin }) => {
           </p>
         </div>
 
-        {/* Image with 4:3 aspect ratio */}
-        {post.image && (
+        {/* Media Display - New system (media_files) or fallback to old system (image) */}
+        {post.media_files && post.media_files.length > 0 ? (
+          // New system: Display media from media_files
+          post.media_files.some(media => media.media_type === 'video') ? (
+            // If there's a video, show video player
+            <VideoPlayer videoFile={post.media_files.find(media => media.media_type === 'video')} />
+          ) : (
+            // If there are only images, show carousel
+            <MediaCarousel mediaFiles={post.media_files.filter(media => media.media_type === 'image')} />
+          )
+        ) : post.image ? (
+          // Fallback: Old system - single image field
           <div className="relative w-full aspect-[4/3] bg-gray-100">
             <img
               src={post.image}
@@ -104,7 +116,7 @@ const PostCard = ({ post, onLike, onUnlike, onDelete, isConfessionAdmin }) => {
               className="absolute inset-0 w-full h-full object-cover"
             />
           </div>
-        )}
+        ) : null}
       </Link>
 
       {/* Actions */}

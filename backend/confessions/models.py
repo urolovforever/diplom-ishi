@@ -52,6 +52,7 @@ class Post(models.Model):
     image = models.ImageField(upload_to='posts/images/', blank=True, null=True)
     video_url = models.URLField(blank=True, null=True, help_text="YouTube/Vimeo URL")
     is_pinned = models.BooleanField(default=False, help_text="Pin this post to top")
+    comments_enabled = models.BooleanField(default=True, help_text="Allow comments on this post")
     views_count = models.PositiveIntegerField(default=0, help_text="Number of views")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -97,6 +98,33 @@ class PostView(models.Model):
     def __str__(self):
         identifier = self.user.username if self.user else self.ip_address
         return f"{identifier} viewed {self.post.title} at {self.viewed_at}"
+
+
+class PostMedia(models.Model):
+    """Media files (images or video) for posts"""
+    MEDIA_TYPE_CHOICES = (
+        ('image', 'Image'),
+        ('video', 'Video'),
+    )
+
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='media_files')
+    media_type = models.CharField(max_length=10, choices=MEDIA_TYPE_CHOICES)
+    file = models.FileField(upload_to='posts/media/%Y/%m/%d/')
+    order = models.PositiveIntegerField(default=0, help_text="Display order for carousel")
+    thumbnail = models.ImageField(upload_to='posts/thumbnails/%Y/%m/%d/', blank=True, null=True, help_text="Thumbnail for videos")
+    duration = models.PositiveIntegerField(null=True, blank=True, help_text="Video duration in seconds")
+    width = models.PositiveIntegerField(null=True, blank=True)
+    height = models.PositiveIntegerField(null=True, blank=True)
+    file_size = models.PositiveIntegerField(null=True, blank=True, help_text="File size in bytes")
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['order', 'id']
+        verbose_name = 'Post Media'
+        verbose_name_plural = 'Post Media'
+
+    def __str__(self):
+        return f"{self.post.title} - {self.media_type} #{self.order}"
 
 
 class Like(models.Model):
