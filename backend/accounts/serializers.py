@@ -7,17 +7,29 @@ User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
     managed_confessions = serializers.SerializerMethodField()
+    permissions = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'role', 'bio', 'avatar', 'date_joined', 'managed_confessions']
-        read_only_fields = ['id', 'username', 'email', 'role', 'date_joined', 'managed_confessions']
+        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'role', 'bio', 'avatar',
+                  'is_active', 'date_joined', 'managed_confessions', 'permissions']
+        read_only_fields = ['id', 'username', 'email', 'role', 'date_joined', 'managed_confessions', 'permissions']
 
     def get_managed_confessions(self, obj):
         """Return list of confessions where this user is admin"""
         from confessions.models import Confession
         confessions = Confession.objects.filter(admin=obj).values('id', 'name', 'slug')
         return list(confessions)
+
+    def get_permissions(self, obj):
+        """Return user permissions"""
+        return {
+            'can_manage_users': obj.has_perm('accounts.can_manage_users'),
+            'can_manage_confessions': obj.has_perm('accounts.can_manage_confessions'),
+            'can_view_analytics': obj.has_perm('accounts.can_view_analytics'),
+            'can_manage_posts': obj.has_perm('accounts.can_manage_posts'),
+            'can_moderate_comments': obj.has_perm('accounts.can_moderate_comments'),
+        }
 
 
 class RegisterSerializer(serializers.ModelSerializer):

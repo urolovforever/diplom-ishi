@@ -4,6 +4,8 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Permission
+from django.contrib.contenttypes.models import ContentType
 from django.db.models import Count, Q
 from django.utils import timezone
 from datetime import timedelta
@@ -253,6 +255,49 @@ class AdminUserManagementViewSet(viewsets.ModelViewSet):
             'users_by_role': users_by_role,
             'monthly_registrations': monthly_registrations,
         })
+
+    @action(detail=True, methods=['post'])
+    def manage_permissions(self, request, pk=None):
+        """Manage user permissions"""
+        user = self.get_object()
+        permissions_data = request.data.get('permissions', {})
+
+        content_type = ContentType.objects.get_for_model(User)
+        permission_codenames = {
+            'can_manage_users': 'can_manage_users',
+            'can_manage_confessions': 'can_manage_confessions',
+            'can_view_analytics': 'can_view_analytics',
+            'can_manage_posts': 'can_manage_posts',
+            'can_moderate_comments': 'can_moderate_comments',
+        }
+
+        for perm_key, perm_codename in permission_codenames.items():
+            if perm_key in permissions_data:
+                try:
+                    permission = Permission.objects.get(
+                        codename=perm_codename,
+                        content_type=content_type
+                    )
+                    if permissions_data[perm_key]:
+                        user.user_permissions.add(permission)
+                    else:
+                        user.user_permissions.remove(permission)
+                except Permission.DoesNotExist:
+                    continue
+
+        return Response({
+            'message': 'Permissions updated successfully',
+            'user': UserSerializer(user).data
+        })
+
+    @action(detail=False, methods=['get'])
+    def available_permissions(self, request):
+        """Get list of available permissions"""
+        content_type = ContentType.objects.get_for_model(User)
+        permissions = Permission.objects.filter(content_type=content_type).values(
+            'id', 'name', 'codename'
+        )
+        return Response(list(permissions))
 
 
 class AdminConfessionManagementView(APIView):
