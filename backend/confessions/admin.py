@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import Confession, Post, Comment, Like, Subscription, Notification, PostView
+from .models import Confession, Post, PostMedia, Comment, Like, Subscription, Notification, PostView
 
 
 @admin.register(Confession)
@@ -39,11 +39,11 @@ class ConfessionAdmin(admin.ModelAdmin):
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    list_display = ['title', 'confession', 'author', 'is_pinned', 'likes_count', 'comments_count', 'created_at']
-    list_filter = ['confession', 'is_pinned', 'created_at']
+    list_display = ['title', 'confession', 'author', 'is_pinned', 'comments_enabled', 'likes_count', 'comments_count', 'created_at']
+    list_filter = ['confession', 'is_pinned', 'comments_enabled', 'created_at']
     search_fields = ['title', 'content']
     readonly_fields = ['created_at', 'updated_at', 'likes_count', 'comments_count']
-    list_editable = ['is_pinned']
+    list_editable = ['is_pinned', 'comments_enabled']
 
     fieldsets = (
         ('Content', {
@@ -53,7 +53,7 @@ class PostAdmin(admin.ModelAdmin):
             'fields': ('image', 'video_url')
         }),
         ('Settings', {
-            'fields': ('is_pinned',)
+            'fields': ('is_pinned', 'comments_enabled')
         }),
         ('Statistics', {
             'fields': ('likes_count', 'comments_count', 'created_at', 'updated_at'),
@@ -70,6 +70,36 @@ class PostAdmin(admin.ModelAdmin):
         return obj.comments.count()
 
     comments_count.short_description = 'Comments'
+
+
+@admin.register(PostMedia)
+class PostMediaAdmin(admin.ModelAdmin):
+    list_display = ['post', 'media_type', 'order', 'file_size_display', 'uploaded_at']
+    list_filter = ['media_type', 'uploaded_at']
+    search_fields = ['post__title']
+    readonly_fields = ['uploaded_at', 'file_size', 'width', 'height', 'duration']
+    list_editable = ['order']
+
+    fieldsets = (
+        ('Post', {
+            'fields': ('post', 'media_type', 'file', 'order')
+        }),
+        ('Metadata', {
+            'fields': ('thumbnail', 'width', 'height', 'duration', 'file_size', 'uploaded_at'),
+            'classes': ('collapse',)
+        }),
+    )
+
+    def file_size_display(self, obj):
+        if obj.file_size:
+            # Convert bytes to KB/MB
+            if obj.file_size < 1024 * 1024:  # < 1MB
+                return f"{obj.file_size / 1024:.1f} KB"
+            else:
+                return f"{obj.file_size / (1024 * 1024):.1f} MB"
+        return "-"
+
+    file_size_display.short_description = 'Size'
 
 
 @admin.register(Comment)

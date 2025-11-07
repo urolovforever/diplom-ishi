@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from .models import Confession, Post, Like, Comment, Subscription, Notification, CommentLike
+from .models import Confession, Post, PostMedia, Like, Comment, Subscription, Notification, CommentLike
 
 User = get_user_model()
 
@@ -109,6 +109,18 @@ class CommentReplySerializer(serializers.ModelSerializer):
         return []
 
 
+class PostMediaSerializer(serializers.ModelSerializer):
+    """Serializer for post media (images and videos)"""
+
+    class Meta:
+        model = PostMedia
+        fields = [
+            'id', 'media_type', 'file', 'order', 'thumbnail',
+            'duration', 'width', 'height', 'file_size', 'uploaded_at'
+        ]
+        read_only_fields = ['id', 'uploaded_at', 'file_size', 'width', 'height', 'duration']
+
+
 class PostSerializer(serializers.ModelSerializer):
     author = UserMinimalSerializer(read_only=True)
     confession = ConfessionSerializer(read_only=True)
@@ -116,13 +128,15 @@ class PostSerializer(serializers.ModelSerializer):
     comments_count = serializers.ReadOnlyField()
     is_liked = serializers.SerializerMethodField()
     comments = CommentSerializer(many=True, read_only=True)
+    media_files = PostMediaSerializer(many=True, read_only=True)
 
     class Meta:
         model = Post
         fields = [
             'id', 'confession', 'author', 'title', 'content',
-            'image', 'video_url', 'is_pinned', 'views_count', 'likes_count',
-            'comments_count', 'is_liked', 'comments',
+            'image', 'video_url', 'is_pinned', 'comments_enabled',
+            'views_count', 'likes_count', 'comments_count', 'is_liked',
+            'media_files', 'comments',
             'created_at', 'updated_at'
         ]
         read_only_fields = ['id', 'author', 'views_count', 'created_at', 'updated_at']
@@ -136,10 +150,16 @@ class PostSerializer(serializers.ModelSerializer):
 
 class PostCreateSerializer(serializers.ModelSerializer):
     """Post yaratish uchun alohida serializer"""
+    media_files_data = serializers.ListField(
+        child=serializers.FileField(),
+        write_only=True,
+        required=False,
+        help_text="List of image or video files to upload"
+    )
 
     class Meta:
         model = Post
-        fields = ['confession', 'title', 'content', 'image', 'video_url', 'is_pinned']
+        fields = ['confession', 'title', 'content', 'image', 'video_url', 'is_pinned', 'comments_enabled', 'media_files_data']
 
     def validate_confession(self, value):
         """Faqat o'z konfessiyasiga post qo'shish mumkin"""
@@ -148,6 +168,31 @@ class PostCreateSerializer(serializers.ModelSerializer):
             if not value.admin == request.user:
                 raise serializers.ValidationError("You can only post to your managed confession.")
         return value
+
+    def create(self, validated_data):
+        media_files_data = validated_data.pop('media_files_data', [])
+        post = super().create(validated_data)
+
+        # Create PostMedia objects for each uploaded file
+        for index, media_file in enumerate(media_files_data):
+            # Determine media type based on file extension
+            file_name = media_file.name.lower()
+            if file_name.endswith(('.jpg', '.jpeg', '.png', '.gif', '.webp')):
+                media_type = 'image'
+            elif file_name.endswith(('.mp4', '.mov', '.avi', '.webm', '.mkv')):
+                media_type = 'video'
+            else:
+                continue  # Skip unsupported file types
+
+            PostMedia.objects.create(
+                post=post,
+                media_type=media_type,
+                file=media_file,
+                order=index,
+                file_size=media_file.size
+            )
+
+        return post
 
 
 class SubscriptionSerializer(serializers.ModelSerializer):
