@@ -6,3 +6,12 @@ psycopg2-binary==2.9.11
 PyJWT==2.10.1
 sqlparse==0.5.3
 typing_extensions==4.15.0
+# Django Channels for WebSocket support
+channels==4.0.0
+channels-redis==4.1.0
+redis==5.0.1
+daphne==4.0.0
+# Additional dependencies
+django-cors-headers==4.3.1
+django-filter==23.5
+Pillow==10.2.0
