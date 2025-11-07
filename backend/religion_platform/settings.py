@@ -9,23 +9,26 @@ DEBUG = config('DEBUG', default=True, cast=bool)
 ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
+    'daphne',  # Must be before django.contrib.staticfiles for WebSocket support
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+
     # Third party
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
     'django_filters',
-    
+    'channels',
+
     # Local apps
     'accounts',
     'confessions',
     'core',
+    'messaging',
 ]
 
 MIDDLEWARE = [
@@ -58,6 +61,17 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'religion_platform.wsgi.application'
+ASGI_APPLICATION = 'religion_platform.asgi.application'
+
+# Channels configuration
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [config('REDIS_URL', default='redis://127.0.0.1:6379/0')],
+        },
+    },
+}
 
 DATABASES = {
     'default': {

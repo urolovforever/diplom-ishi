@@ -1,0 +1,112 @@
+import { formatDistanceToNow } from 'date-fns';
+
+const ConversationList = ({
+  conversations,
+  selectedConversationId,
+  onSelectConversation,
+  isLoading,
+}) => {
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+      </div>
+    );
+  }
+
+  if (conversations.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center p-8 text-gray-500">
+        <svg
+          className="h-12 w-12 mb-4"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
+          />
+        </svg>
+        <p className="font-medium">No conversations yet</p>
+        <p className="text-sm">Start a conversation with an admin</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex-1 overflow-y-auto">
+      {conversations.map((conversation) => {
+        const otherParticipants = conversation.participants.filter(
+          (p) => p.id !== conversation.participants[0]?.id
+        );
+        const displayName =
+          otherParticipants.length > 0
+            ? otherParticipants.map((p) => p.username).join(', ')
+            : 'Unknown';
+
+        const isSelected = conversation.id === selectedConversationId;
+
+        return (
+          <div
+            key={conversation.id}
+            onClick={() => onSelectConversation(conversation)}
+            className={`
+              flex items-center p-4 cursor-pointer border-b border-gray-200
+              hover:bg-gray-50 transition-colors
+              ${isSelected ? 'bg-indigo-50 border-l-4 border-l-indigo-600' : ''}
+            `}
+          >
+            {/* Avatar */}
+            <div className="flex-shrink-0">
+              <div className="h-12 w-12 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold">
+                {displayName.charAt(0).toUpperCase()}
+              </div>
+            </div>
+
+            {/* Conversation Info */}
+            <div className="ml-3 flex-1 min-w-0">
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-semibold text-gray-900 truncate">
+                  {displayName}
+                </p>
+                {conversation.last_message_preview && (
+                  <p className="text-xs text-gray-500">
+                    {formatDistanceToNow(new Date(conversation.last_message_preview.created_at), {
+                      addSuffix: true,
+                    })}
+                  </p>
+                )}
+              </div>
+
+              {conversation.confession && (
+                <p className="text-xs text-gray-500 mb-1">
+                  in {conversation.confession.name}
+                </p>
+              )}
+
+              {conversation.last_message_preview && (
+                <p className="text-sm text-gray-600 truncate">
+                  {conversation.last_message_preview.sender}:{' '}
+                  {conversation.last_message_preview.content}
+                </p>
+              )}
+
+              {conversation.unread_count > 0 && (
+                <div className="mt-1">
+                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-indigo-600 text-white">
+                    {conversation.unread_count}
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+export default ConversationList;

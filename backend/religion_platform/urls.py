@@ -7,6 +7,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/accounts/', include('accounts.urls')),
     path('api/', include('confessions.urls')),
+    path('api/messaging/', include('messaging.urls')),
 ]
 
 # Media files (development only)

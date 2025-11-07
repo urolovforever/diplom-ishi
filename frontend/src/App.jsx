@@ -17,6 +17,7 @@ import PostDetails from './pages/PostDetails'
 import Profile from './pages/Profile'
 import UserProfile from './pages/UserProfile'
 import AdminPanel from './pages/AdminPanel'
+import Messages from './pages/Messages'
 import NotFound from './pages/NotFound'
 
 // Protected Route Component
@@ -70,6 +71,18 @@ function App() {
       <Route path="/profile" element={
         <ProtectedRoute>
           <Profile />
+        </ProtectedRoute>
+      } />
+
+      <Route path="/messages" element={
+        <ProtectedRoute>
+          <Messages />
+        </ProtectedRoute>
+      } />
+
+      <Route path="/messages/:conversationId" element={
+        <ProtectedRoute>
+          <Messages />
         </ProtectedRoute>
       } />
 
