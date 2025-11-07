@@ -5,7 +5,7 @@ import { confessionAPI } from '../api/confession'
 import { useAuthStore } from '../store/authStore'
 import MainLayout from '../components/layout/MainLayout'
 import Loading from '../components/Loading'
-import { FiUsers, FiFileText, FiUserPlus, FiUserMinus, FiEdit2, FiX, FiImage, FiTrash2, FiEye, FiHeart, FiMessageCircle, FiArrowLeft } from 'react-icons/fi'
+import { FiUsers, FiFileText, FiUserPlus, FiUserMinus, FiEdit2, FiX, FiImage, FiTrash2, FiEye, FiHeart, FiMessageCircle, FiArrowLeft, FiVideo } from 'react-icons/fi'
 
 const ConfessionPage = () => {
   const { slug } = useParams()
@@ -298,8 +298,54 @@ const ConfessionPage = () => {
                 onClick={() => handlePostClick(post.id)}
                 className="relative aspect-square cursor-pointer group overflow-hidden bg-gray-100"
               >
-                {/* Post Image or Gradient */}
-                {post.image ? (
+                {/* Media Display - New system (media_files) or fallback */}
+                {post.media_files && post.media_files.length > 0 ? (
+                  <>
+                    {post.media_files[0].media_type === 'video' ? (
+                      // Video: Show video thumbnail or first frame
+                      <>
+                        <video
+                          src={post.media_files[0].file}
+                          className="w-full h-full object-cover"
+                          preload="metadata"
+                        />
+                        {/* Video Badge */}
+                        <div className="absolute top-2 right-2 bg-black/70 text-white p-1.5 rounded-full">
+                          <FiVideo size={16} />
+                        </div>
+                        {/* Title Overlay */}
+                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2 md:p-3">
+                          <h3 className="text-white text-xs md:text-sm font-semibold line-clamp-2">
+                            {post.title}
+                          </h3>
+                        </div>
+                      </>
+                    ) : (
+                      // Image(s): Show first image
+                      <>
+                        <img
+                          src={post.media_files[0].file}
+                          alt={post.title}
+                          className="w-full h-full object-cover"
+                        />
+                        {/* Multiple Images Badge */}
+                        {post.media_files.length > 1 && (
+                          <div className="absolute top-2 right-2 bg-black/70 text-white px-2 py-1 rounded-full text-xs font-medium flex items-center space-x-1">
+                            <FiImage size={14} />
+                            <span>{post.media_files.length}</span>
+                          </div>
+                        )}
+                        {/* Title Overlay */}
+                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2 md:p-3">
+                          <h3 className="text-white text-xs md:text-sm font-semibold line-clamp-2">
+                            {post.title}
+                          </h3>
+                        </div>
+                      </>
+                    )}
+                  </>
+                ) : post.image ? (
+                  // Fallback: Old single image system
                   <>
                     <img
                       src={post.image}
@@ -314,6 +360,7 @@ const ConfessionPage = () => {
                     </div>
                   </>
                 ) : (
+                  // No media: Show gradient background
                   <div className="w-full h-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center p-4">
                     <h3 className="text-white text-center font-semibold text-sm md:text-base line-clamp-3">
                       {post.title}

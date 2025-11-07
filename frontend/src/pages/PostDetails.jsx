@@ -6,6 +6,8 @@ import { useAuthStore } from '../store/authStore'
 import MainLayout from '../components/layout/MainLayout'
 import CommentSection from '../components/CommentSection'
 import Loading from '../components/Loading'
+import MediaCarousel from '../components/MediaCarousel'
+import VideoPlayer from '../components/VideoPlayer'
 import { FiHeart, FiMessageCircle, FiArrowLeft, FiEye } from 'react-icons/fi'
 import { BsPinFill } from 'react-icons/bs'
 import { formatDistanceToNow } from 'date-fns'
@@ -125,14 +127,25 @@ const PostDetails = () => {
 
         {/* Content */}
         <div className="p-6">
-          {/* Image */}
-          {post.image && (
+          {/* Media Display - New system (media_files) or fallback to old system (image) */}
+          {post.media_files && post.media_files.length > 0 ? (
+            <div className="mb-6">
+              {post.media_files.some(media => media.media_type === 'video') ? (
+                // If there's a video, show video player
+                <VideoPlayer videoFile={post.media_files.find(media => media.media_type === 'video')} />
+              ) : (
+                // If there are only images, show carousel
+                <MediaCarousel mediaFiles={post.media_files.filter(media => media.media_type === 'image')} />
+              )}
+            </div>
+          ) : post.image ? (
+            // Fallback: Old system - single image field
             <img
               src={post.image}
               alt={post.title}
               className="w-full rounded-lg mb-6"
             />
-          )}
+          ) : null}
 
           {/* Text Content */}
           <div className="prose max-w-none mb-6">
