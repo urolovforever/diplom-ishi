@@ -87,3 +87,18 @@ button:active {
 .animate-fadeIn {
   animation: fadeIn 0.3s ease-in-out;
 }
+
+/* Highlight animation for pinned message scroll */
+@keyframes highlightPulse {
+  0%, 100% {
+    background-color: transparent;
+  }
+  50% {
+    background-color: rgba(251, 191, 36, 0.3);
+  }
+}
+
+.highlight-message {
+  animation: highlightPulse 2s ease-in-out;
+  border-radius: 0.5rem;
+}
