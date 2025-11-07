@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import useMessagingStore from '../store/messagingStore';
-import useAuthStore from '../store/authStore';
+import { useAuthStore } from '../store/authStore';
 import ConversationList from '../components/messaging/ConversationList';
 import ChatView from '../components/messaging/ChatView';
 
