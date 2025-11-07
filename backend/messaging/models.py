@@ -1,7 +1,9 @@
-from django.db import models
+from django.db import models, transaction
 from django.conf import settings
 from django.utils import timezone
 from datetime import timedelta
+import time
+from django.db.utils import OperationalError
 
 
 class Conversation(models.Model):
@@ -48,17 +50,36 @@ class Conversation(models.Model):
         ).exclude(sender=user).count()
 
     def mark_as_read(self, user):
-        """Mark all messages in conversation as read for a user"""
+        """Mark all messages in conversation as read for a user with retry logic"""
         unread_messages = self.messages.exclude(sender=user).exclude(
             message_reads__user=user,
             message_reads__read_at__isnull=False
         )
-        for message in unread_messages:
-            MessageRead.objects.update_or_create(
-                message=message,
-                user=user,
-                defaults={'read_at': timezone.now()}
-            )
+
+        # Retry up to 3 times with exponential backoff for database locks
+        max_retries = 3
+        for attempt in range(max_retries):
+            try:
+                # Use atomic transaction to reduce lock time
+                with transaction.atomic():
+                    read_time = timezone.now()
+                    for message in unread_messages:
+                        MessageRead.objects.update_or_create(
+                            message=message,
+                            user=user,
+                            defaults={'read_at': read_time}
+                        )
+                # If successful, break out of retry loop
+                break
+            except OperationalError as e:
+                if 'database is locked' in str(e) and attempt < max_retries - 1:
+                    # Wait with exponential backoff: 0.1s, 0.2s, 0.4s
+                    wait_time = 0.1 * (2 ** attempt)
+                    time.sleep(wait_time)
+                    continue
+                else:
+                    # If last attempt or different error, raise it
+                    raise
 
 
 class Message(models.Model):
