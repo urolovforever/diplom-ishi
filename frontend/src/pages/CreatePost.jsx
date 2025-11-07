@@ -24,7 +24,7 @@ const CreatePost = () => {
   const [submitting, setSubmitting] = useState(false)
   const [images, setImages] = useState([])
   const [video, setVideo] = useState(null)
-  const [pdf, setPdf] = useState(null)
+  const [pdfs, setPdfs] = useState([])
 
   useEffect(() => {
     fetchConfessions()
@@ -100,19 +100,25 @@ const CreatePost = () => {
   }
 
   const handlePdfChange = (e) => {
-    const file = e.target.files[0]
-    if (!file) return
+    const files = Array.from(e.target.files)
+    if (files.length === 0) return
 
-    if (!file.type.endsWith('pdf')) {
+    // Check all files are PDFs
+    const allPdfs = files.every(file => file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf'))
+    if (!allPdfs) {
       toast.error('Please upload only PDF files')
       return
     }
 
-    setPdf(file)
+    setPdfs(prev => [...prev, ...files])
   }
 
-  const removePdf = () => {
-    setPdf(null)
+  const removePdf = (index) => {
+    setPdfs(prev => prev.filter((_, i) => i !== index))
+  }
+
+  const clearAllPdfs = () => {
+    setPdfs([])
   }
 
   const handleSubmit = async (e) => {
@@ -139,8 +145,10 @@ const CreatePost = () => {
         })
       } else if (video) {
         postFormData.append('media_files_data', video)
-      } else if (pdf) {
-        postFormData.append('media_files_data', pdf)
+      } else if (pdfs.length > 0) {
+        pdfs.forEach((file) => {
+          postFormData.append('media_files_data', file)
+        })
       }
 
       await confessionAPI.createPost(postFormData)
@@ -222,7 +230,7 @@ const CreatePost = () => {
           </div>
 
           {/* Images Section */}
-          <div className={`space-y-3 ${video || pdf ? 'opacity-50 pointer-events-none' : ''}`}>
+          <div className={`space-y-3 ${video || pdfs.length > 0 ? 'opacity-50 pointer-events-none' : ''}`}>
             <div className="flex items-center justify-between">
               <label className="block text-sm font-semibold text-gray-700">
                 📸 Images {images.length > 0 && `(${images.length})`}
@@ -287,14 +295,14 @@ const CreatePost = () => {
                   multiple
                   onChange={handleImageChange}
                   className="hidden"
-                  disabled={video !== null || pdf !== null}
+                  disabled={video !== null || pdfs.length > 0}
                 />
               </label>
             )}
           </div>
 
           {/* Video Section */}
-          <div className={`space-y-3 ${images.length > 0 || pdf ? 'opacity-50 pointer-events-none' : ''}`}>
+          <div className={`space-y-3 ${images.length > 0 || pdfs.length > 0 ? 'opacity-50 pointer-events-none' : ''}`}>
             <div className="flex items-center justify-between">
               <label className="block text-sm font-semibold text-gray-700">
                 🎥 Video {video && '(1)'}
@@ -334,7 +342,7 @@ const CreatePost = () => {
                   accept="video/*"
                   onChange={handleVideoChange}
                   className="hidden"
-                  disabled={images.length > 0 || pdf !== null}
+                  disabled={images.length > 0 || pdfs.length > 0}
                 />
               </label>
             )}
@@ -344,39 +352,67 @@ const CreatePost = () => {
           <div className={`space-y-3 ${images.length > 0 || video ? 'opacity-50 pointer-events-none' : ''}`}>
             <div className="flex items-center justify-between">
               <label className="block text-sm font-semibold text-gray-700">
-                📄 PDF Document {pdf && '(1)'}
+                📄 PDF Documents {pdfs.length > 0 && `(${pdfs.length})`}
               </label>
-              {pdf && (
+              {pdfs.length > 0 && (
                 <button
                   type="button"
-                  onClick={removePdf}
+                  onClick={clearAllPdfs}
                   className="text-sm text-red-600 hover:text-red-700 font-medium"
                 >
-                  Remove
+                  Clear All
                 </button>
               )}
             </div>
 
-            {pdf ? (
-              <div className="relative">
-                <div className="flex items-center space-x-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
-                  <div className="flex-shrink-0 w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
-                    <FiFileText size={24} className="text-red-600" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-900 truncate">{pdf.name}</p>
-                    <p className="text-xs text-gray-500">{(pdf.size / 1024 / 1024).toFixed(2)} MB</p>
-                  </div>
+            {pdfs.length > 0 ? (
+              <div className="space-y-3">
+                {/* PDFs List */}
+                <div className="space-y-2">
+                  {pdfs.map((file, index) => (
+                    <div key={index} className="relative group">
+                      <div className="flex items-center space-x-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                        <div className="flex-shrink-0 w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+                          <FiFileText size={24} className="text-red-600" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-gray-900 truncate">{file.name}</p>
+                          <p className="text-xs text-gray-500">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => removePdf(index)}
+                          className="p-1.5 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
+                        >
+                          <FiX size={16} />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+
+                  {/* Add More Button */}
+                  <label className="flex items-center justify-center p-4 border-2 border-dashed border-red-300 rounded-lg cursor-pointer hover:bg-red-50 transition-colors group">
+                    <FiPlus size={24} className="text-red-400 mr-2 group-hover:text-red-600" />
+                    <span className="text-sm text-gray-600 font-medium">Add More PDFs</span>
+                    <input
+                      type="file"
+                      accept=".pdf,application/pdf"
+                      multiple
+                      onChange={handlePdfChange}
+                      className="hidden"
+                    />
+                  </label>
                 </div>
               </div>
             ) : (
               <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-red-300 rounded-lg cursor-pointer hover:bg-red-50 transition-colors group">
                 <FiFileText size={32} className="text-red-400 mb-2 group-hover:text-red-600" />
-                <span className="text-sm text-gray-600 font-medium">Upload PDF</span>
-                <span className="text-xs text-gray-500 mt-1">One file only • PDF format</span>
+                <span className="text-sm text-gray-600 font-medium">Upload PDFs</span>
+                <span className="text-xs text-gray-500 mt-1">Multiple files allowed • PDF format</span>
                 <input
                   type="file"
                   accept=".pdf,application/pdf"
+                  multiple
                   onChange={handlePdfChange}
                   className="hidden"
                   disabled={images.length > 0 || video !== null}

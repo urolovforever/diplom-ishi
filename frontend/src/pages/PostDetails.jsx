@@ -131,22 +131,27 @@ const PostDetails = () => {
           {post.media_files && post.media_files.length > 0 ? (
             <div className="mb-6">
               {post.media_files.some(media => media.media_type === 'pdf') ? (
-                // If there's a PDF, show PDF viewer
-                <div className="border border-gray-200 rounded-lg overflow-hidden">
-                  <div className="bg-red-50 p-4 border-b border-red-100 flex items-center space-x-3">
-                    <FiFileText size={24} className="text-red-600" />
-                    <div>
-                      <p className="font-medium text-gray-800">PDF Document</p>
-                      <p className="text-sm text-gray-500">
-                        {post.media_files.find(media => media.media_type === 'pdf')?.file.split('/').pop()}
-                      </p>
-                    </div>
-                  </div>
-                  <iframe
-                    src={post.media_files.find(media => media.media_type === 'pdf')?.file}
-                    className="w-full h-[600px]"
-                    title="PDF Viewer"
-                  />
+                // If there are PDFs, show compact list with download links
+                <div className="space-y-2">
+                  {post.media_files.filter(media => media.media_type === 'pdf').map((pdfFile, index) => (
+                    <a
+                      key={index}
+                      href={pdfFile.file}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center space-x-3 p-4 bg-red-50 rounded-lg border border-red-100 hover:bg-red-100 transition-colors"
+                    >
+                      <div className="flex-shrink-0 w-12 h-12 bg-red-200 rounded-lg flex items-center justify-center">
+                        <FiFileText size={24} className="text-red-600" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-gray-800 truncate">
+                          {pdfFile.file.split('/').pop()}
+                        </p>
+                        <p className="text-sm text-gray-500">PDF Document • Click to open</p>
+                      </div>
+                    </a>
+                  ))}
                 </div>
               ) : post.media_files.some(media => media.media_type === 'video') ? (
                 // If there's a video, show video player
