@@ -338,12 +338,26 @@ const CommentItem = ({ comment, post, user, onDelete, onLikeToggle, onReply, onE
   )
 }
 
-const CommentSection = ({ postId }) => {
+const CommentSection = ({ postId, commentsEnabled = true }) => {
   const { user } = useAuthStore()
   const [comments, setComments] = useState([])
   const [newComment, setNewComment] = useState('')
   const [loading, setLoading] = useState(false)
   const [post, setPost] = useState(null)
+
+  // If comments are disabled, show message and return early
+  if (commentsEnabled === false) {
+    return (
+      <div className="bg-white rounded-xl shadow-md p-6">
+        <h3 className="text-xl font-bold text-gray-800 mb-4">Comments</h3>
+        <div className="flex flex-col items-center justify-center py-8 text-gray-500">
+          <FiMessageCircle size={48} className="mb-3 opacity-50" />
+          <p className="text-lg font-medium">Comments are disabled</p>
+          <p className="text-sm">The author has turned off commenting for this post</p>
+        </div>
+      </div>
+    )
+  }
 
   useEffect(() => {
     fetchPostData()

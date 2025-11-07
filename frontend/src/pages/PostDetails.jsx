@@ -174,7 +174,7 @@ const PostDetails = () => {
       </div>
 
       {/* Comments Section */}
-      <CommentSection postId={post.id} />
+      <CommentSection postId={post.id} commentsEnabled={post.comments_enabled} />
       </div>
     </MainLayout>
   )
