@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { FiHeart, FiMessageCircle, FiEdit2, FiTrash2, FiEye } from 'react-icons/fi'
+import { FiHeart, FiMessageCircle, FiEdit2, FiTrash2, FiEye, FiFileText } from 'react-icons/fi'
 import { BsPinFill } from 'react-icons/bs'
 import { formatDistanceToNow } from 'date-fns'
 import MediaCarousel from './MediaCarousel'
@@ -100,7 +100,16 @@ const PostCard = ({ post, onLike, onUnlike, onDelete, isConfessionAdmin }) => {
         {/* Media Display - New system (media_files) or fallback to old system (image) */}
         {post.media_files && post.media_files.length > 0 ? (
           // New system: Display media from media_files
-          post.media_files.some(media => media.media_type === 'video') ? (
+          post.media_files.some(media => media.media_type === 'pdf') ? (
+            // If there's a PDF, show PDF indicator
+            <div className="relative w-full aspect-[4/3] bg-gradient-to-br from-red-50 to-red-100 flex items-center justify-center">
+              <div className="text-center">
+                <FiFileText size={64} className="text-red-600 mx-auto mb-3" />
+                <p className="text-lg font-semibold text-gray-800">PDF Document</p>
+                <p className="text-sm text-gray-600 mt-1">Click to view</p>
+              </div>
+            </div>
+          ) : post.media_files.some(media => media.media_type === 'video') ? (
             // If there's a video, show video player
             <VideoPlayer videoFile={post.media_files.find(media => media.media_type === 'video')} />
           ) : (

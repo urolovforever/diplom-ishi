@@ -101,10 +101,11 @@ class PostView(models.Model):
 
 
 class PostMedia(models.Model):
-    """Media files (images or video) for posts"""
+    """Media files (images, video, or PDF) for posts"""
     MEDIA_TYPE_CHOICES = (
         ('image', 'Image'),
         ('video', 'Video'),
+        ('pdf', 'PDF'),
     )
 
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='media_files')
