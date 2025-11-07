@@ -91,8 +91,8 @@ const ConversationList = ({
               {conversation.last_message_preview && (
                 <p className="text-sm text-gray-600 truncate">
                   {currentUser && conversation.last_message_preview.sender === currentUser.username
-                    ? `You: ${conversation.last_message_preview.content}`
-                    : conversation.last_message_preview.content}
+                    ? conversation.last_message_preview.content
+                    : `${conversation.last_message_preview.sender}: ${conversation.last_message_preview.content}`}
                 </p>
               )}
 
