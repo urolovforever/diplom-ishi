@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { toast } from 'react-toastify';
 import useMessagingStore from '../../store/messagingStore';
-import useAuthStore from '../../store/authStore';
+import { useAuthStore } from '../../store/authStore';
 import WebSocketManager from '../../utils/websocket';
 import MessageBubble from './MessageBubble';
 import MessageInput from './MessageInput';
