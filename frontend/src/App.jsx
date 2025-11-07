@@ -20,16 +20,32 @@ import AdminPanel from './pages/AdminPanel'
 import Messages from './pages/Messages'
 import NotFound from './pages/NotFound'
 
+// Admin Pages
+import AdminLayout from './components/admin/AdminLayout'
+import Dashboard from './pages/admin/Dashboard'
+import UserManagement from './pages/admin/UserManagement'
+import ConfessionManagement from './pages/admin/ConfessionManagement'
+import Analytics from './pages/admin/Analytics'
+import Settings from './pages/admin/Settings'
+
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
   const { user } = useAuthStore()
   return user ? children : <Navigate to="/login" />
 }
 
-// Admin Route Component
+// Admin Route Component (for confession admins)
 const AdminRoute = ({ children }) => {
   const { user } = useAuthStore()
   return user && (user.role === 'admin' || user.role === 'superadmin')
+    ? children
+    : <Navigate to="/" />
+}
+
+// Super Admin Route Component (for super admins only)
+const SuperAdminRoute = ({ children }) => {
+  const { user } = useAuthStore()
+  return user && user.role === 'superadmin'
     ? children
     : <Navigate to="/" />
 }
@@ -86,7 +102,7 @@ function App() {
         </ProtectedRoute>
       } />
 
-      {/* Admin Routes */}
+      {/* Confession Admin Routes */}
       <Route path="/create" element={
         <AdminRoute>
           <CreatePost />
@@ -99,11 +115,18 @@ function App() {
         </AdminRoute>
       } />
 
+      {/* Super Admin Panel Routes */}
       <Route path="/admin" element={
-        <AdminRoute>
-          <AdminPanel />
-        </AdminRoute>
-      } />
+        <SuperAdminRoute>
+          <AdminLayout />
+        </SuperAdminRoute>
+      }>
+        <Route index element={<Dashboard />} />
+        <Route path="users" element={<UserManagement />} />
+        <Route path="confessions" element={<ConfessionManagement />} />
+        <Route path="analytics" element={<Analytics />} />
+        <Route path="settings" element={<Settings />} />
+      </Route>
 
       {/* 404 */}
       <Route path="*" element={<NotFound />} />
