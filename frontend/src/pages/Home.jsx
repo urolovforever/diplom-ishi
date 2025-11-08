@@ -7,9 +7,11 @@ import MainLayout from '../components/layout/MainLayout'
 import ConfessionsStories from '../components/ConfessionsStories'
 import PostCard from '../components/PostCard'
 import Loading from '../components/Loading'
+import { useLanguage } from '../contexts/LanguageContext'
 
 const Home = () => {
   const { user } = useAuthStore()
+  const { t } = useLanguage()
   const [posts, setPosts] = useState([])
   const [loading, setLoading] = useState(true)
   const [selectedConfession, setSelectedConfession] = useState(null)
@@ -120,24 +122,24 @@ const Home = () => {
       {/* Posts Feed */}
       <div className="space-y-6">
         {!user ? (
-          <div className="text-center py-16 bg-white rounded-xl shadow-sm border border-gray-200">
+          <div className="text-center py-16 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
             <div className="text-6xl mb-4">🔒</div>
-            <p className="text-gray-700 text-xl font-semibold mb-2">Login Required</p>
-            <p className="text-gray-500 mb-6">
+            <p className="text-gray-700 dark:text-gray-200 text-xl font-semibold mb-2">Login Required</p>
+            <p className="text-gray-500 dark:text-gray-400 mb-6">
               Please login to view posts from confessions you follow
             </p>
             <Link
               to="/login"
-              className="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold"
+              className="inline-block px-6 py-3 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors font-semibold"
             >
               Login Now
             </Link>
           </div>
         ) : posts.length === 0 ? (
-          <div className="text-center py-12 bg-white rounded-xl shadow-sm border border-gray-200">
+          <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
             <div className="text-6xl mb-4">📭</div>
-            <p className="text-gray-500 text-lg mb-2">No posts to show</p>
-            <p className="text-gray-400 text-sm">
+            <p className="text-gray-500 dark:text-gray-400 text-lg mb-2">No posts to show</p>
+            <p className="text-gray-400 dark:text-gray-500 text-sm">
               Subscribe to confessions to see their posts here
             </p>
           </div>
