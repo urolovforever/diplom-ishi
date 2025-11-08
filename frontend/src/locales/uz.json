@@ -118,7 +118,13 @@
     "noSubscribedAdmins": "Obuna bo'lgan konfessiya adminlari yo'q",
     "subscribeToMessage": "Adminlarga xabar yuborish uchun konfessiyalarga obuna bo'ling",
     "adminOf": "admindir",
-    "confessions": "konfessiyalar"
+    "confessions": "konfessiyalar",
+    "you": "Siz",
+    "in": "ichida",
+    "pleaseLoginToSendMessages": "Xabar yuborish uchun tizimga kiring",
+    "conversationOpened": "Suhbat ochildi!",
+    "failedToOpenConversation": "Suhbatni ochib bo'lmadi",
+    "pleaseLoginToAccessMessages": "Xabarlarga kirish uchun tizimga kiring"
   },
   "profile": {
     "profileInformation": "Profil ma'lumotlari",

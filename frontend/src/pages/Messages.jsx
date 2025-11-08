@@ -65,7 +65,7 @@ const Messages = () => {
 
   const handleStartConversation = async (admin, confessionId) => {
     if (!user) {
-      toast.error('Please login to send messages');
+      toast.error(t('messages.pleaseLoginToSendMessages'));
       return;
     }
 
@@ -82,10 +82,10 @@ const Messages = () => {
       setSelectedConversationId(conversation.id);
       navigate(`/messages/${conversation.id}`);
       setShowAdminsList(false);
-      toast.success('Conversation opened!');
+      toast.success(t('messages.conversationOpened'));
     } catch (error) {
       console.error('Failed to create conversation:', error);
-      toast.error(error.response?.data?.error || 'Failed to open conversation');
+      toast.error(error.response?.data?.error || t('messages.failedToOpenConversation'));
     } finally {
       setStartingConversation(null);
     }
@@ -120,7 +120,7 @@ const Messages = () => {
       <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-950">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-            Please log in to access messages
+            {t('messages.pleaseLoginToAccessMessages')}
           </h2>
         </div>
       </div>

@@ -118,7 +118,13 @@
     "noSubscribedAdmins": "No subscribed confession admins",
     "subscribeToMessage": "Subscribe to confessions to message their admins",
     "adminOf": "admin of",
-    "confessions": "confessions"
+    "confessions": "confessions",
+    "you": "You",
+    "in": "in",
+    "pleaseLoginToSendMessages": "Please login to send messages",
+    "conversationOpened": "Conversation opened!",
+    "failedToOpenConversation": "Failed to open conversation",
+    "pleaseLoginToAccessMessages": "Please log in to access messages"
   },
   "profile": {
     "profileInformation": "Profile Information",
