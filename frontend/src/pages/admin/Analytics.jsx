@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import adminAPI from '../../api/admin';
 import { toast } from 'react-toastify';
+import { useTheme } from '../../contexts/ThemeContext';
+import { useLanguage } from '../../contexts/LanguageContext';
 import {
   FiTrendingUp,
   FiUsers,
@@ -9,6 +11,8 @@ import {
 } from 'react-icons/fi';
 
 const Analytics = () => {
+  const { darkMode } = useTheme();
+  const { t } = useLanguage();
   const [stats, setStats] = useState(null);
   const [systemStats, setSystemStats] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -28,7 +32,7 @@ const Analytics = () => {
       setSystemStats(sysStats);
     } catch (error) {
       console.error('Error fetching analytics:', error);
-      toast.error('Failed to load analytics');
+      toast.error(t('admin.failedToLoadAnalytics'));
     } finally {
       setLoading(false);
     }
@@ -43,76 +47,76 @@ const Analytics = () => {
   }
 
   if (!stats || !systemStats) {
-    return <div className="text-center text-gray-600">No analytics data available</div>;
+    return <div className={`text-center ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('admin.noAnalyticsData')}</div>;
   }
 
   return (
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Platform Analytics</h1>
-        <p className="text-gray-600 mt-1">Comprehensive platform statistics and insights</p>
+        <h1 className={`text-2xl font-bold ${darkMode ? 'text-gray-100' : 'text-gray-900'}`}>{t('admin.platformAnalytics')}</h1>
+        <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} mt-1`}>{t('admin.comprehensiveStats')}</p>
       </div>
 
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-6 rounded-xl shadow-lg">
+        <div className={`${darkMode ? 'bg-gradient-to-br from-blue-700 to-blue-800' : 'bg-gradient-to-br from-blue-500 to-blue-600'} text-white p-6 rounded-xl shadow-lg`}>
           <div className="flex items-center justify-between mb-4">
             <FiUsers size={32} className="opacity-80" />
             <span className="text-xs bg-white bg-opacity-20 px-2 py-1 rounded-full">
-              Total
+              {t('admin.total')}
             </span>
           </div>
           <p className="text-3xl font-bold">{stats.total_users}</p>
-          <p className="text-blue-100 text-sm mt-1">Total Users</p>
+          <p className={`${darkMode ? 'text-blue-200' : 'text-blue-100'} text-sm mt-1`}>{t('admin.totalUsers')}</p>
         </div>
 
-        <div className="bg-gradient-to-br from-green-500 to-green-600 text-white p-6 rounded-xl shadow-lg">
+        <div className={`${darkMode ? 'bg-gradient-to-br from-green-700 to-green-800' : 'bg-gradient-to-br from-green-500 to-green-600'} text-white p-6 rounded-xl shadow-lg`}>
           <div className="flex items-center justify-between mb-4">
             <FiActivity size={32} className="opacity-80" />
             <span className="text-xs bg-white bg-opacity-20 px-2 py-1 rounded-full">
-              24h
+              {t('admin.24h')}
             </span>
           </div>
           <p className="text-3xl font-bold">{systemStats.active_users_24h}</p>
-          <p className="text-green-100 text-sm mt-1">Active Users (24h)</p>
+          <p className={`${darkMode ? 'text-green-200' : 'text-green-100'} text-sm mt-1`}>{t('admin.activeUsers24h')}</p>
         </div>
 
-        <div className="bg-gradient-to-br from-purple-500 to-purple-600 text-white p-6 rounded-xl shadow-lg">
+        <div className={`${darkMode ? 'bg-gradient-to-br from-purple-700 to-purple-800' : 'bg-gradient-to-br from-purple-500 to-purple-600'} text-white p-6 rounded-xl shadow-lg`}>
           <div className="flex items-center justify-between mb-4">
             <FiTrendingUp size={32} className="opacity-80" />
             <span className="text-xs bg-white bg-opacity-20 px-2 py-1 rounded-full">
-              7 days
+              {t('admin.7days')}
             </span>
           </div>
           <p className="text-3xl font-bold">{systemStats.growth.users_7d}</p>
-          <p className="text-purple-100 text-sm mt-1">New Users (7d)</p>
+          <p className={`${darkMode ? 'text-purple-200' : 'text-purple-100'} text-sm mt-1`}>{t('admin.newUsers7d')}</p>
         </div>
 
-        <div className="bg-gradient-to-br from-orange-500 to-orange-600 text-white p-6 rounded-xl shadow-lg">
+        <div className={`${darkMode ? 'bg-gradient-to-br from-orange-700 to-orange-800' : 'bg-gradient-to-br from-orange-500 to-orange-600'} text-white p-6 rounded-xl shadow-lg`}>
           <div className="flex items-center justify-between mb-4">
             <FiFileText size={32} className="opacity-80" />
             <span className="text-xs bg-white bg-opacity-20 px-2 py-1 rounded-full">
-              7 days
+              {t('admin.7days')}
             </span>
           </div>
           <p className="text-3xl font-bold">{systemStats.growth.posts_7d}</p>
-          <p className="text-orange-100 text-sm mt-1">New Posts (7d)</p>
+          <p className={`${darkMode ? 'text-orange-200' : 'text-orange-100'} text-sm mt-1`}>{t('admin.newPosts7d')}</p>
         </div>
       </div>
 
       {/* User Stats by Role */}
-      <div className="bg-white rounded-xl shadow-md p-6 border border-gray-100">
-        <h3 className="text-lg font-bold text-gray-900 mb-6">Users by Role</h3>
+      <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'} rounded-xl shadow-md p-6 border`}>
+        <h3 className={`text-lg font-bold ${darkMode ? 'text-gray-100' : 'text-gray-900'} mb-6`}>{t('admin.usersByRole')}</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="text-center p-6 bg-gray-50 rounded-lg">
-            <div className="text-4xl font-bold text-gray-900 mb-2">
+          <div className={`text-center p-6 ${darkMode ? 'bg-gray-700' : 'bg-gray-50'} rounded-lg`}>
+            <div className={`text-4xl font-bold ${darkMode ? 'text-gray-100' : 'text-gray-900'} mb-2`}>
               {stats.users_by_role.user}
             </div>
-            <div className="text-sm text-gray-600">Regular Users</div>
-            <div className="mt-3 h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('admin.regularUsers')}</div>
+            <div className={`mt-3 h-2 ${darkMode ? 'bg-gray-600' : 'bg-gray-200'} rounded-full overflow-hidden`}>
               <div
-                className="h-full bg-gray-500 rounded-full"
+                className={`h-full ${darkMode ? 'bg-gray-400' : 'bg-gray-500'} rounded-full`}
                 style={{
                   width: `${(stats.users_by_role.user / stats.total_users) * 100}%`,
                 }}
@@ -120,14 +124,14 @@ const Analytics = () => {
             </div>
           </div>
 
-          <div className="text-center p-6 bg-blue-50 rounded-lg">
-            <div className="text-4xl font-bold text-blue-900 mb-2">
+          <div className={`text-center p-6 ${darkMode ? 'bg-blue-900' : 'bg-blue-50'} rounded-lg`}>
+            <div className={`text-4xl font-bold ${darkMode ? 'text-blue-200' : 'text-blue-900'} mb-2`}>
               {stats.users_by_role.admin}
             </div>
-            <div className="text-sm text-blue-600">Admins</div>
-            <div className="mt-3 h-2 bg-blue-200 rounded-full overflow-hidden">
+            <div className={`text-sm ${darkMode ? 'text-blue-300' : 'text-blue-600'}`}>{t('admin.admins')}</div>
+            <div className={`mt-3 h-2 ${darkMode ? 'bg-blue-700' : 'bg-blue-200'} rounded-full overflow-hidden`}>
               <div
-                className="h-full bg-blue-500 rounded-full"
+                className={`h-full ${darkMode ? 'bg-blue-400' : 'bg-blue-500'} rounded-full`}
                 style={{
                   width: `${(stats.users_by_role.admin / stats.total_users) * 100}%`,
                 }}
@@ -135,14 +139,14 @@ const Analytics = () => {
             </div>
           </div>
 
-          <div className="text-center p-6 bg-red-50 rounded-lg">
-            <div className="text-4xl font-bold text-red-900 mb-2">
+          <div className={`text-center p-6 ${darkMode ? 'bg-red-900' : 'bg-red-50'} rounded-lg`}>
+            <div className={`text-4xl font-bold ${darkMode ? 'text-red-200' : 'text-red-900'} mb-2`}>
               {stats.users_by_role.superadmin}
             </div>
-            <div className="text-sm text-red-600">Super Admins</div>
-            <div className="mt-3 h-2 bg-red-200 rounded-full overflow-hidden">
+            <div className={`text-sm ${darkMode ? 'text-red-300' : 'text-red-600'}`}>{t('admin.superAdmins')}</div>
+            <div className={`mt-3 h-2 ${darkMode ? 'bg-red-700' : 'bg-red-200'} rounded-full overflow-hidden`}>
               <div
-                className="h-full bg-red-500 rounded-full"
+                className={`h-full ${darkMode ? 'bg-red-400' : 'bg-red-500'} rounded-full`}
                 style={{
                   width: `${(stats.users_by_role.superadmin / stats.total_users) * 100}%`,
                 }}
@@ -153,16 +157,16 @@ const Analytics = () => {
       </div>
 
       {/* Monthly Registration Trend */}
-      <div className="bg-white rounded-xl shadow-md p-6 border border-gray-100">
-        <h3 className="text-lg font-bold text-gray-900 mb-6">Monthly User Registrations</h3>
+      <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'} rounded-xl shadow-md p-6 border`}>
+        <h3 className={`text-lg font-bold ${darkMode ? 'text-gray-100' : 'text-gray-900'} mb-6`}>{t('admin.monthlyUserRegistrations')}</h3>
         <div className="space-y-4">
           {stats.monthly_registrations.map((month) => (
             <div key={month.month} className="flex items-center">
-              <div className="w-24 text-sm text-gray-600">{month.month}</div>
+              <div className={`w-24 text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{month.month}</div>
               <div className="flex-1">
-                <div className="bg-gray-200 rounded-full h-8 overflow-hidden">
+                <div className={`${darkMode ? 'bg-gray-700' : 'bg-gray-200'} rounded-full h-8 overflow-hidden`}>
                   <div
-                    className="bg-gradient-to-r from-indigo-500 to-purple-600 h-full rounded-full flex items-center justify-end pr-3 text-white text-sm font-semibold transition-all"
+                    className={`${darkMode ? 'bg-gradient-to-r from-blue-600 to-purple-700' : 'bg-gradient-to-r from-indigo-500 to-purple-600'} h-full rounded-full flex items-center justify-end pr-3 text-white text-sm font-semibold transition-all`}
                     style={{
                       width: `${
                         (month.count / Math.max(...stats.monthly_registrations.map((m) => m.count))) *
@@ -181,32 +185,32 @@ const Analytics = () => {
       </div>
 
       {/* Top Active Users */}
-      <div className="bg-white rounded-xl shadow-md p-6 border border-gray-100">
-        <h3 className="text-lg font-bold text-gray-900 mb-6">Top Active Users</h3>
+      <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'} rounded-xl shadow-md p-6 border`}>
+        <h3 className={`text-lg font-bold ${darkMode ? 'text-gray-100' : 'text-gray-900'} mb-6`}>{t('admin.topActiveUsers')}</h3>
         <div className="space-y-3">
           {systemStats.top_users.map((user, index) => (
             <div
               key={user.id}
-              className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+              className={`flex items-center justify-between p-4 ${darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-50 hover:bg-gray-100'} rounded-lg transition-colors`}
             >
               <div className="flex items-center space-x-4">
-                <div className="bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-full h-12 w-12 flex items-center justify-center font-bold text-lg">
+                <div className={`${darkMode ? 'bg-gradient-to-br from-blue-600 to-purple-700' : 'bg-gradient-to-br from-indigo-500 to-purple-600'} text-white rounded-full h-12 w-12 flex items-center justify-center font-bold text-lg`}>
                   #{index + 1}
                 </div>
                 <div>
-                  <p className="font-semibold text-gray-900">{user.username}</p>
-                  <p className="text-sm text-gray-500">
-                    {user.total_activity} posts & comments
+                  <p className={`font-semibold ${darkMode ? 'text-gray-100' : 'text-gray-900'}`}>{user.username}</p>
+                  <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                    {user.total_activity} {t('admin.postsAndComments')}
                   </p>
                 </div>
               </div>
               <span
                 className={`px-3 py-1 rounded-full text-xs font-semibold ${
                   user.role === 'superadmin'
-                    ? 'bg-red-100 text-red-800'
+                    ? darkMode ? 'bg-red-900 text-red-200' : 'bg-red-100 text-red-800'
                     : user.role === 'admin'
-                    ? 'bg-blue-100 text-blue-800'
-                    : 'bg-gray-100 text-gray-800'
+                    ? darkMode ? 'bg-blue-900 text-blue-200' : 'bg-blue-100 text-blue-800'
+                    : darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-800'
                 }`}
               >
                 {user.role}
@@ -218,36 +222,36 @@ const Analytics = () => {
 
       {/* Growth Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-white rounded-xl shadow-md p-6 border border-gray-100">
-          <h3 className="text-lg font-bold text-gray-900 mb-4">User Growth</h3>
+        <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'} rounded-xl shadow-md p-6 border`}>
+          <h3 className={`text-lg font-bold ${darkMode ? 'text-gray-100' : 'text-gray-900'} mb-4`}>{t('admin.userGrowth')}</h3>
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-gray-600">Last 7 days</span>
-              <span className="text-2xl font-bold text-green-600">
+              <span className={`${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('admin.last7days')}</span>
+              <span className={`text-2xl font-bold ${darkMode ? 'text-green-400' : 'text-green-600'}`}>
                 +{systemStats.growth.users_7d}
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-gray-600">Last 30 days</span>
-              <span className="text-2xl font-bold text-blue-600">
+              <span className={`${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('admin.last30days')}</span>
+              <span className={`text-2xl font-bold ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>
                 +{systemStats.growth.users_30d}
               </span>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-md p-6 border border-gray-100">
-          <h3 className="text-lg font-bold text-gray-900 mb-4">Content Growth</h3>
+        <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'} rounded-xl shadow-md p-6 border`}>
+          <h3 className={`text-lg font-bold ${darkMode ? 'text-gray-100' : 'text-gray-900'} mb-4`}>{t('admin.contentGrowth')}</h3>
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-gray-600">Posts (7 days)</span>
-              <span className="text-2xl font-bold text-green-600">
+              <span className={`${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('admin.posts7days')}</span>
+              <span className={`text-2xl font-bold ${darkMode ? 'text-green-400' : 'text-green-600'}`}>
                 +{systemStats.growth.posts_7d}
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-gray-600">Posts (30 days)</span>
-              <span className="text-2xl font-bold text-blue-600">
+              <span className={`${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('admin.posts30days')}</span>
+              <span className={`text-2xl font-bold ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>
                 +{systemStats.growth.posts_30d}
               </span>
             </div>
@@ -256,26 +260,26 @@ const Analytics = () => {
       </div>
 
       {/* User Status */}
-      <div className="bg-white rounded-xl shadow-md p-6 border border-gray-100">
-        <h3 className="text-lg font-bold text-gray-900 mb-6">User Status Distribution</h3>
+      <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'} rounded-xl shadow-md p-6 border`}>
+        <h3 className={`text-lg font-bold ${darkMode ? 'text-gray-100' : 'text-gray-900'} mb-6`}>{t('admin.userStatusDistribution')}</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="text-center p-6 bg-green-50 rounded-lg">
-            <div className="text-5xl font-bold text-green-900 mb-2">
+          <div className={`text-center p-6 ${darkMode ? 'bg-green-900' : 'bg-green-50'} rounded-lg`}>
+            <div className={`text-5xl font-bold ${darkMode ? 'text-green-200' : 'text-green-900'} mb-2`}>
               {stats.active_users}
             </div>
-            <div className="text-sm text-green-600 font-medium">Active Users</div>
-            <div className="mt-4 text-xs text-gray-600">
-              {((stats.active_users / stats.total_users) * 100).toFixed(1)}% of total
+            <div className={`text-sm ${darkMode ? 'text-green-300' : 'text-green-600'} font-medium`}>{t('admin.activeUsers')}</div>
+            <div className={`mt-4 text-xs ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              {((stats.active_users / stats.total_users) * 100).toFixed(1)}% {t('admin.ofTotal')}
             </div>
           </div>
 
-          <div className="text-center p-6 bg-red-50 rounded-lg">
-            <div className="text-5xl font-bold text-red-900 mb-2">
+          <div className={`text-center p-6 ${darkMode ? 'bg-red-900' : 'bg-red-50'} rounded-lg`}>
+            <div className={`text-5xl font-bold ${darkMode ? 'text-red-200' : 'text-red-900'} mb-2`}>
               {stats.inactive_users}
             </div>
-            <div className="text-sm text-red-600 font-medium">Inactive Users</div>
-            <div className="mt-4 text-xs text-gray-600">
-              {((stats.inactive_users / stats.total_users) * 100).toFixed(1)}% of total
+            <div className={`text-sm ${darkMode ? 'text-red-300' : 'text-red-600'} font-medium`}>{t('admin.inactiveUsers')}</div>
+            <div className={`mt-4 text-xs ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              {((stats.inactive_users / stats.total_users) * 100).toFixed(1)}% {t('admin.ofTotal')}
             </div>
           </div>
         </div>
