@@ -12,10 +12,12 @@ import { FiHeart, FiMessageCircle, FiArrowLeft, FiEye, FiFileText } from 'react-
 import { BsPinFill } from 'react-icons/bs'
 import { formatDistanceToNow } from 'date-fns'
 import { formatUsername } from '../utils/formatters'
+import { useLanguage } from '../contexts/LanguageContext'
 
 const PostDetails = () => {
   const { id } = useParams()
   const { user } = useAuthStore()
+  const { t } = useLanguage()
 
   const [post, setPost] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -71,7 +73,7 @@ const PostDetails = () => {
 
   if (!post) return (
     <MainLayout>
-      <div className="text-center py-12">Post not found</div>
+      <div className="text-center py-12 text-gray-800 dark:text-gray-200">Post not found</div>
     </MainLayout>
   )
 
@@ -81,20 +83,20 @@ const PostDetails = () => {
       {/* Back Button */}
       <Link
         to="/"
-        className="inline-flex items-center space-x-2 text-blue-600 hover:text-blue-700 mb-6"
+        className="inline-flex items-center space-x-2 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 mb-6 transition-colors"
       >
         <FiArrowLeft />
-        <span>Back to Home</span>
+        <span>{t('common.backToHome')}</span>
       </Link>
 
       {/* Post Content */}
-      <div className="bg-white rounded-xl shadow-md overflow-hidden mb-6">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden mb-6">
         {/* Header */}
-        <div className="p-6 border-b border-gray-100">
+        <div className="p-6 border-b border-gray-100 dark:border-gray-700">
           <div className="flex items-center justify-between mb-4">
             <Link
               to={`/confession/${post.confession.slug}`}
-              className="flex items-center space-x-3 hover:opacity-80"
+              className="flex items-center space-x-3 hover:opacity-80 transition-opacity"
             >
               {post.confession.logo && (
                 <img
@@ -104,24 +106,24 @@ const PostDetails = () => {
                 />
               )}
               <div>
-                <h3 className="font-semibold text-gray-800">
+                <h3 className="font-semibold text-gray-800 dark:text-gray-200">
                   {post.confession.name}
                 </h3>
-                <p className="text-sm text-gray-500">
-                  by {formatUsername(post.author.username)} • {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  {t('common.by')} {formatUsername(post.author.username)} • {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
                 </p>
               </div>
             </Link>
 
             {post.is_pinned && (
-              <div className="flex items-center space-x-1 text-yellow-600 bg-yellow-50 px-3 py-1 rounded-full">
+              <div className="flex items-center space-x-1 text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900/30 px-3 py-1 rounded-full">
                 <BsPinFill size={16} />
-                <span className="text-sm font-medium">Pinned</span>
+                <span className="text-sm font-medium">{t('common.pinned')}</span>
               </div>
             )}
           </div>
 
-          <h1 className="text-3xl font-bold text-gray-800 mb-4">
+          <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-4">
             {post.title}
           </h1>
         </div>
@@ -140,16 +142,16 @@ const PostDetails = () => {
                       href={pdfFile.file}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center space-x-3 p-4 bg-red-50 rounded-lg border border-red-100 hover:bg-red-100 transition-colors"
+                      className="flex items-center space-x-3 p-4 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-100 dark:border-red-900/30 hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors"
                     >
-                      <div className="flex-shrink-0 w-12 h-12 bg-red-200 rounded-lg flex items-center justify-center">
-                        <FiFileText size={24} className="text-red-600" />
+                      <div className="flex-shrink-0 w-12 h-12 bg-red-200 dark:bg-red-800 rounded-lg flex items-center justify-center">
+                        <FiFileText size={24} className="text-red-600 dark:text-red-400" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="font-medium text-gray-800 truncate">
+                        <p className="font-medium text-gray-800 dark:text-gray-200 truncate">
                           {pdfFile.file.split('/').pop()}
                         </p>
-                        <p className="text-sm text-gray-500">PDF Document • Click to open</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">{t('common.pdfDocument')} • {t('common.clickToOpen')}</p>
                       </div>
                     </a>
                   ))}
@@ -173,39 +175,39 @@ const PostDetails = () => {
 
           {/* Text Content */}
           <div className="prose max-w-none mb-6">
-            <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+            <p className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap">
               {post.content}
             </p>
           </div>
         </div>
 
         {/* Actions */}
-        <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-between">
+        <div className="px-6 py-4 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <button
               onClick={handleLikeToggle}
               className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-all ${
                 post.is_liked
-                  ? 'text-red-600 bg-red-50 hover:bg-red-100'
-                  : 'text-gray-600 hover:bg-gray-100'
+                  ? 'text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/30 hover:bg-red-100 dark:hover:bg-red-900/50'
+                  : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
               }`}
             >
               <FiHeart
                 size={20}
                 fill={post.is_liked ? 'currentColor' : 'none'}
               />
-              <span>{post.likes_count} {post.likes_count === 1 ? 'Like' : 'Likes'}</span>
+              <span>{post.likes_count} {post.likes_count === 1 ? t('common.like') : t('common.like') + 's'}</span>
             </button>
 
-            <div className="flex items-center space-x-2 text-gray-600 px-4 py-2">
+            <div className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 px-4 py-2">
               <FiMessageCircle size={20} />
-              <span>{post.comments_count} {post.comments_count === 1 ? 'Comment' : 'Comments'}</span>
+              <span>{post.comments_count} {post.comments_count === 1 ? t('common.comment') : t('common.comments')}</span>
             </div>
           </div>
 
-          <div className="flex items-center space-x-2 text-gray-500">
+          <div className="flex items-center space-x-2 text-gray-500 dark:text-gray-400">
             <FiEye size={18} />
-            <span>{post.views_count || 0} views</span>
+            <span>{post.views_count || 0} {t('common.views')}</span>
           </div>
         </div>
       </div>

@@ -8,6 +8,7 @@ import { FiTrash2, FiSend, FiHeart, FiEdit3, FiCheck, FiX, FiChevronDown, FiChev
 import { FaHeart, FaHeart as FaHeartSolid } from 'react-icons/fa'
 import { BsPinFill, BsPin } from 'react-icons/bs'
 import { formatUsername } from '../utils/formatters'
+import { useLanguage } from '../contexts/LanguageContext'
 
 // Helper function to convert URLs to clickable links
 const linkify = (text) => {
@@ -20,7 +21,7 @@ const linkify = (text) => {
           href={part}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-blue-600"
+          className="text-blue-600 dark:text-blue-400"
         >
           {part}
         </a>
@@ -33,6 +34,7 @@ const linkify = (text) => {
 const CommentItem = ({ comment, post, user, onDelete, onLikeToggle, onReply, onEdit, onPin, level = 0 }) => {
   const navigate = useNavigate()
   const location = useLocation()
+  const { t } = useLanguage()
   const commentRef = useRef(null)
   const [showReplyForm, setShowReplyForm] = useState(false)
   const [replyText, setReplyText] = useState('')
@@ -84,10 +86,10 @@ const CommentItem = ({ comment, post, user, onDelete, onLikeToggle, onReply, onE
       })
       setReplyText('')
       setShowReplyForm(false)
-      toast.success('Reply posted!')
+      toast.success(t('common.replyPosted'))
       onReply()
     } catch (error) {
-      toast.error('Failed to post reply')
+      toast.error(t('common.replyFailed'))
     } finally {
       setSubmitting(false)
     }
@@ -99,10 +101,10 @@ const CommentItem = ({ comment, post, user, onDelete, onLikeToggle, onReply, onE
     try {
       await confessionAPI.updateComment(comment.id, { content: editText })
       setIsEditing(false)
-      toast.success('Comment updated!')
+      toast.success(t('common.commentUpdated'))
       onEdit()
     } catch (error) {
-      toast.error('Failed to update comment')
+      toast.error(t('common.commentUpdateFailed'))
     }
   }
 
@@ -118,7 +120,7 @@ const CommentItem = ({ comment, post, user, onDelete, onLikeToggle, onReply, onE
     <div
       id={`comment-${comment.id}`}
       ref={commentRef}
-      className={`${level > 0 ? 'ml-8 border-l-2 border-gray-200 pl-4' : ''} transition-all duration-300 ${isHighlighted ? 'bg-blue-50 ring-2 ring-blue-400 rounded-lg' : ''}`}
+      className={`${level > 0 ? 'ml-8 border-l-2 border-gray-200 dark:border-gray-700 pl-4' : ''} transition-all duration-300 ${isHighlighted ? 'bg-blue-50 dark:bg-blue-900/20 ring-2 ring-blue-400 dark:ring-blue-500 rounded-lg' : ''}`}
     >
       <div className="flex space-x-3 py-3">
         {/* Avatar */}
@@ -142,20 +144,20 @@ const CommentItem = ({ comment, post, user, onDelete, onLikeToggle, onReply, onE
           <div className="flex items-center space-x-2 mb-1">
             <button
               onClick={() => navigate(`/user/${comment.author.username}`)}
-              className="font-semibold text-sm text-gray-900 hover:text-blue-600 transition-colors"
+              className="font-semibold text-sm text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
             >
               {formatUsername(comment.author.username)}
             </button>
-            <span className="text-xs text-gray-500">
+            <span className="text-xs text-gray-500 dark:text-gray-400">
               {formatDistanceToNow(new Date(comment.created_at), { addSuffix: true })}
             </span>
             {comment.is_edited && (
-              <span className="text-xs text-gray-400 italic">edited</span>
+              <span className="text-xs text-gray-400 dark:text-gray-500 italic">{t('common.edited')}</span>
             )}
             {comment.is_pinned && (
-              <span className="flex items-center space-x-1 text-xs text-yellow-600 bg-yellow-50 px-2 py-0.5 rounded-full">
+              <span className="flex items-center space-x-1 text-xs text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900/30 px-2 py-0.5 rounded-full">
                 <BsPinFill size={10} />
-                <span>Pinned</span>
+                <span>{t('common.pinned')}</span>
               </span>
             )}
           </div>
@@ -166,32 +168,32 @@ const CommentItem = ({ comment, post, user, onDelete, onLikeToggle, onReply, onE
               <textarea
                 value={editText}
                 onChange={(e) => setEditText(e.target.value)}
-                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
                 rows="2"
                 autoFocus
               />
               <div className="flex items-center space-x-2 mt-2">
                 <button
                   onClick={handleEditSubmit}
-                  className="flex items-center space-x-1 px-3 py-1 bg-blue-600 text-white text-xs font-semibold rounded-full hover:bg-blue-700"
+                  className="flex items-center space-x-1 px-3 py-1 bg-blue-600 dark:bg-blue-500 text-white text-xs font-semibold rounded-full hover:bg-blue-700 dark:hover:bg-blue-600"
                 >
                   <FiCheck size={12} />
-                  <span>Save</span>
+                  <span>{t('common.save')}</span>
                 </button>
                 <button
                   onClick={() => {
                     setIsEditing(false)
                     setEditText(comment.content)
                   }}
-                  className="flex items-center space-x-1 px-3 py-1 bg-gray-200 text-gray-700 text-xs font-semibold rounded-full hover:bg-gray-300"
+                  className="flex items-center space-x-1 px-3 py-1 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-semibold rounded-full hover:bg-gray-300 dark:hover:bg-gray-600"
                 >
                   <FiX size={12} />
-                  <span>Cancel</span>
+                  <span>{t('common.cancel')}</span>
                 </button>
               </div>
             </div>
           ) : (
-            <p className="text-sm text-gray-800 mb-2 break-words whitespace-pre-wrap">
+            <p className="text-sm text-gray-800 dark:text-gray-200 mb-2 break-words whitespace-pre-wrap">
               {linkify(comment.content)}
             </p>
           )}
@@ -222,9 +224,9 @@ const CommentItem = ({ comment, post, user, onDelete, onLikeToggle, onReply, onE
               {user && (
                 <button
                   onClick={() => setShowReplyForm(!showReplyForm)}
-                  className="font-semibold text-gray-500 hover:text-blue-600 transition-colors"
+                  className="font-semibold text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                 >
-                  Reply
+                  {t('common.reply')}
                 </button>
               )}
 
@@ -232,10 +234,10 @@ const CommentItem = ({ comment, post, user, onDelete, onLikeToggle, onReply, onE
               {user && user.id === comment.author.id && (
                 <button
                   onClick={() => setIsEditing(true)}
-                  className="flex items-center space-x-1 font-semibold text-gray-500 hover:text-blue-600 transition-colors"
+                  className="flex items-center space-x-1 font-semibold text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                 >
                   <FiEdit3 size={11} />
-                  <span>Edit</span>
+                  <span>{t('common.edit')}</span>
                 </button>
               )}
 
@@ -243,17 +245,17 @@ const CommentItem = ({ comment, post, user, onDelete, onLikeToggle, onReply, onE
               {canPinComment() && (
                 <button
                   onClick={() => onPin(comment.id, comment.is_pinned)}
-                  className="flex items-center space-x-1 font-semibold text-gray-500 hover:text-yellow-600 transition-colors"
+                  className="flex items-center space-x-1 font-semibold text-gray-500 dark:text-gray-400 hover:text-yellow-600 dark:hover:text-yellow-400 transition-colors"
                 >
                   {comment.is_pinned ? (
                     <>
                       <BsPinFill size={11} />
-                      <span>Unpin</span>
+                      <span>{t('common.unpin')}</span>
                     </>
                   ) : (
                     <>
                       <BsPin size={11} />
-                      <span>Pin</span>
+                      <span>{t('common.pin')}</span>
                     </>
                   )}
                 </button>
@@ -263,9 +265,9 @@ const CommentItem = ({ comment, post, user, onDelete, onLikeToggle, onReply, onE
               {canDeleteComment() && (
                 <button
                   onClick={() => onDelete(comment.id)}
-                  className="font-semibold text-gray-500 hover:text-red-600 transition-colors"
+                  className="font-semibold text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
                 >
-                  Delete
+                  {t('common.delete')}
                 </button>
               )}
 
@@ -273,17 +275,17 @@ const CommentItem = ({ comment, post, user, onDelete, onLikeToggle, onReply, onE
               {hasReplies && (
                 <button
                   onClick={() => setCollapsed(!collapsed)}
-                  className="flex items-center space-x-1 font-semibold text-gray-500 hover:text-blue-600 transition-colors"
+                  className="flex items-center space-x-1 font-semibold text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                 >
                   {collapsed ? (
                     <>
                       <FiChevronDown size={12} />
-                      <span>View {comment.replies_count} {comment.replies_count === 1 ? 'reply' : 'replies'}</span>
+                      <span>View {comment.replies_count} {comment.replies_count === 1 ? t('common.oneReply') : t('common.replies')}</span>
                     </>
                   ) : (
                     <>
                       <FiChevronUp size={12} />
-                      <span>Hide replies</span>
+                      <span>{t('common.hideReplies')}</span>
                     </>
                   )}
                 </button>
@@ -299,16 +301,16 @@ const CommentItem = ({ comment, post, user, onDelete, onLikeToggle, onReply, onE
                   type="text"
                   value={replyText}
                   onChange={(e) => setReplyText(e.target.value)}
-                  placeholder={`Reply to ${formatUsername(comment.author.username)}...`}
-                  className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-full focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder={`${t('common.replyTo')} ${formatUsername(comment.author.username)}...`}
+                  className="flex-1 px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400 rounded-full focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   autoFocus
                 />
                 <button
                   type="submit"
                   disabled={submitting || !replyText.trim()}
-                  className="px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-full hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                  className="px-4 py-2 bg-blue-600 dark:bg-blue-500 text-white text-sm font-semibold rounded-full hover:bg-blue-700 dark:hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                 >
-                  {submitting ? '...' : 'Post'}
+                  {submitting ? '...' : t('common.postComment')}
                 </button>
               </div>
             </form>
@@ -341,6 +343,7 @@ const CommentItem = ({ comment, post, user, onDelete, onLikeToggle, onReply, onE
 
 const CommentSection = ({ postId, commentsEnabled = true }) => {
   const { user } = useAuthStore()
+  const { t } = useLanguage()
   const [comments, setComments] = useState([])
   const [newComment, setNewComment] = useState('')
   const [loading, setLoading] = useState(false)
@@ -349,12 +352,12 @@ const CommentSection = ({ postId, commentsEnabled = true }) => {
   // If comments are disabled, show message and return early
   if (commentsEnabled === false) {
     return (
-      <div className="bg-white rounded-xl shadow-md p-6">
-        <h3 className="text-xl font-bold text-gray-800 mb-4">Comments</h3>
-        <div className="flex flex-col items-center justify-center py-8 text-gray-500">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
+        <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">{t('common.comments')}</h3>
+        <div className="flex flex-col items-center justify-center py-8 text-gray-500 dark:text-gray-400">
           <FiMessageCircle size={48} className="mb-3 opacity-50" />
-          <p className="text-lg font-medium">Comments are disabled</p>
-          <p className="text-sm">The author has turned off commenting for this post</p>
+          <p className="text-lg font-medium">{t('common.commentsDisabled')}</p>
+          <p className="text-sm">{t('common.commentsDisabledText')}</p>
         </div>
       </div>
     )
@@ -387,12 +390,12 @@ const CommentSection = ({ postId, commentsEnabled = true }) => {
     e.preventDefault()
 
     if (!user) {
-      toast.error('Please login to comment')
+      toast.error(t('common.pleaseLoginToComment'))
       return
     }
 
     if (!newComment.trim()) {
-      toast.error('Comment cannot be empty')
+      toast.error(t('common.commentEmpty'))
       return
     }
 
@@ -404,23 +407,23 @@ const CommentSection = ({ postId, commentsEnabled = true }) => {
       })
       setNewComment('')
       await fetchComments()
-      toast.success('Comment posted!')
+      toast.success(t('common.commentPosted'))
     } catch (error) {
-      toast.error('Failed to post comment')
+      toast.error(t('common.commentPostFailed'))
     } finally {
       setLoading(false)
     }
   }
 
   const handleDelete = async (commentId) => {
-    if (!window.confirm('Delete this comment and all its replies?')) return
+    if (!window.confirm(t('common.deleteConfirm'))) return
 
     try {
       await confessionAPI.deleteComment(commentId)
       await fetchComments()
-      toast.success('Comment deleted')
+      toast.success(t('common.commentDeleted'))
     } catch (error) {
-      toast.error('Failed to delete comment')
+      toast.error(t('common.commentDeleteFailed'))
     }
   }
 
@@ -433,7 +436,7 @@ const CommentSection = ({ postId, commentsEnabled = true }) => {
       }
       await fetchComments()
     } catch (error) {
-      toast.error('Failed to update like')
+      toast.error(t('common.commentUpdateFailed'))
     }
   }
 
@@ -441,14 +444,14 @@ const CommentSection = ({ postId, commentsEnabled = true }) => {
     try {
       if (isPinned) {
         await confessionAPI.unpinComment(commentId)
-        toast.success('Comment unpinned')
+        toast.success(t('common.commentUnpinned'))
       } else {
         await confessionAPI.pinComment(commentId)
-        toast.success('Comment pinned')
+        toast.success(t('common.commentPinned'))
       }
       await fetchComments()
     } catch (error) {
-      toast.error('Failed to pin/unpin comment')
+      toast.error(t('common.commentPinFailed'))
     }
   }
 
@@ -462,15 +465,15 @@ const CommentSection = ({ postId, commentsEnabled = true }) => {
   const totalComments = countAllComments(comments)
 
   return (
-    <div className="bg-white rounded-xl shadow-md p-6">
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
       {/* Header */}
-      <h3 className="text-xl font-bold text-gray-800 mb-4">
-        Comments ({totalComments})
+      <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">
+        {t('common.comments')} ({totalComments})
       </h3>
 
       {/* Comment Form */}
       {user && (
-        <form onSubmit={handleSubmit} className="mb-6 border-b border-gray-200 pb-6">
+        <form onSubmit={handleSubmit} className="mb-6 border-b border-gray-200 dark:border-gray-700 pb-6">
           <div className="flex space-x-3">
             {user.avatar ? (
               <img
@@ -490,16 +493,16 @@ const CommentSection = ({ postId, commentsEnabled = true }) => {
                 type="text"
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
-                placeholder="Add a comment..."
-                className="w-full px-4 py-2 border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none text-sm transition-colors"
+                placeholder={t('common.writeComment')}
+                className="w-full px-4 py-2 border-b-2 border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-400 focus:border-blue-500 focus:outline-none text-sm transition-colors"
               />
               <div className="mt-2 flex justify-end">
                 <button
                   type="submit"
                   disabled={loading || !newComment.trim()}
-                  className="px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-105"
+                  className="px-4 py-2 bg-blue-600 dark:bg-blue-500 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-105"
                 >
-                  {loading ? 'Posting...' : 'Post'}
+                  {loading ? t('common.posting') : t('common.postComment')}
                 </button>
               </div>
             </div>
@@ -510,11 +513,11 @@ const CommentSection = ({ postId, commentsEnabled = true }) => {
       {/* Comments List */}
       <div>
         {comments.length === 0 ? (
-          <p className="text-center text-gray-500 py-8 text-sm">
-            No comments yet. Be the first to comment!
+          <p className="text-center text-gray-500 dark:text-gray-400 py-8 text-sm">
+            {t('common.noCommentsYet')}. {t('common.beTheFirst')}
           </p>
         ) : (
-          <div className="divide-y divide-gray-100">
+          <div className="divide-y divide-gray-100 dark:divide-gray-700">
             {comments.map(comment => (
               <CommentItem
                 key={comment.id}
