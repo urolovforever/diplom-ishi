@@ -3,10 +3,12 @@ import { toast } from 'react-toastify'
 import { confessionAPI } from '../api/confession'
 import { authAPI } from '../api/auth'
 import { useAuthStore } from '../store/authStore'
+import { useLanguage } from '../contexts/LanguageContext'
 import { FiPlus, FiImage, FiVideo, FiUsers, FiSettings } from 'react-icons/fi'
 
 // Component for regular admin - post creation
 const AdminPostCreation = ({ user }) => {
+  const { t } = useLanguage()
   const [formData, setFormData] = useState({
     confession: '',
     title: '',
@@ -36,7 +38,7 @@ const AdminPostCreation = ({ user }) => {
     e.preventDefault()
 
     if (!formData.confession) {
-      toast.error('Please select a confession')
+      toast.error(t('admin.pleaseSelectConfession'))
       return
     }
 
@@ -59,7 +61,7 @@ const AdminPostCreation = ({ user }) => {
 
       await confessionAPI.createPost(submitData)
 
-      toast.success('Post created successfully!')
+      toast.success(t('admin.postCreatedSuccess'))
 
       // Reset form
       setFormData({
@@ -72,7 +74,7 @@ const AdminPostCreation = ({ user }) => {
       })
       setImagePreview(null)
     } catch (error) {
-      toast.error(error.response?.data?.confession?.[0] || 'Failed to create post')
+      toast.error(error.response?.data?.confession?.[0] || t('admin.failedToCreatePost'))
     } finally {
       setLoading(false)
     }
@@ -84,14 +86,14 @@ const AdminPostCreation = ({ user }) => {
         <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
           <FiPlus className="text-white" size={24} />
         </div>
-        <h2 className="text-2xl font-bold text-gray-800">Create New Post</h2>
+        <h2 className="text-2xl font-bold text-gray-800">{t('admin.createNewPost')}</h2>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Confession Selection */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Confession *
+            {t('admin.confession')} *
           </label>
           <input
             type="number"
@@ -99,18 +101,18 @@ const AdminPostCreation = ({ user }) => {
             value={formData.confession}
             onChange={handleChange}
             required
-            placeholder="Enter confession ID"
+            placeholder={t('admin.enterConfessionID')}
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
           <p className="text-xs text-gray-500 mt-1">
-            Enter the confession ID you manage
+            {t('admin.enterConfessionIDYouManage')}
           </p>
         </div>
 
         {/* Title */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Title *
+            {t('admin.title')} *
           </label>
           <input
             type="text"
@@ -118,7 +120,7 @@ const AdminPostCreation = ({ user }) => {
             value={formData.title}
             onChange={handleChange}
             required
-            placeholder="Enter post title..."
+            placeholder={t('admin.enterPostTitle')}
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>
@@ -126,7 +128,7 @@ const AdminPostCreation = ({ user }) => {
         {/* Content */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Content *
+            {t('admin.content')} *
           </label>
           <textarea
             name="content"
@@ -134,7 +136,7 @@ const AdminPostCreation = ({ user }) => {
             onChange={handleChange}
             required
             rows="8"
-            placeholder="Write your post content..."
+            placeholder={t('admin.writePostContent')}
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
           />
         </div>
@@ -143,7 +145,7 @@ const AdminPostCreation = ({ user }) => {
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             <FiImage className="inline mr-2" />
-            Image (optional)
+            {t('admin.imageOptional')}
           </label>
           <input
             type="file"
@@ -156,7 +158,7 @@ const AdminPostCreation = ({ user }) => {
             <div className="mt-4">
               <img
                 src={imagePreview}
-                alt="Preview"
+                alt={t('admin.preview')}
                 className="w-full max-h-64 object-cover rounded-lg"
               />
             </div>
@@ -167,18 +169,18 @@ const AdminPostCreation = ({ user }) => {
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             <FiVideo className="inline mr-2" />
-            Video URL (optional)
+            {t('admin.videoURL')}
           </label>
           <input
             type="url"
             name="video_url"
             value={formData.video_url}
             onChange={handleChange}
-            placeholder="https://youtube.com/embed/..."
+            placeholder={t('admin.videoURLPlaceholder')}
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
           <p className="text-xs text-gray-500 mt-1">
-            Enter YouTube or Vimeo embed URL
+            {t('admin.enterYouTubeVimeoURL')}
           </p>
         </div>
 
@@ -192,7 +194,7 @@ const AdminPostCreation = ({ user }) => {
             className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
           />
           <label className="text-sm font-medium text-gray-700">
-            Pin this post to the top
+            {t('admin.pinThisPostToTop')}
           </label>
         </div>
 
@@ -202,7 +204,7 @@ const AdminPostCreation = ({ user }) => {
           disabled={loading}
           className="w-full py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {loading ? 'Creating Post...' : 'Create Post'}
+          {loading ? t('admin.creatingPost') : t('admin.createPost')}
         </button>
       </form>
     </div>
@@ -211,6 +213,7 @@ const AdminPostCreation = ({ user }) => {
 
 // Component for superadmin - confession management
 const SuperAdminPanel = () => {
+  const { t } = useLanguage()
   const [confessions, setConfessions] = useState([])
   const [adminUsers, setAdminUsers] = useState([])
   const [loading, setLoading] = useState(true)
@@ -230,7 +233,7 @@ const SuperAdminPanel = () => {
       setConfessions(confessionsData.results || confessionsData)
       setAdminUsers(adminsData)
     } catch (error) {
-      toast.error('Failed to load data')
+      toast.error(t('admin.failedToLoadData'))
     } finally {
       setLoading(false)
     }
@@ -238,7 +241,7 @@ const SuperAdminPanel = () => {
 
   const handleAssignAdmin = async (confessionSlug, adminId) => {
     if (!adminId) {
-      toast.error('Please select an admin')
+      toast.error(t('admin.pleaseSelectAdmin'))
       return
     }
 
@@ -246,10 +249,10 @@ const SuperAdminPanel = () => {
 
     try {
       await confessionAPI.assignAdmin(confessionSlug, adminId)
-      toast.success('Admin assigned successfully!')
+      toast.success(t('admin.adminAssignedSuccess'))
       await fetchData()
     } catch (error) {
-      toast.error(error.response?.data?.error || 'Failed to assign admin')
+      toast.error(error.response?.data?.error || t('admin.failedToAssignAdmin'))
     } finally {
       setAssigningAdmin({ ...assigningAdmin, [confessionSlug]: false })
     }
@@ -270,15 +273,15 @@ const SuperAdminPanel = () => {
           <FiUsers className="text-white" size={24} />
         </div>
         <div>
-          <h2 className="text-2xl font-bold text-gray-800">Confession Management</h2>
-          <p className="text-sm text-gray-600">Assign admins to confessions</p>
+          <h2 className="text-2xl font-bold text-gray-800">{t('admin.confessionManagement')}</h2>
+          <p className="text-sm text-gray-600">{t('admin.assignAdminsToConfessions')}</p>
         </div>
       </div>
 
       <div className="space-y-4">
         {confessions.length === 0 ? (
           <div className="text-center py-8 text-gray-500">
-            No confessions found
+            {t('admin.noConfessionsFound')}
           </div>
         ) : (
           confessions.map((confession) => (
@@ -299,8 +302,8 @@ const SuperAdminPanel = () => {
                     <h3 className="text-xl font-bold text-gray-800">{confession.name}</h3>
                     <p className="text-sm text-gray-600">{confession.description}</p>
                     <div className="flex items-center space-x-4 mt-2 text-xs text-gray-500">
-                      <span>{confession.subscribers_count} subscribers</span>
-                      <span>{confession.posts_count} posts</span>
+                      <span>{confession.subscribers_count} {t('admin.subscribers')}</span>
+                      <span>{confession.posts_count} {t('common.posts')}</span>
                     </div>
                   </div>
                 </div>
@@ -309,7 +312,7 @@ const SuperAdminPanel = () => {
               <div className="flex items-center space-x-4">
                 <div className="flex-1">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Current Admin: {confession.admin?.username || 'Not assigned'}
+                    {t('admin.currentAdmin')} {confession.admin?.username || t('admin.notAssigned')}
                   </label>
                   <select
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -317,7 +320,7 @@ const SuperAdminPanel = () => {
                     disabled={assigningAdmin[confession.slug]}
                     defaultValue=""
                   >
-                    <option value="">Select admin to assign...</option>
+                    <option value="">{t('admin.selectAdminToAssign')}</option>
                     {adminUsers.map((admin) => (
                       <option key={admin.id} value={admin.id}>
                         {admin.username} ({admin.role}) - {admin.email}
@@ -339,15 +342,16 @@ const SuperAdminPanel = () => {
 
 const AdminPanel = () => {
   const { user } = useAuthStore()
+  const { t } = useLanguage()
 
   return (
     <div className="max-w-4xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">Admin Panel</h1>
+        <h1 className="text-3xl font-bold text-gray-800 mb-2">{t('admin.panel')}</h1>
         <p className="text-gray-600">
           {user?.role === 'superadmin'
-            ? 'Manage confessions and assign admins'
-            : 'Create and manage posts for your confession'
+            ? t('admin.manageConfessionsAndAdmins')
+            : t('admin.managePostsForConfession')
           }
         </p>
       </div>
