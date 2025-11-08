@@ -10,12 +10,17 @@ import {
   FiUser,
   FiLogOut,
   FiSettings,
-  FiArrowLeft
+  FiArrowLeft,
+  FiMoreHorizontal,
+  FiMoon,
+  FiSun,
+  FiGlobe
 } from 'react-icons/fi'
 import { FaUserCircle, FaHeart, FaComment, FaUsers } from 'react-icons/fa'
 import { getUnreadCount, getNotifications, markNotificationAsRead, markAllNotificationsAsRead } from '../../api/notification'
 import messagingAPI from '../../api/messaging'
 import { toast } from 'react-toastify'
+import { formatUsername } from '../../utils/formatters'
 
 const LeftSidebar = () => {
   const { user, logout } = useAuthStore()
@@ -26,6 +31,9 @@ const LeftSidebar = () => {
   const [unreadMessagesCount, setUnreadMessagesCount] = useState(0)
   const [notifications, setNotifications] = useState([])
   const [loadingNotifications, setLoadingNotifications] = useState(false)
+  const [showMoreMenu, setShowMoreMenu] = useState(false)
+  const [darkMode, setDarkMode] = useState(localStorage.getItem('darkMode') === 'true')
+  const [language, setLanguage] = useState(localStorage.getItem('language') || 'en')
 
   // Fetch unread count
   useEffect(() => {
@@ -63,9 +71,37 @@ const LeftSidebar = () => {
     return () => clearInterval(interval)
   }, [user])
 
+  // Close more menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showMoreMenu && !event.target.closest('.more-menu-container')) {
+        setShowMoreMenu(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [showMoreMenu])
+
   const handleLogout = () => {
     logout()
     navigate('/login')
+  }
+
+  const toggleDarkMode = () => {
+    const newMode = !darkMode
+    setDarkMode(newMode)
+    localStorage.setItem('darkMode', newMode)
+    // TODO: Implement dark mode styling
+    toast.info(`Dark mode ${newMode ? 'enabled' : 'disabled'}`)
+  }
+
+  const changeLanguage = (lang) => {
+    setLanguage(lang)
+    localStorage.setItem('language', lang)
+    setShowMoreMenu(false)
+    // TODO: Implement actual language switching
+    toast.info(`Language changed to ${lang.toUpperCase()}`)
   }
 
   const isActive = (path) => {
@@ -297,7 +333,7 @@ const LeftSidebar = () => {
                             <FaUserCircle className="w-6 h-6 text-gray-400" />
                           )}
                           <span className="text-sm font-medium text-blue-600 hover:text-blue-700 truncate">
-                            @{notification.actor.username}
+                            @{formatUsername(notification.actor.username)}
                           </span>
                         </div>
 
@@ -336,8 +372,8 @@ const LeftSidebar = () => {
 
       {/* User section */}
       {user ? (
-        <div className="px-4 py-4 border-t border-gray-200">
-          <div className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-100">
+        <div className="px-4 py-4 border-t border-gray-200 relative more-menu-container">
+          <div className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-50">
             <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
               {user.avatar ? (
                 <img
@@ -346,22 +382,90 @@ const LeftSidebar = () => {
                   className="w-12 h-12 rounded-full object-cover"
                 />
               ) : (
-                <span className="text-white font-bold text-lg">{user.username[0].toUpperCase()}</span>
+                <span className="text-white font-bold text-lg">{formatUsername(user.username)[0].toUpperCase()}</span>
               )}
             </div>
             <div className="flex-1">
-              <p className="text-sm font-semibold text-gray-800">{user.username}</p>
-              <p className="text-xs text-gray-500">{user.role}</p>
+              <p className="text-sm font-semibold text-gray-800">{formatUsername(user.username)}</p>
+              <p className="text-xs text-gray-500 capitalize">{user.role}</p>
             </div>
+            <button
+              onClick={() => setShowMoreMenu(!showMoreMenu)}
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            >
+              <FiMoreHorizontal size={20} className="text-gray-600" />
+            </button>
           </div>
 
-          <button
-            onClick={handleLogout}
-            className="w-full flex items-center space-x-4 px-4 py-3 mt-2 rounded-lg text-red-600 hover:bg-red-50 transition-colors"
-          >
-            <FiLogOut size={26} />
-            <span className="text-base font-medium">Logout</span>
-          </button>
+          {/* More Menu Dropdown */}
+          {showMoreMenu && (
+            <div className="absolute bottom-full left-4 right-4 mb-2 bg-white border border-gray-200 rounded-lg shadow-xl py-2 z-50">
+              {/* Dark Mode Toggle */}
+              <button
+                onClick={toggleDarkMode}
+                className="w-full flex items-center space-x-3 px-4 py-3 hover:bg-gray-50 transition-colors"
+              >
+                {darkMode ? <FiSun size={20} className="text-gray-700" /> : <FiMoon size={20} className="text-gray-700" />}
+                <span className="text-sm font-medium text-gray-800">
+                  {darkMode ? 'Light Mode' : 'Dark Mode'}
+                </span>
+              </button>
+
+              {/* Language Selector */}
+              <div className="border-t border-gray-100">
+                <div className="px-4 py-2">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <FiGlobe size={20} className="text-gray-700" />
+                    <span className="text-sm font-medium text-gray-800">Language</span>
+                  </div>
+                  <div className="flex space-x-2 ml-7">
+                    <button
+                      onClick={() => changeLanguage('en')}
+                      className={`px-3 py-1.5 rounded text-xs font-medium transition-colors ${
+                        language === 'en'
+                          ? 'bg-blue-600 text-white'
+                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
+                    >
+                      EN
+                    </button>
+                    <button
+                      onClick={() => changeLanguage('uz')}
+                      className={`px-3 py-1.5 rounded text-xs font-medium transition-colors ${
+                        language === 'uz'
+                          ? 'bg-blue-600 text-white'
+                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
+                    >
+                      UZ
+                    </button>
+                    <button
+                      onClick={() => changeLanguage('ru')}
+                      className={`px-3 py-1.5 rounded text-xs font-medium transition-colors ${
+                        language === 'ru'
+                          ? 'bg-blue-600 text-white'
+                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
+                    >
+                      RU
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Logout */}
+              <button
+                onClick={() => {
+                  setShowMoreMenu(false)
+                  handleLogout()
+                }}
+                className="w-full flex items-center space-x-3 px-4 py-3 hover:bg-red-50 transition-colors border-t border-gray-100 text-red-600"
+              >
+                <FiLogOut size={20} />
+                <span className="text-sm font-medium">Logout</span>
+              </button>
+            </div>
+          )}
         </div>
       ) : (
         <div className="px-4 py-4 border-t border-gray-200 space-y-2">

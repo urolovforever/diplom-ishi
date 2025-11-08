@@ -7,6 +7,7 @@ import { formatDistanceToNow } from 'date-fns'
 import { FiTrash2, FiSend, FiHeart, FiEdit3, FiCheck, FiX, FiChevronDown, FiChevronUp, FiMessageCircle } from 'react-icons/fi'
 import { FaHeart, FaHeart as FaHeartSolid } from 'react-icons/fa'
 import { BsPinFill, BsPin } from 'react-icons/bs'
+import { formatUsername } from '../utils/formatters'
 
 // Helper function to convert URLs to clickable links
 const linkify = (text) => {
@@ -130,7 +131,7 @@ const CommentItem = ({ comment, post, user, onDelete, onLikeToggle, onReply, onE
         ) : (
           <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 flex items-center justify-center flex-shrink-0">
             <span className="text-white font-bold text-sm">
-              {comment.author.username[0].toUpperCase()}
+              {formatUsername(comment.author.username)[0].toUpperCase()}
             </span>
           </div>
         )}
@@ -143,7 +144,7 @@ const CommentItem = ({ comment, post, user, onDelete, onLikeToggle, onReply, onE
               onClick={() => navigate(`/user/${comment.author.username}`)}
               className="font-semibold text-sm text-gray-900 hover:text-blue-600 hover:underline transition-colors"
             >
-              {comment.author.username}
+              {formatUsername(comment.author.username)}
             </button>
             <span className="text-xs text-gray-500">
               {formatDistanceToNow(new Date(comment.created_at), { addSuffix: true })}
@@ -298,7 +299,7 @@ const CommentItem = ({ comment, post, user, onDelete, onLikeToggle, onReply, onE
                   type="text"
                   value={replyText}
                   onChange={(e) => setReplyText(e.target.value)}
-                  placeholder={`Reply to ${comment.author.username}...`}
+                  placeholder={`Reply to ${formatUsername(comment.author.username)}...`}
                   className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-full focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   autoFocus
                 />
@@ -480,7 +481,7 @@ const CommentSection = ({ postId, commentsEnabled = true }) => {
             ) : (
               <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 flex items-center justify-center flex-shrink-0">
                 <span className="text-white font-bold text-lg">
-                  {user.username[0].toUpperCase()}
+                  {formatUsername(user.username)[0].toUpperCase()}
                 </span>
               </div>
             )}

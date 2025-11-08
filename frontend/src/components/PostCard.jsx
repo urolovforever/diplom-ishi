@@ -5,6 +5,7 @@ import { BsPinFill } from 'react-icons/bs'
 import { formatDistanceToNow } from 'date-fns'
 import MediaCarousel from './MediaCarousel'
 import VideoPlayer from './VideoPlayer'
+import { formatUsername } from '../utils/formatters'
 
 const PostCard = ({ post, onLike, onUnlike, onDelete, isConfessionAdmin }) => {
   const navigate = useNavigate()
@@ -50,7 +51,7 @@ const PostCard = ({ post, onLike, onUnlike, onDelete, isConfessionAdmin }) => {
                 {post.confession.name}
               </h4>
               <p className="text-xs text-gray-500">
-                by {post.author.username} • {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
+                by {formatUsername(post.author.username)} • {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
               </p>
             </div>
           </Link>
