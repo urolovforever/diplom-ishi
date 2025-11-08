@@ -20,7 +20,7 @@ const linkify = (text) => {
           href={part}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-blue-600 hover:underline"
+          className="text-blue-600"
         >
           {part}
         </a>
@@ -142,7 +142,7 @@ const CommentItem = ({ comment, post, user, onDelete, onLikeToggle, onReply, onE
           <div className="flex items-center space-x-2 mb-1">
             <button
               onClick={() => navigate(`/user/${comment.author.username}`)}
-              className="font-semibold text-sm text-gray-900 hover:text-blue-600 hover:underline transition-colors"
+              className="font-semibold text-sm text-gray-900 hover:text-blue-600 transition-colors"
             >
               {formatUsername(comment.author.username)}
             </button>

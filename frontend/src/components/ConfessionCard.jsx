@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { FiUsers, FiFileText, FiCheckCircle } from 'react-icons/fi'
+import { formatUsername } from '../utils/formatters'
 
 const ConfessionCard = ({ confession }) => {
   const navigate = useNavigate()
@@ -70,9 +71,9 @@ const ConfessionCard = ({ confession }) => {
               Admin:{' '}
               <button
                 onClick={(e) => handleAdminClick(e, confession.admin.username)}
-                className="font-medium text-blue-600 hover:text-blue-800 hover:underline transition-colors"
+                className="font-medium text-blue-600 hover:text-blue-800 transition-colors"
               >
-                {confession.admin.username}
+                {formatUsername(confession.admin.username)}
               </button>
             </p>
           </div>

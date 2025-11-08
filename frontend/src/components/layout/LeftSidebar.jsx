@@ -21,6 +21,8 @@ import { getUnreadCount, getNotifications, markNotificationAsRead, markAllNotifi
 import messagingAPI from '../../api/messaging'
 import { toast } from 'react-toastify'
 import { formatUsername } from '../../utils/formatters'
+import { useTheme } from '../../contexts/ThemeContext'
+import { useLanguage } from '../../contexts/LanguageContext'
 
 const LeftSidebar = () => {
   const { user, logout } = useAuthStore()
@@ -32,8 +34,8 @@ const LeftSidebar = () => {
   const [notifications, setNotifications] = useState([])
   const [loadingNotifications, setLoadingNotifications] = useState(false)
   const [showMoreMenu, setShowMoreMenu] = useState(false)
-  const [darkMode, setDarkMode] = useState(localStorage.getItem('darkMode') === 'true')
-  const [language, setLanguage] = useState(localStorage.getItem('language') || 'en')
+  const { darkMode, toggleDarkMode } = useTheme()
+  const { language, changeLanguage: setLanguage, t } = useLanguage()
 
   // Fetch unread count
   useEffect(() => {
@@ -88,20 +90,14 @@ const LeftSidebar = () => {
     navigate('/login')
   }
 
-  const toggleDarkMode = () => {
-    const newMode = !darkMode
-    setDarkMode(newMode)
-    localStorage.setItem('darkMode', newMode)
-    // TODO: Implement dark mode styling
-    toast.info(`Dark mode ${newMode ? 'enabled' : 'disabled'}`)
+  const handleDarkModeToggle = () => {
+    toggleDarkMode()
+    setShowMoreMenu(false)
   }
 
-  const changeLanguage = (lang) => {
+  const handleLanguageChange = (lang) => {
     setLanguage(lang)
-    localStorage.setItem('language', lang)
     setShowMoreMenu(false)
-    // TODO: Implement actual language switching
-    toast.info(`Language changed to ${lang.toUpperCase()}`)
   }
 
   const isActive = (path) => {
@@ -197,8 +193,8 @@ const LeftSidebar = () => {
 
     const className = `flex items-center space-x-4 px-5 py-3.5 rounded-xl transition-all duration-200 relative ${
       !isButton && isActive(to)
-        ? 'bg-blue-50 text-blue-600 font-semibold'
-        : 'text-gray-700 hover:bg-gray-100'
+        ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-semibold'
+        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
     } ${isButton ? 'w-full text-left' : ''}`
 
     if (isButton) {
@@ -217,13 +213,13 @@ const LeftSidebar = () => {
   }
 
   return (
-    <div className="fixed left-0 top-0 h-screen w-72 bg-white border-r border-gray-200 flex flex-col">
+    <div className="fixed left-0 top-0 h-screen w-72 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 flex flex-col transition-colors duration-200">
       {/* Logo */}
-      <Link to="/" className="flex items-center space-x-3 px-6 py-6 border-b border-gray-200">
+      <Link to="/" className="flex items-center space-x-3 px-6 py-6 border-b border-gray-200 dark:border-gray-700">
         <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
           <span className="text-white font-bold text-2xl">RP</span>
         </div>
-        <span className="text-xl font-bold text-gray-800">
+        <span className="text-xl font-bold text-gray-800 dark:text-gray-100">
           Religion<br />Platform
         </span>
       </Link>
@@ -232,29 +228,29 @@ const LeftSidebar = () => {
       {!showNotifications ? (
         // Regular Navigation
         <nav className="flex-1 px-4 py-6 space-y-1">
-          <NavItem to="/" icon={FiHome} label="Home" />
-          <NavItem to="/explore" icon={FiCompass} label="Explore" />
+          <NavItem to="/" icon={FiHome} label={t('nav.home')} />
+          <NavItem to="/explore" icon={FiCompass} label={t('nav.explore')} />
 
           {user && (
             <>
-              <NavItem to="/messages" icon={FiMessageCircle} label="Messages" badge={unreadMessagesCount} />
+              <NavItem to="/messages" icon={FiMessageCircle} label={t('nav.messages')} badge={unreadMessagesCount} />
 
               <NavItem
                 icon={FiBell}
-                label="Notifications"
+                label={t('nav.notifications')}
                 onClick={handleNotificationsClick}
                 badge={unreadCount}
                 isButton={true}
               />
 
               {user.role === 'admin' && (
-                <NavItem to="/create" icon={FiPlusSquare} label="Create" />
+                <NavItem to="/create" icon={FiPlusSquare} label={t('nav.create')} />
               )}
 
-              <NavItem to="/profile" icon={FiUser} label="Profile" />
+              <NavItem to="/profile" icon={FiUser} label={t('nav.profile')} />
 
               {user.role === 'superadmin' && (
-                <NavItem to="/admin" icon={FiSettings} label="Admin Panel" />
+                <NavItem to="/admin" icon={FiSettings} label={t('nav.admin')} />
               )}
             </>
           )}
@@ -263,22 +259,22 @@ const LeftSidebar = () => {
         // Notifications View
         <div className="flex-1 flex flex-col min-h-0">
           {/* Back Button */}
-          <div className="px-4 py-4 border-b border-gray-200 flex-shrink-0">
+          <div className="px-4 py-4 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
             <button
               onClick={handleBackClick}
-              className="flex items-center space-x-3 text-gray-700 hover:text-blue-600 transition-colors"
+              className="flex items-center space-x-3 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
             >
               <FiArrowLeft size={24} />
-              <span className="text-lg font-semibold">Notifications</span>
+              <span className="text-lg font-semibold">{t('nav.notifications')}</span>
             </button>
           </div>
 
           {/* Mark all read button */}
           {notifications.some(n => !n.is_read) && (
-            <div className="px-4 py-3 border-b border-gray-200 flex-shrink-0">
+            <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
               <button
                 onClick={handleMarkAllRead}
-                className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+                className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium"
               >
                 Mark all as read
               </button>
@@ -292,18 +288,18 @@ const LeftSidebar = () => {
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
               </div>
             ) : notifications.length === 0 ? (
-              <div className="flex flex-col items-center justify-center h-full text-gray-500 px-4">
+              <div className="flex flex-col items-center justify-center h-full text-gray-500 dark:text-gray-400 px-4">
                 <FaUserCircle size={48} className="mb-4 opacity-50" />
                 <p>No notifications yet</p>
               </div>
             ) : (
-              <div className="divide-y divide-gray-200">
+              <div className="divide-y divide-gray-200 dark:divide-gray-700">
                 {notifications.map((notification) => (
                   <div
                     key={notification.id}
                     onClick={() => handleNotificationClick(notification)}
-                    className={`p-4 cursor-pointer transition hover:bg-gray-50 relative ${
-                      notification.is_read ? 'bg-white' : 'bg-blue-50'
+                    className={`p-4 cursor-pointer transition hover:bg-gray-50 dark:hover:bg-gray-800 relative ${
+                      notification.is_read ? 'bg-white dark:bg-gray-900' : 'bg-blue-50 dark:bg-blue-900/20'
                     }`}
                   >
                     <div className="flex items-start space-x-3">
@@ -338,19 +334,19 @@ const LeftSidebar = () => {
                         </div>
 
                         {/* Message */}
-                        <p className="text-sm text-gray-700 mb-1 line-clamp-2">
+                        <p className="text-sm text-gray-700 dark:text-gray-300 mb-1 line-clamp-2">
                           {notification.message}
                         </p>
 
                         {/* Confession name (if available) */}
                         {notification.confession && (
-                          <p className="text-xs text-gray-500 mb-1 truncate">
+                          <p className="text-xs text-gray-500 dark:text-gray-400 mb-1 truncate">
                             in {notification.confession.name}
                           </p>
                         )}
 
                         {/* Time */}
-                        <p className="text-xs text-gray-400">
+                        <p className="text-xs text-gray-400 dark:text-gray-500">
                           {notification.time_ago}
                         </p>
 
@@ -372,8 +368,8 @@ const LeftSidebar = () => {
 
       {/* User section */}
       {user ? (
-        <div className="px-4 py-4 border-t border-gray-200 relative more-menu-container">
-          <div className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-50">
+        <div className="px-4 py-4 border-t border-gray-200 dark:border-gray-700 relative more-menu-container">
+          <div className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800">
             <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
               {user.avatar ? (
                 <img
@@ -386,70 +382,61 @@ const LeftSidebar = () => {
               )}
             </div>
             <div className="flex-1">
-              <p className="text-sm font-semibold text-gray-800">{formatUsername(user.username)}</p>
-              <p className="text-xs text-gray-500 capitalize">{user.role}</p>
+              <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">{formatUsername(user.username)}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 capitalize">{user.role}</p>
             </div>
             <button
               onClick={() => setShowMoreMenu(!showMoreMenu)}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
             >
-              <FiMoreHorizontal size={20} className="text-gray-600" />
+              <FiMoreHorizontal size={20} className="text-gray-600 dark:text-gray-400" />
             </button>
           </div>
 
           {/* More Menu Dropdown */}
           {showMoreMenu && (
-            <div className="absolute bottom-full left-4 right-4 mb-2 bg-white border border-gray-200 rounded-lg shadow-xl py-2 z-50">
+            <div className="absolute bottom-full left-4 right-4 mb-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-2xl overflow-hidden z-50">
               {/* Dark Mode Toggle */}
               <button
-                onClick={toggleDarkMode}
-                className="w-full flex items-center space-x-3 px-4 py-3 hover:bg-gray-50 transition-colors"
+                onClick={handleDarkModeToggle}
+                className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
               >
-                {darkMode ? <FiSun size={20} className="text-gray-700" /> : <FiMoon size={20} className="text-gray-700" />}
-                <span className="text-sm font-medium text-gray-800">
-                  {darkMode ? 'Light Mode' : 'Dark Mode'}
-                </span>
+                <div className="flex items-center space-x-3">
+                  {darkMode ? <FiSun size={20} className="text-yellow-500" /> : <FiMoon size={20} className="text-indigo-600" />}
+                  <span className="text-sm font-medium text-gray-800 dark:text-gray-200">
+                    {darkMode ? t('settings.lightMode') : t('settings.darkMode')}
+                  </span>
+                </div>
+                <div className={`w-10 h-6 rounded-full transition-colors ${darkMode ? 'bg-indigo-600' : 'bg-gray-300'} relative`}>
+                  <div className={`absolute top-1 ${darkMode ? 'right-1' : 'left-1'} w-4 h-4 bg-white rounded-full transition-all`}></div>
+                </div>
               </button>
 
               {/* Language Selector */}
-              <div className="border-t border-gray-100">
-                <div className="px-4 py-2">
-                  <div className="flex items-center space-x-2 mb-2">
-                    <FiGlobe size={20} className="text-gray-700" />
-                    <span className="text-sm font-medium text-gray-800">Language</span>
-                  </div>
-                  <div className="flex space-x-2 ml-7">
+              <div className="border-t border-gray-200 dark:border-gray-700 px-4 py-3">
+                <div className="flex items-center space-x-2 mb-3">
+                  <FiGlobe size={18} className="text-gray-600 dark:text-gray-400" />
+                  <span className="text-sm font-semibold text-gray-800 dark:text-gray-200">{t('settings.language')}</span>
+                </div>
+                <div className="grid grid-cols-3 gap-2">
+                  {[
+                    { code: 'en', label: 'English', flag: '🇬🇧' },
+                    { code: 'uz', label: 'O\'zbek', flag: '🇺🇿' },
+                    { code: 'ru', label: 'Русский', flag: '🇷🇺' }
+                  ].map(lang => (
                     <button
-                      onClick={() => changeLanguage('en')}
-                      className={`px-3 py-1.5 rounded text-xs font-medium transition-colors ${
-                        language === 'en'
-                          ? 'bg-blue-600 text-white'
-                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      key={lang.code}
+                      onClick={() => handleLanguageChange(lang.code)}
+                      className={`flex flex-col items-center justify-center p-2 rounded-lg transition-all ${
+                        language === lang.code
+                          ? 'bg-blue-600 text-white shadow-md'
+                          : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
                       }`}
                     >
-                      EN
+                      <span className="text-2xl mb-1">{lang.flag}</span>
+                      <span className="text-xs font-medium">{lang.label}</span>
                     </button>
-                    <button
-                      onClick={() => changeLanguage('uz')}
-                      className={`px-3 py-1.5 rounded text-xs font-medium transition-colors ${
-                        language === 'uz'
-                          ? 'bg-blue-600 text-white'
-                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                      }`}
-                    >
-                      UZ
-                    </button>
-                    <button
-                      onClick={() => changeLanguage('ru')}
-                      className={`px-3 py-1.5 rounded text-xs font-medium transition-colors ${
-                        language === 'ru'
-                          ? 'bg-blue-600 text-white'
-                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                      }`}
-                    >
-                      RU
-                    </button>
-                  </div>
+                  ))}
                 </div>
               </div>
 
@@ -459,27 +446,27 @@ const LeftSidebar = () => {
                   setShowMoreMenu(false)
                   handleLogout()
                 }}
-                className="w-full flex items-center space-x-3 px-4 py-3 hover:bg-red-50 transition-colors border-t border-gray-100 text-red-600"
+                className="w-full flex items-center space-x-3 px-4 py-3 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors border-t border-gray-200 dark:border-gray-700 text-red-600 dark:text-red-400"
               >
                 <FiLogOut size={20} />
-                <span className="text-sm font-medium">Logout</span>
+                <span className="text-sm font-medium">{t('settings.logout')}</span>
               </button>
             </div>
           )}
         </div>
       ) : (
-        <div className="px-4 py-4 border-t border-gray-200 space-y-2">
+        <div className="px-4 py-4 border-t border-gray-200 dark:border-gray-700 space-y-2">
           <Link
             to="/login"
-            className="block w-full px-4 py-3 text-center text-blue-600 hover:bg-blue-50 rounded-lg font-medium"
+            className="block w-full px-4 py-3 text-center text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg font-medium"
           >
-            Login
+            {t('auth.login')}
           </Link>
           <Link
             to="/register"
             className="block w-full px-4 py-3 text-center bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium"
           >
-            Register
+            {t('auth.register')}
           </Link>
         </div>
       )}
