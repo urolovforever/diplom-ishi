@@ -63,12 +63,12 @@ const ConfessionsStories = ({ onConfessionSelect }) => {
 
   if (loading) {
     return (
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-6">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 mb-6">
         <div className="flex space-x-4 overflow-hidden">
           {[1, 2, 3, 4, 5, 6].map((i) => (
             <div key={i} className="flex flex-col items-center space-y-2 animate-pulse">
-              <div className="w-16 h-16 rounded-full bg-gray-200"></div>
-              <div className="w-12 h-3 bg-gray-200 rounded"></div>
+              <div className="w-16 h-16 rounded-full bg-gray-200 dark:bg-gray-700"></div>
+              <div className="w-12 h-3 bg-gray-200 dark:bg-gray-700 rounded"></div>
             </div>
           ))}
         </div>
@@ -77,16 +77,16 @@ const ConfessionsStories = ({ onConfessionSelect }) => {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-6 relative">
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 mb-6 relative">
       {/* Empty State Message */}
       {user && confessions.length === 0 && (
         <div className="text-center py-4">
-          <p className="text-gray-600 text-sm mb-2">
+          <p className="text-gray-600 dark:text-gray-400 text-sm mb-2">
             You haven't subscribed to any confessions yet
           </p>
           <Link
             to="/explore"
-            className="text-blue-600 hover:text-blue-700 text-sm font-semibold"
+            className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm font-semibold"
           >
             Explore Confessions →
           </Link>
@@ -98,15 +98,15 @@ const ConfessionsStories = ({ onConfessionSelect }) => {
         <>
           <button
             onClick={() => handleScroll('left')}
-            className="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-8 h-8 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-100 transition-colors"
+            className="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-8 h-8 bg-white dark:bg-gray-700 rounded-full shadow-lg flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
           >
-            <FiChevronLeft size={20} className="text-gray-600" />
+            <FiChevronLeft size={20} className="text-gray-600 dark:text-gray-300" />
           </button>
           <button
             onClick={() => handleScroll('right')}
-            className="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-8 h-8 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-100 transition-colors"
+            className="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-8 h-8 bg-white dark:bg-gray-700 rounded-full shadow-lg flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
           >
-            <FiChevronRight size={20} className="text-gray-600" />
+            <FiChevronRight size={20} className="text-gray-600 dark:text-gray-300" />
           </button>
         </>
       )}
@@ -128,12 +128,12 @@ const ConfessionsStories = ({ onConfessionSelect }) => {
                 className={`w-16 h-16 rounded-full flex items-center justify-center transition-all ${
                   selectedConfession === null
                     ? 'bg-gradient-to-r from-blue-500 to-purple-600 scale-110'
-                    : 'bg-gray-200 hover:bg-gray-300'
+                    : 'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600'
                 }`}
               >
                 <span className="text-white font-bold text-xl">All</span>
               </div>
-              <span className="text-xs text-gray-600 font-medium text-center w-20 truncate">
+              <span className="text-xs text-gray-600 dark:text-gray-400 font-medium text-center w-20 truncate">
                 All Posts
               </span>
             </button>
@@ -156,10 +156,10 @@ const ConfessionsStories = ({ onConfessionSelect }) => {
                     ? 'bg-gradient-to-r from-blue-500 to-purple-600 scale-110'
                     : isSubscribed
                     ? 'bg-gradient-to-r from-pink-500 to-orange-500'
-                    : 'bg-gray-300'
+                    : 'bg-gray-300 dark:bg-gray-700'
                 } ${!isSelected && 'group-hover:scale-105'}`}
               >
-                <div className="w-full h-full rounded-full bg-white p-0.5">
+                <div className="w-full h-full rounded-full bg-white dark:bg-gray-800 p-0.5">
                   {confession.logo ? (
                     <img
                       src={confession.logo}
@@ -175,7 +175,7 @@ const ConfessionsStories = ({ onConfessionSelect }) => {
                   )}
                 </div>
               </div>
-              <span className="text-xs text-gray-600 font-medium text-center w-20 truncate">
+              <span className="text-xs text-gray-600 dark:text-gray-400 font-medium text-center w-20 truncate">
                 {confession.name}
               </span>
             </button>

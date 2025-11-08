@@ -73,10 +73,10 @@ const RightSidebar = () => {
   }
 
   const SidebarCard = ({ title, icon: Icon, children }) => (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-4">
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-4 mb-4">
       <div className="flex items-center space-x-2 mb-4">
-        <Icon className="text-gray-600" size={20} />
-        <h3 className="font-semibold text-gray-800">{title}</h3>
+        <Icon className="text-gray-600 dark:text-gray-400" size={20} />
+        <h3 className="font-semibold text-gray-800 dark:text-gray-200">{title}</h3>
       </div>
       {children}
     </div>
@@ -85,7 +85,7 @@ const RightSidebar = () => {
   const ConfessionItem = ({ confession, showButton = false }) => (
     <Link
       to={`/confession/${confession.slug}`}
-      className="flex items-center space-x-3 py-2 hover:bg-gray-50 rounded-lg px-2 transition-colors group"
+      className="flex items-center space-x-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg px-2 transition-colors group"
     >
       {confession.logo ? (
         <img
@@ -99,10 +99,10 @@ const RightSidebar = () => {
         </div>
       )}
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-semibold text-gray-800 truncate">
+        <p className="text-sm font-semibold text-gray-800 dark:text-gray-200 truncate">
           {confession.name}
         </p>
-        <p className="text-xs text-gray-500">
+        <p className="text-xs text-gray-500 dark:text-gray-400">
           {confession.subscribers_count || 0} followers
         </p>
       </div>
@@ -110,7 +110,7 @@ const RightSidebar = () => {
         <button
           onClick={(e) => handleFollow(e, confession)}
           disabled={subscribing[confession.id]}
-          className="text-xs font-semibold text-blue-600 hover:text-blue-700 px-3 py-1 rounded-full hover:bg-blue-50 disabled:opacity-50"
+          className="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 px-3 py-1 rounded-full hover:bg-blue-50 dark:hover:bg-blue-900/30 disabled:opacity-50"
         >
           {subscribing[confession.id] ? '...' : 'Follow'}
         </button>
@@ -120,17 +120,17 @@ const RightSidebar = () => {
 
   if (loading) {
     return (
-      <div className="fixed right-0 top-0 h-screen w-96 bg-gray-50 p-5">
+      <div className="fixed right-0 top-0 h-screen w-96 bg-gray-50 dark:bg-gray-950 p-5">
         <div className="animate-pulse space-y-4">
-          <div className="bg-white rounded-xl h-48"></div>
-          <div className="bg-white rounded-xl h-48"></div>
+          <div className="bg-white dark:bg-gray-800 rounded-xl h-48"></div>
+          <div className="bg-white dark:bg-gray-800 rounded-xl h-48"></div>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="fixed right-0 top-0 h-screen w-96 bg-gray-50 overflow-y-auto p-5">
+    <div className="fixed right-0 top-0 h-screen w-96 bg-gray-50 dark:bg-gray-950 overflow-y-auto p-5">
       {/* Active/My Confessions */}
       {user && activeConfessions.length > 0 && (
         <SidebarCard title="My Confessions" icon={FiClock}>
@@ -150,7 +150,7 @@ const RightSidebar = () => {
               <ConfessionItem key={confession.id} confession={confession} showButton />
             ))
           ) : (
-            <p className="text-sm text-gray-500 py-2">
+            <p className="text-sm text-gray-500 dark:text-gray-400 py-2">
               {user ? 'No more suggestions' : 'Login to get personalized suggestions'}
             </p>
           )}
@@ -159,17 +159,17 @@ const RightSidebar = () => {
 
       {/* Footer */}
       <div className="mt-6 px-2 pb-4">
-        <div className="text-xs text-gray-500 space-y-2">
+        <div className="text-xs text-gray-500 dark:text-gray-400 space-y-2">
           <div className="flex flex-wrap gap-2">
-            <a href="#" className="hover:text-gray-700">About</a>
+            <a href="#" className="hover:text-gray-700 dark:hover:text-gray-300">About</a>
             <span>·</span>
-            <a href="#" className="hover:text-gray-700">Help</a>
+            <a href="#" className="hover:text-gray-700 dark:hover:text-gray-300">Help</a>
             <span>·</span>
-            <a href="#" className="hover:text-gray-700">Privacy</a>
+            <a href="#" className="hover:text-gray-700 dark:hover:text-gray-300">Privacy</a>
             <span>·</span>
-            <a href="#" className="hover:text-gray-700">Terms</a>
+            <a href="#" className="hover:text-gray-700 dark:hover:text-gray-300">Terms</a>
           </div>
-          <p className="text-gray-400">© 2025 Religion Platform</p>
+          <p className="text-gray-400 dark:text-gray-500">© 2025 Religion Platform</p>
         </div>
       </div>
     </div>
