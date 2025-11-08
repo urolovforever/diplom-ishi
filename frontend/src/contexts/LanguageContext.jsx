@@ -45,7 +45,8 @@ export const LanguageProvider = ({ children }) => {
     // Support {{variable}} syntax
     let result = value
     Object.keys(variables).forEach((varKey) => {
-      const regex = new RegExp(`{{${varKey}}}`, 'g')
+      // Escape curly braces properly for regex
+      const regex = new RegExp(`\\{\\{${varKey}\\}\\}`, 'g')
       result = result.replace(regex, variables[varKey])
     })
 
