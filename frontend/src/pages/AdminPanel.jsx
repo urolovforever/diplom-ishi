@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { toast } from 'react-toastify'
+import { Link } from 'react-router-dom'
 import { confessionAPI } from '../api/confession'
 import { authAPI } from '../api/auth'
 import { useAuthStore } from '../store/authStore'
 import { useLanguage } from '../contexts/LanguageContext'
-import { FiPlus, FiImage, FiVideo, FiUsers, FiSettings } from 'react-icons/fi'
+import { FiPlus, FiImage, FiVideo, FiUsers, FiSettings, FiArrowLeft } from 'react-icons/fi'
 
 // Component for regular admin - post creation
 const AdminPostCreation = ({ user }) => {
@@ -81,18 +82,18 @@ const AdminPostCreation = ({ user }) => {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-md p-8">
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-8">
       <div className="flex items-center space-x-3 mb-6">
         <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
           <FiPlus className="text-white" size={24} />
         </div>
-        <h2 className="text-2xl font-bold text-gray-800">{t('admin.createNewPost')}</h2>
+        <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">{t('admin.createNewPost')}</h2>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Confession Selection */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             {t('admin.confession')} *
           </label>
           <input
@@ -102,16 +103,16 @@ const AdminPostCreation = ({ user }) => {
             onChange={handleChange}
             required
             placeholder={t('admin.enterConfessionID')}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
             {t('admin.enterConfessionIDYouManage')}
           </p>
         </div>
 
         {/* Title */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             {t('admin.title')} *
           </label>
           <input
@@ -121,13 +122,13 @@ const AdminPostCreation = ({ user }) => {
             onChange={handleChange}
             required
             placeholder={t('admin.enterPostTitle')}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>
 
         {/* Content */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             {t('admin.content')} *
           </label>
           <textarea
@@ -137,13 +138,13 @@ const AdminPostCreation = ({ user }) => {
             required
             rows="8"
             placeholder={t('admin.writePostContent')}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+            className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
           />
         </div>
 
         {/* Image Upload */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             <FiImage className="inline mr-2" />
             {t('admin.imageOptional')}
           </label>
@@ -152,7 +153,7 @@ const AdminPostCreation = ({ user }) => {
             name="image"
             accept="image/*"
             onChange={handleChange}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
           {imagePreview && (
             <div className="mt-4">
@@ -167,7 +168,7 @@ const AdminPostCreation = ({ user }) => {
 
         {/* Video URL */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             <FiVideo className="inline mr-2" />
             {t('admin.videoURL')}
           </label>
@@ -177,9 +178,9 @@ const AdminPostCreation = ({ user }) => {
             value={formData.video_url}
             onChange={handleChange}
             placeholder={t('admin.videoURLPlaceholder')}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
             {t('admin.enterYouTubeVimeoURL')}
           </p>
         </div>
@@ -191,9 +192,9 @@ const AdminPostCreation = ({ user }) => {
             name="is_pinned"
             checked={formData.is_pinned}
             onChange={handleChange}
-            className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+            className="w-5 h-5 text-blue-600 border-gray-300 dark:border-gray-600 rounded focus:ring-blue-500"
           />
-          <label className="text-sm font-medium text-gray-700">
+          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
             {t('admin.pinThisPostToTop')}
           </label>
         </div>
@@ -261,33 +262,33 @@ const SuperAdminPanel = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 dark:border-blue-400"></div>
       </div>
     )
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-md p-8">
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-8">
       <div className="flex items-center space-x-3 mb-6">
         <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
           <FiUsers className="text-white" size={24} />
         </div>
         <div>
-          <h2 className="text-2xl font-bold text-gray-800">{t('admin.confessionManagement')}</h2>
-          <p className="text-sm text-gray-600">{t('admin.assignAdminsToConfessions')}</p>
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">{t('admin.confessionManagement')}</h2>
+          <p className="text-sm text-gray-600 dark:text-gray-400">{t('admin.assignAdminsToConfessions')}</p>
         </div>
       </div>
 
       <div className="space-y-4">
         {confessions.length === 0 ? (
-          <div className="text-center py-8 text-gray-500">
+          <div className="text-center py-8 text-gray-500 dark:text-gray-400">
             {t('admin.noConfessionsFound')}
           </div>
         ) : (
           confessions.map((confession) => (
             <div
               key={confession.id}
-              className="border border-gray-200 rounded-lg p-6 hover:border-blue-300 transition-all"
+              className="border border-gray-200 dark:border-gray-700 rounded-lg p-6 hover:border-blue-300 dark:hover:border-blue-500 transition-all"
             >
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center space-x-4">
@@ -299,9 +300,9 @@ const SuperAdminPanel = () => {
                     />
                   )}
                   <div>
-                    <h3 className="text-xl font-bold text-gray-800">{confession.name}</h3>
-                    <p className="text-sm text-gray-600">{confession.description}</p>
-                    <div className="flex items-center space-x-4 mt-2 text-xs text-gray-500">
+                    <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100">{confession.name}</h3>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">{confession.description}</p>
+                    <div className="flex items-center space-x-4 mt-2 text-xs text-gray-500 dark:text-gray-400">
                       <span>{confession.subscribers_count} {t('admin.subscribers')}</span>
                       <span>{confession.posts_count} {t('common.posts')}</span>
                     </div>
@@ -311,11 +312,11 @@ const SuperAdminPanel = () => {
 
               <div className="flex items-center space-x-4">
                 <div className="flex-1">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     {t('admin.currentAdmin')} {confession.admin?.username || t('admin.notAssigned')}
                   </label>
                   <select
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     onChange={(e) => handleAssignAdmin(confession.slug, e.target.value)}
                     disabled={assigningAdmin[confession.slug]}
                     defaultValue=""
@@ -329,7 +330,7 @@ const SuperAdminPanel = () => {
                   </select>
                 </div>
                 {assigningAdmin[confession.slug] && (
-                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600 dark:border-blue-400"></div>
                 )}
               </div>
             </div>
@@ -347,8 +348,17 @@ const AdminPanel = () => {
   return (
     <div className="max-w-4xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">{t('admin.panel')}</h1>
-        <p className="text-gray-600">
+        <div className="flex items-center justify-between mb-4">
+          <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100">{t('admin.panel')}</h1>
+          <Link
+            to="/"
+            className="inline-flex items-center space-x-2 px-4 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
+          >
+            <FiArrowLeft />
+            <span>{t('admin.returnToSite')}</span>
+          </Link>
+        </div>
+        <p className="text-gray-600 dark:text-gray-400">
           {user?.role === 'superadmin'
             ? t('admin.manageConfessionsAndAdmins')
             : t('admin.managePostsForConfession')
