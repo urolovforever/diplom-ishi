@@ -49,18 +49,31 @@ const NotificationsSidebar = ({ isOpen, onClose, onNotificationsRead }) => {
   };
 
   useEffect(() => {
+    console.log('📢 NotificationsSidebar isOpen changed:', isOpen);
     if (isOpen) {
+      console.log('📢 Sidebar opened, fetching notifications...');
       fetchNotifications();
     }
   }, [isOpen]);
 
   const fetchNotifications = async () => {
+    console.log('🔔 Fetching notifications...');
     setLoading(true);
     try {
       const data = await getNotifications();
-      setNotifications(data.results || data);
+      console.log('📦 Raw API response:', data);
+      const notificationsList = data.results || data;
+      console.log('✅ Notifications fetched:', notificationsList.length, 'notifications');
+      console.log('📋 Notifications list:', notificationsList);
+      if (notificationsList.length > 0) {
+        console.log('📋 First notification:', notificationsList[0]);
+      } else {
+        console.log('⚠️ No notifications in the list!');
+      }
+      setNotifications(notificationsList);
+      console.log('💾 Notifications set in state');
     } catch (error) {
-      console.error('Failed to fetch notifications:', error);
+      console.error('❌ Failed to fetch notifications:', error);
       toast.error(t('notifications.failedToLoad'));
     } finally {
       setLoading(false);
@@ -158,10 +171,14 @@ const NotificationsSidebar = ({ isOpen, onClose, onNotificationsRead }) => {
             <div className="flex flex-col items-center justify-center h-full text-gray-500 dark:text-gray-400">
               <FaUserCircle size={48} className="mb-4 opacity-50" />
               <p>{t('common.noNotifications')}</p>
+              {console.log('🚫 Rendering "No notifications" message')}
             </div>
           ) : (
             <div className="divide-y divide-gray-200 dark:divide-gray-700">
-              {notifications.map((notification) => (
+              {console.log('🎨 Rendering', notifications.length, 'notifications')}
+              {notifications.map((notification) => {
+                console.log('🔄 Rendering notification:', notification.id, notification.notification_type);
+                return (
                 <div
                   key={notification.id}
                   onClick={() => handleNotificationClick(notification)}
@@ -221,7 +238,8 @@ const NotificationsSidebar = ({ isOpen, onClose, onNotificationsRead }) => {
                     </div>
                   </div>
                 </div>
-              ))}
+              );
+              })}
             </div>
           )}
         </div>
