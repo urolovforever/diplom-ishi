@@ -17,10 +17,13 @@ export const useLanguage = () => {
 
 export const LanguageProvider = ({ children }) => {
   const [language, setLanguage] = useState(() => {
-    return localStorage.getItem('language') || 'en'
+    const savedLang = localStorage.getItem('language') || 'en'
+    console.log('LanguageProvider initialized with language:', savedLang)
+    return savedLang
   })
 
   useEffect(() => {
+    console.log('Language changed to:', language)
     localStorage.setItem('language', language)
   }, [language])
 
@@ -33,7 +36,10 @@ export const LanguageProvider = ({ children }) => {
     }
 
     // If no translation found, return the key
-    if (!value) return key
+    if (!value) {
+      console.warn(`Translation not found for key: ${key} in language: ${language}`)
+      return key
+    }
 
     // Replace variables in the translation string
     // Support {{variable}} syntax
