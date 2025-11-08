@@ -24,7 +24,7 @@ export const LanguageProvider = ({ children }) => {
     localStorage.setItem('language', language)
   }, [language])
 
-  const t = (key) => {
+  const t = (key, variables = {}) => {
     const keys = key.split('.')
     let value = translations[language]
 
@@ -32,7 +32,18 @@ export const LanguageProvider = ({ children }) => {
       value = value?.[k]
     }
 
-    return value || key
+    // If no translation found, return the key
+    if (!value) return key
+
+    // Replace variables in the translation string
+    // Support {{variable}} syntax
+    let result = value
+    Object.keys(variables).forEach((varKey) => {
+      const regex = new RegExp(`{{${varKey}}}`, 'g')
+      result = result.replace(regex, variables[varKey])
+    })
+
+    return result
   }
 
   const changeLanguage = (lang) => {
