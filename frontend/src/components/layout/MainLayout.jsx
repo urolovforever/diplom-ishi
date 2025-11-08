@@ -4,7 +4,7 @@ import RightSidebar from './RightSidebar'
 
 const MainLayout = ({ children, showRightSidebar = true }) => {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors duration-200">
       {/* Left Sidebar */}
       <LeftSidebar />
 
