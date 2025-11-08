@@ -6,8 +6,10 @@ import { useAuthStore } from '../store/authStore'
 import MainLayout from '../components/layout/MainLayout'
 import Loading from '../components/Loading'
 import { FiImage, FiX, FiVideo, FiUpload, FiPlus, FiFileText } from 'react-icons/fi'
+import { useLanguage } from '../contexts/LanguageContext'
 
 const CreatePost = () => {
+  const { t } = useLanguage()
   const navigate = useNavigate()
   const { user } = useAuthStore()
 
@@ -68,7 +70,7 @@ const CreatePost = () => {
     // Check all files are images
     const allImages = files.every(file => file.type.startsWith('image/'))
     if (!allImages) {
-      toast.error('Please upload only image files')
+      toast.error(t('post.onlyImages'))
       return
     }
 
@@ -80,7 +82,7 @@ const CreatePost = () => {
     if (!file) return
 
     if (!file.type.startsWith('video/')) {
-      toast.error('Please upload only video files')
+      toast.error(t('post.onlyVideos'))
       return
     }
 
@@ -106,7 +108,7 @@ const CreatePost = () => {
     // Check all files are PDFs
     const allPdfs = files.every(file => file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf'))
     if (!allPdfs) {
-      toast.error('Please upload only PDF files')
+      toast.error(t('post.onlyPDFs'))
       return
     }
 
@@ -125,7 +127,7 @@ const CreatePost = () => {
     e.preventDefault()
 
     if (!formData.title || !formData.content || !formData.confession) {
-      toast.error('Please fill in all required fields')
+      toast.error(t('post.fillAllFields'))
       return
     }
 
@@ -152,7 +154,7 @@ const CreatePost = () => {
       }
 
       await confessionAPI.createPost(postFormData)
-      toast.success('Post created successfully!')
+      toast.success(t('post.postCreatedSuccess'))
       navigate('/')
     } catch (error) {
       toast.error('Failed to create post')
@@ -173,13 +175,13 @@ const CreatePost = () => {
   return (
     <MainLayout showRightSidebar={false}>
       <div className="max-w-3xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-8">Create New Post</h1>
+        <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-8">{t('post.create')}</h1>
 
         <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 space-y-6">
           {/* Confession Selection */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-              Confession <span className="text-red-500">*</span>
+              {t('post.confession')} <span className="text-red-500">*</span>
             </label>
             <select
               name="confession"
@@ -188,7 +190,7 @@ const CreatePost = () => {
               className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
               required
             >
-              <option value="">Select a confession</option>
+              <option value="">{t('post.selectConfession')}</option>
               {confessions.map(confession => (
                 <option key={confession.id} value={confession.id}>
                   {confession.name}
@@ -200,14 +202,14 @@ const CreatePost = () => {
           {/* Title */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-              Title <span className="text-red-500">*</span>
+              {t('post.title')} <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
               name="title"
               value={formData.title}
               onChange={handleChange}
-              placeholder="Enter post title"
+              placeholder={t('post.enterTitle')}
               className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
               required
             />
@@ -216,13 +218,13 @@ const CreatePost = () => {
           {/* Content */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-              Content <span className="text-red-500">*</span>
+              {t('post.content')} <span className="text-red-500">*</span>
             </label>
             <textarea
               name="content"
               value={formData.content}
               onChange={handleChange}
-              placeholder="Write your post content..."
+              placeholder={t('post.writeContent')}
               rows="8"
               className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 resize-none"
               required
@@ -233,7 +235,7 @@ const CreatePost = () => {
           <div className={`space-y-3 ${video || pdfs.length > 0 ? 'opacity-50 pointer-events-none' : ''}`}>
             <div className="flex items-center justify-between">
               <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300">
-                📸 Images {images.length > 0 && `(${images.length})`}
+                📸 {t('post.images')} {images.length > 0 && `(${images.length})`}
               </label>
               {images.length > 0 && (
                 <button
@@ -241,7 +243,7 @@ const CreatePost = () => {
                   onClick={clearAllImages}
                   className="text-sm text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 font-medium"
                 >
-                  Clear All
+                  {t('post.clearAll')}
                 </button>
               )}
             </div>
@@ -273,7 +275,7 @@ const CreatePost = () => {
                   {/* Add More Button */}
                   <label className="flex flex-col items-center justify-center aspect-square border-2 border-dashed border-blue-300 dark:border-blue-700 rounded-lg cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors group">
                     <FiPlus size={32} className="text-blue-400 dark:text-blue-500 mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400" />
-                    <span className="text-xs text-gray-600 dark:text-gray-400 font-medium">Add More</span>
+                    <span className="text-xs text-gray-600 dark:text-gray-400 font-medium">{t('post.addMore')}</span>
                     <input
                       type="file"
                       accept="image/*"
@@ -287,8 +289,8 @@ const CreatePost = () => {
             ) : (
               <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-blue-300 dark:border-blue-700 rounded-lg cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors group">
                 <FiImage size={32} className="text-blue-400 dark:text-blue-500 mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400" />
-                <span className="text-sm text-gray-600 dark:text-gray-300 font-medium">Upload Images</span>
-                <span className="text-xs text-gray-500 dark:text-gray-400 mt-1">Multiple files allowed • JPG, PNG, GIF, WEBP</span>
+                <span className="text-sm text-gray-600 dark:text-gray-300 font-medium">{t('post.uploadImages')}</span>
+                <span className="text-xs text-gray-500 dark:text-gray-400 mt-1">{t('post.multipleFilesAllowed')} • {t('post.imageFileTypes')}</span>
                 <input
                   type="file"
                   accept="image/*"
@@ -305,7 +307,7 @@ const CreatePost = () => {
           <div className={`space-y-3 ${images.length > 0 || pdfs.length > 0 ? 'opacity-50 pointer-events-none' : ''}`}>
             <div className="flex items-center justify-between">
               <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300">
-                🎥 Video {video && '(1)'}
+                🎥 {t('post.video')} {video && '(1)'}
               </label>
               {video && (
                 <button
@@ -313,7 +315,7 @@ const CreatePost = () => {
                   onClick={removeVideo}
                   className="text-sm text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 font-medium"
                 >
-                  Remove
+                  {t('post.remove')}
                 </button>
               )}
             </div>
@@ -335,8 +337,8 @@ const CreatePost = () => {
             ) : (
               <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-purple-300 dark:border-purple-700 rounded-lg cursor-pointer hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors group">
                 <FiVideo size={32} className="text-purple-400 dark:text-purple-500 mb-2 group-hover:text-purple-600 dark:group-hover:text-purple-400" />
-                <span className="text-sm text-gray-600 dark:text-gray-300 font-medium">Upload Video</span>
-                <span className="text-xs text-gray-500 dark:text-gray-400 mt-1">One file only • MP4, MOV, AVI, WEBM</span>
+                <span className="text-sm text-gray-600 dark:text-gray-300 font-medium">{t('post.uploadVideo')}</span>
+                <span className="text-xs text-gray-500 dark:text-gray-400 mt-1">{t('post.oneFileOnly')} • {t('post.videoFileTypes')}</span>
                 <input
                   type="file"
                   accept="video/*"
@@ -352,7 +354,7 @@ const CreatePost = () => {
           <div className={`space-y-3 ${images.length > 0 || video ? 'opacity-50 pointer-events-none' : ''}`}>
             <div className="flex items-center justify-between">
               <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300">
-                📄 PDF Documents {pdfs.length > 0 && `(${pdfs.length})`}
+                📄 {t('post.pdfDocuments')} {pdfs.length > 0 && `(${pdfs.length})`}
               </label>
               {pdfs.length > 0 && (
                 <button
@@ -360,7 +362,7 @@ const CreatePost = () => {
                   onClick={clearAllPdfs}
                   className="text-sm text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 font-medium"
                 >
-                  Clear All
+                  {t('post.clearAll')}
                 </button>
               )}
             </div>
@@ -393,7 +395,7 @@ const CreatePost = () => {
                   {/* Add More Button */}
                   <label className="flex items-center justify-center p-4 border-2 border-dashed border-red-300 dark:border-red-700 rounded-lg cursor-pointer hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors group">
                     <FiPlus size={24} className="text-red-400 dark:text-red-500 mr-2 group-hover:text-red-600 dark:group-hover:text-red-400" />
-                    <span className="text-sm text-gray-600 dark:text-gray-300 font-medium">Add More PDFs</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-300 font-medium">{t('post.addMorePDFs')}</span>
                     <input
                       type="file"
                       accept=".pdf,application/pdf"
@@ -407,8 +409,8 @@ const CreatePost = () => {
             ) : (
               <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-red-300 dark:border-red-700 rounded-lg cursor-pointer hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors group">
                 <FiFileText size={32} className="text-red-400 dark:text-red-500 mb-2 group-hover:text-red-600 dark:group-hover:text-red-400" />
-                <span className="text-sm text-gray-600 dark:text-gray-300 font-medium">Upload PDFs</span>
-                <span className="text-xs text-gray-500 dark:text-gray-400 mt-1">Multiple files allowed • PDF format</span>
+                <span className="text-sm text-gray-600 dark:text-gray-300 font-medium">{t('post.uploadPDFs')}</span>
+                <span className="text-xs text-gray-500 dark:text-gray-400 mt-1">{t('post.multipleFilesAllowed')} • {t('post.pdfFileTypes')}</span>
                 <input
                   type="file"
                   accept=".pdf,application/pdf"
@@ -432,7 +434,7 @@ const CreatePost = () => {
               className="w-5 h-5 text-blue-600 border-gray-300 dark:border-gray-600 rounded focus:ring-blue-500"
             />
             <label htmlFor="comments_enabled" className="text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer">
-              Allow comments on this post
+              {t('post.commentsEnabled')}
             </label>
           </div>
 
@@ -448,7 +450,7 @@ const CreatePost = () => {
                 className="w-5 h-5 text-blue-600 border-gray-300 dark:border-gray-600 rounded focus:ring-blue-500"
               />
               <label htmlFor="is_pinned" className="text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer">
-                Pin this post to the top of the confession
+                {t('post.pinPost')}
               </label>
             </div>
           )}
@@ -460,14 +462,14 @@ const CreatePost = () => {
               disabled={submitting}
               className="flex-1 px-6 py-3 bg-blue-600 dark:bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-700 dark:hover:bg-blue-600 disabled:bg-blue-300 dark:disabled:bg-blue-800 disabled:cursor-not-allowed transition-colors"
             >
-              {submitting ? 'Creating...' : 'Create Post'}
+              {submitting ? t('post.creating') : t('post.submit')}
             </button>
             <button
               type="button"
               onClick={() => navigate('/')}
               className="px-6 py-3 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
             >
-              Cancel
+              {t('common.cancel')}
             </button>
           </div>
         </form>
