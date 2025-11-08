@@ -143,7 +143,8 @@
     "startFollowing": "Start following confessions to see their posts in your feed and stay updated with their content.",
     "saving": "Saving...",
     "change": "Change",
-    "changePhoto": "Change photo"
+    "changePhoto": "Change photo",
+    "subscribed": "Subscribed"
   },
   "notifications": {
     "likedYourPost": "liked your post",

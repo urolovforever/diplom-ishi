@@ -143,7 +143,8 @@
     "startFollowing": "Feed'ingizda postlarini ko'rish va yangilanishlardan xabardor bo'lish uchun konfessiyalarga obuna bo'lishni boshlang.",
     "saving": "Saqlanmoqda...",
     "change": "O'zgartirish",
-    "changePhoto": "Rasmni o'zgartirish"
+    "changePhoto": "Rasmni o'zgartirish",
+    "subscribed": "Obuna bo'lindi"
   },
   "notifications": {
     "likedYourPost": "postingizni yoqtirdi",

@@ -2,15 +2,14 @@ import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { FiHeart, FiMessageCircle, FiEdit2, FiTrash2, FiEye, FiFileText } from 'react-icons/fi'
 import { BsPinFill } from 'react-icons/bs'
-import { formatDistanceToNow } from 'date-fns'
 import MediaCarousel from './MediaCarousel'
 import VideoPlayer from './VideoPlayer'
-import { formatUsername } from '../utils/formatters'
+import { formatUsername, formatRelativeTime } from '../utils/formatters'
 import { useLanguage } from '../contexts/LanguageContext'
 
 const PostCard = ({ post, onLike, onUnlike, onDelete, isConfessionAdmin }) => {
   const navigate = useNavigate()
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
   const handleLikeToggle = (e) => {
     e.preventDefault()
     if (post.is_liked) {
@@ -53,7 +52,7 @@ const PostCard = ({ post, onLike, onUnlike, onDelete, isConfessionAdmin }) => {
                 {post.confession.name}
               </h4>
               <p className="text-xs text-gray-500 dark:text-gray-400">
-                {t('common.by')} {formatUsername(post.author.username)} • {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
+                {t('common.by')} {formatUsername(post.author.username)} • {formatRelativeTime(post.created_at, language)}
               </p>
             </div>
           </Link>
