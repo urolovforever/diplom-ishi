@@ -3,11 +3,13 @@ import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { authAPI } from '../api/auth'
 import { useAuthStore } from '../store/authStore'
+import { useLanguage } from '../contexts/LanguageContext'
 import { FiMail, FiLock, FiEye, FiEyeOff } from 'react-icons/fi'
 
 const Login = () => {
   const navigate = useNavigate()
   const { user, setAuth } = useAuthStore()
+  const { t } = useLanguage()
 
   const [formData, setFormData] = useState({
     username: '',
@@ -47,14 +49,14 @@ const Login = () => {
       setAuth(profileResponse, response.access)
 
       // Show success message and redirect
-      toast.success('Login successful!')
+      toast.success(t('auth.loginSuccess'))
       navigate('/')
     } catch (error) {
       // Show specific error message for invalid credentials
       if (error.response?.status === 401) {
-        toast.error('Invalid username or password')
+        toast.error(t('auth.invalidCredentials'))
       } else {
-        toast.error(error.response?.data?.detail || 'Invalid username or password')
+        toast.error(error.response?.data?.detail || t('auth.invalidCredentials'))
       }
     } finally {
       setLoading(false)
@@ -69,8 +71,8 @@ const Login = () => {
           <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
             <span className="text-white font-bold text-2xl">RP</span>
           </div>
-          <h2 className="text-3xl font-bold text-gray-800">Welcome Back</h2>
-          <p className="text-gray-600 mt-2">Login to your account</p>
+          <h2 className="text-3xl font-bold text-gray-800">{t('auth.welcomeBack')}</h2>
+          <p className="text-gray-600 mt-2">{t('auth.loginToAccount')}</p>
         </div>
 
         {/* Form */}
@@ -78,7 +80,7 @@ const Login = () => {
           {/* Username or Email */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Username yoki Email
+              {t('auth.usernameOrEmail')}
             </label>
             <div className="relative">
               <FiMail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
@@ -89,7 +91,7 @@ const Login = () => {
                 onChange={handleChange}
                 required
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Username yoki email kiriting"
+                placeholder={t('auth.enterUsernameOrEmail')}
               />
             </div>
           </div>
@@ -97,7 +99,7 @@ const Login = () => {
           {/* Password */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Password
+              {t('auth.password')}
             </label>
             <div className="relative">
               <FiLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
@@ -108,7 +110,7 @@ const Login = () => {
                 onChange={handleChange}
                 required
                 className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Enter your password"
+                placeholder={t('auth.enterPassword')}
               />
               <button
                 type="button"
@@ -126,19 +128,19 @@ const Login = () => {
             disabled={loading}
             className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? 'Logging in...' : 'Login'}
+            {loading ? t('auth.loggingIn') : t('auth.login')}
           </button>
         </form>
 
         {/* Footer */}
         <div className="mt-6 text-center space-y-3">
           <Link to="/password-reset" className="block text-purple-600 hover:text-purple-700 font-medium text-sm">
-            Forgot your password?
+            {t('auth.forgotPassword')}
           </Link>
           <p className="text-gray-600">
-            Don't have an account?{' '}
+            {t('auth.dontHaveAccount')}{' '}
             <Link to="/register" className="text-blue-600 hover:text-blue-700 font-medium">
-              Register here
+              {t('auth.registerHere')}
             </Link>
           </p>
         </div>
