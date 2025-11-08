@@ -33,7 +33,7 @@ const linkify = (text) => {
 const CommentItem = ({ comment, post, user, onDelete, onLikeToggle, onReply, onEdit, onPin, level = 0 }) => {
   const navigate = useNavigate()
   const location = useLocation()
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
   const commentRef = useRef(null)
   const [showReplyForm, setShowReplyForm] = useState(false)
   const [replyText, setReplyText] = useState('')
