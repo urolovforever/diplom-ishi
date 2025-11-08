@@ -1,5 +1,5 @@
 import { formatDistanceToNow } from 'date-fns';
-import { enUS, ru, uz } from 'date-fns/locale';
+import { enUS, ru } from 'date-fns/locale';
 import { useLanguage } from '../../contexts/LanguageContext';
 
 const ConversationList = ({
@@ -12,10 +12,11 @@ const ConversationList = ({
   const { t, language } = useLanguage();
 
   // Map language codes to date-fns locales
+  // Uzbek uses English format as date-fns doesn't have uz locale
   const localeMap = {
     en: enUS,
     ru: ru,
-    uz: uz,
+    uz: enUS, // Fallback to English for Uzbek
   };
 
   const currentLocale = localeMap[language] || enUS;
