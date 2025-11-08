@@ -98,7 +98,7 @@ const ConversationList = ({
 
               {conversation.confession && (
                 <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">
-                  {t('messages.in')} {conversation.confession.name}
+                  {conversation.confession.name}
                 </p>
               )}
 

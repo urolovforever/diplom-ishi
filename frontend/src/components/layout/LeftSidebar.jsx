@@ -20,7 +20,7 @@ import { FaUserCircle, FaHeart, FaComment, FaUsers } from 'react-icons/fa'
 import { getUnreadCount, getNotifications, markNotificationAsRead, markAllNotificationsAsRead } from '../../api/notification'
 import messagingAPI from '../../api/messaging'
 import { toast } from 'react-toastify'
-import { formatUsername } from '../../utils/formatters'
+import { formatUsername, formatRelativeTime } from '../../utils/formatters'
 import { useTheme } from '../../contexts/ThemeContext'
 import { useLanguage } from '../../contexts/LanguageContext'
 
@@ -376,7 +376,7 @@ const LeftSidebar = () => {
 
                         {/* Time */}
                         <p className="text-xs text-gray-400 dark:text-gray-500">
-                          {notification.time_ago}
+                          {formatRelativeTime(notification.created_at, language)}
                         </p>
 
                         {/* Unread indicator */}
