@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import adminAPI from '../../api/admin';
 import { toast } from 'react-toastify';
+import { useTheme } from '../../contexts/ThemeContext';
+import { useLanguage } from '../../contexts/LanguageContext';
 import {
   FiMessageSquare,
   FiUsers,
@@ -11,6 +13,8 @@ import {
 } from 'react-icons/fi';
 
 const ConfessionManagement = () => {
+  const { darkMode } = useTheme();
+  const { t } = useLanguage();
   const [confessions, setConfessions] = useState([]);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -33,7 +37,7 @@ const ConfessionManagement = () => {
       setUsers(usersData.results || usersData);
     } catch (error) {
       console.error('Error fetching data:', error);
-      toast.error('Failed to load data');
+      toast.error(t('admin.failedToLoadData'));
     } finally {
       setLoading(false);
     }
@@ -41,18 +45,18 @@ const ConfessionManagement = () => {
 
   const handleAssignAdmin = async () => {
     if (!selectedConfession || !selectedUserId) {
-      toast.error('Please select a user');
+      toast.error(t('admin.pleaseSelectAdmin'));
       return;
     }
 
     try {
       await adminAPI.assignConfessionAdmin(selectedConfession.id, selectedUserId);
-      toast.success('Admin assigned successfully');
+      toast.success(t('admin.adminAssignedSuccess'));
       setShowAssignModal(false);
       fetchData();
     } catch (error) {
       console.error('Error assigning admin:', error);
-      toast.error(error.response?.data?.error || 'Failed to assign admin');
+      toast.error(error.response?.data?.error || t('admin.failedToAssignAdmin'));
     }
   };
 
@@ -69,24 +73,24 @@ const ConfessionManagement = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Confession Management</h1>
-          <p className="text-gray-600 mt-1">Manage confessions and assign admins</p>
+          <h1 className={`text-2xl font-bold ${darkMode ? 'text-gray-100' : 'text-gray-900'}`}>{t('admin.confessionManagementPage')}</h1>
+          <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} mt-1`}>{t('admin.manageConfessionsAndAdmins')}</p>
         </div>
         <button
           onClick={fetchData}
-          className="flex items-center space-x-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+          className={`flex items-center space-x-2 px-4 py-2 ${darkMode ? 'bg-blue-700 hover:bg-blue-600' : 'bg-indigo-600 hover:bg-indigo-700'} text-white rounded-lg transition-colors`}
         >
           <FiRefreshCw size={18} />
-          <span>Refresh</span>
+          <span>{t('admin.refresh')}</span>
         </button>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-gradient-to-br from-purple-500 to-indigo-600 text-white p-6 rounded-xl shadow-lg">
+        <div className={`${darkMode ? 'bg-gradient-to-br from-purple-700 to-indigo-800' : 'bg-gradient-to-br from-purple-500 to-indigo-600'} text-white p-6 rounded-xl shadow-lg`}>
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-purple-100 text-sm">Total Confessions</p>
+              <p className={`${darkMode ? 'text-purple-200' : 'text-purple-100'} text-sm`}>{t('admin.totalConfessions')}</p>
               <p className="text-3xl font-bold mt-2">{confessions.length}</p>
             </div>
             <div className="bg-white bg-opacity-20 p-3 rounded-lg">
@@ -95,10 +99,10 @@ const ConfessionManagement = () => {
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-blue-500 to-cyan-600 text-white p-6 rounded-xl shadow-lg">
+        <div className={`${darkMode ? 'bg-gradient-to-br from-blue-700 to-cyan-800' : 'bg-gradient-to-br from-blue-500 to-cyan-600'} text-white p-6 rounded-xl shadow-lg`}>
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-blue-100 text-sm">Total Subscribers</p>
+              <p className={`${darkMode ? 'text-blue-200' : 'text-blue-100'} text-sm`}>{t('admin.totalSubscribers')}</p>
               <p className="text-3xl font-bold mt-2">
                 {confessions.reduce((sum, c) => sum + c.subscriber_count, 0)}
               </p>
@@ -109,10 +113,10 @@ const ConfessionManagement = () => {
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-green-500 to-teal-600 text-white p-6 rounded-xl shadow-lg">
+        <div className={`${darkMode ? 'bg-gradient-to-br from-green-700 to-teal-800' : 'bg-gradient-to-br from-green-500 to-teal-600'} text-white p-6 rounded-xl shadow-lg`}>
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-green-100 text-sm">Total Posts</p>
+              <p className={`${darkMode ? 'text-green-200' : 'text-green-100'} text-sm`}>{t('admin.totalPosts')}</p>
               <p className="text-3xl font-bold mt-2">
                 {confessions.reduce((sum, c) => sum + c.post_count, 0)}
               </p>
@@ -126,14 +130,13 @@ const ConfessionManagement = () => {
 
       {/* Confessions without Admin Warning */}
       {confessions.some((c) => !c.admin) && (
-        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-lg">
+        <div className={`${darkMode ? 'bg-yellow-900 border-yellow-700' : 'bg-yellow-50 border-yellow-400'} border-l-4 p-4 rounded-lg`}>
           <div className="flex items-center">
-            <FiAlertCircle className="text-yellow-600 mr-3" size={24} />
+            <FiAlertCircle className={`${darkMode ? 'text-yellow-400' : 'text-yellow-600'} mr-3`} size={24} />
             <div>
-              <p className="text-yellow-800 font-semibold">Action Required</p>
-              <p className="text-yellow-700 text-sm">
-                {confessions.filter((c) => !c.admin).length} confession(s) don't have an assigned
-                admin
+              <p className={`${darkMode ? 'text-yellow-200' : 'text-yellow-800'} font-semibold`}>{t('admin.actionRequired')}</p>
+              <p className={`${darkMode ? 'text-yellow-300' : 'text-yellow-700'} text-sm`}>
+                {confessions.filter((c) => !c.admin).length} {t('admin.confessionsWithoutAdmin')}
               </p>
             </div>
           </div>
@@ -145,10 +148,10 @@ const ConfessionManagement = () => {
         {confessions.map((confession) => (
           <div
             key={confession.id}
-            className="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden hover:shadow-lg transition-shadow"
+            className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'} rounded-xl shadow-md border overflow-hidden hover:shadow-lg transition-shadow`}
           >
             {/* Header with Logo */}
-            <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-6 text-white">
+            <div className={`${darkMode ? 'bg-gradient-to-r from-blue-700 to-purple-700' : 'bg-gradient-to-r from-indigo-600 to-purple-600'} p-6 text-white`}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
                   {confession.logo ? (
@@ -164,7 +167,7 @@ const ConfessionManagement = () => {
                   )}
                   <div>
                     <h3 className="text-xl font-bold">{confession.name}</h3>
-                    <p className="text-indigo-100 text-sm">@{confession.slug}</p>
+                    <p className={`${darkMode ? 'text-blue-200' : 'text-indigo-100'} text-sm`}>@{confession.slug}</p>
                   </div>
                 </div>
               </div>
@@ -172,43 +175,43 @@ const ConfessionManagement = () => {
 
             {/* Body */}
             <div className="p-6">
-              <p className="text-gray-600 mb-4 line-clamp-2">{confession.description}</p>
+              <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-4 line-clamp-2`}>{confession.description}</p>
 
               {/* Stats */}
               <div className="grid grid-cols-2 gap-4 mb-4">
-                <div className="bg-gray-50 p-3 rounded-lg">
+                <div className={`${darkMode ? 'bg-gray-700' : 'bg-gray-50'} p-3 rounded-lg`}>
                   <div className="flex items-center space-x-2">
-                    <FiUsers className="text-blue-600" />
+                    <FiUsers className={`${darkMode ? 'text-blue-400' : 'text-blue-600'}`} />
                     <div>
-                      <p className="text-xs text-gray-500">Subscribers</p>
-                      <p className="text-lg font-bold text-gray-900">
+                      <p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>{t('admin.subscribers')}</p>
+                      <p className={`text-lg font-bold ${darkMode ? 'text-gray-100' : 'text-gray-900'}`}>
                         {confession.subscriber_count}
                       </p>
                     </div>
                   </div>
                 </div>
-                <div className="bg-gray-50 p-3 rounded-lg">
+                <div className={`${darkMode ? 'bg-gray-700' : 'bg-gray-50'} p-3 rounded-lg`}>
                   <div className="flex items-center space-x-2">
-                    <FiFileText className="text-green-600" />
+                    <FiFileText className={`${darkMode ? 'text-green-400' : 'text-green-600'}`} />
                     <div>
-                      <p className="text-xs text-gray-500">Posts</p>
-                      <p className="text-lg font-bold text-gray-900">{confession.post_count}</p>
+                      <p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>{t('admin.posts')}</p>
+                      <p className={`text-lg font-bold ${darkMode ? 'text-gray-100' : 'text-gray-900'}`}>{confession.post_count}</p>
                     </div>
                   </div>
                 </div>
               </div>
 
               {/* Admin Info */}
-              <div className="border-t border-gray-200 pt-4">
+              <div className={`border-t ${darkMode ? 'border-gray-700' : 'border-gray-200'} pt-4`}>
                 {confession.admin ? (
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
-                      <div className="h-10 w-10 rounded-full bg-gradient-to-br from-green-500 to-teal-600 flex items-center justify-center text-white font-bold">
+                      <div className={`h-10 w-10 rounded-full ${darkMode ? 'bg-gradient-to-br from-green-600 to-teal-700' : 'bg-gradient-to-br from-green-500 to-teal-600'} flex items-center justify-center text-white font-bold`}>
                         {confession.admin.username.charAt(0).toUpperCase()}
                       </div>
                       <div>
-                        <p className="text-sm text-gray-500">Admin</p>
-                        <p className="font-semibold text-gray-900">{confession.admin.username}</p>
+                        <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>{t('confession.admin')}</p>
+                        <p className={`font-semibold ${darkMode ? 'text-gray-100' : 'text-gray-900'}`}>{confession.admin.username}</p>
                       </div>
                     </div>
                     <button
@@ -217,16 +220,16 @@ const ConfessionManagement = () => {
                         setSelectedUserId(confession.admin.id);
                         setShowAssignModal(true);
                       }}
-                      className="px-4 py-2 text-sm bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-100 transition-colors"
+                      className={`px-4 py-2 text-sm ${darkMode ? 'bg-gray-700 text-blue-400 hover:bg-gray-600' : 'bg-indigo-50 text-indigo-600 hover:bg-indigo-100'} rounded-lg transition-colors`}
                     >
-                      Change Admin
+                      {t('admin.changeRole')}
                     </button>
                   </div>
                 ) : (
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2 text-orange-600">
+                    <div className={`flex items-center space-x-2 ${darkMode ? 'text-orange-400' : 'text-orange-600'}`}>
                       <FiAlertCircle />
-                      <span className="text-sm font-medium">No admin assigned</span>
+                      <span className="text-sm font-medium">{t('admin.notAssigned')}</span>
                     </div>
                     <button
                       onClick={() => {
@@ -234,10 +237,10 @@ const ConfessionManagement = () => {
                         setSelectedUserId('');
                         setShowAssignModal(true);
                       }}
-                      className="flex items-center space-x-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+                      className={`flex items-center space-x-2 px-4 py-2 ${darkMode ? 'bg-blue-700 hover:bg-blue-600' : 'bg-indigo-600 hover:bg-indigo-700'} text-white rounded-lg transition-colors`}
                     >
                       <FiUserPlus size={16} />
-                      <span>Assign Admin</span>
+                      <span>{t('admin.assignAdmin')}</span>
                     </button>
                   </div>
                 )}
@@ -250,46 +253,46 @@ const ConfessionManagement = () => {
       {/* Assign Admin Modal */}
       {showAssignModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full mx-4">
-            <h3 className="text-xl font-bold text-gray-900 mb-4">Assign Admin</h3>
-            <p className="text-gray-600 mb-6">
-              Select an admin for <span className="font-semibold">{selectedConfession?.name}</span>
+          <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-2xl p-8 max-w-md w-full mx-4`}>
+            <h3 className={`text-xl font-bold ${darkMode ? 'text-gray-100' : 'text-gray-900'} mb-4`}>{t('admin.assignAdmin')}</h3>
+            <p className={`${darkMode ? 'text-gray-300' : 'text-gray-600'} mb-6`}>
+              {t('admin.selectAdminFor')} <span className="font-semibold">{selectedConfession?.name}</span>
             </p>
 
             <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Select Admin User
+              <label className={`block text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'} mb-2`}>
+                {t('admin.selectAdminUser')}
               </label>
               <select
                 value={selectedUserId}
                 onChange={(e) => setSelectedUserId(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className={`w-full px-4 py-2 border ${darkMode ? 'border-gray-600 bg-gray-700 text-gray-100' : 'border-gray-300 bg-white'} rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500`}
               >
-                <option value="">-- Select Admin --</option>
+                <option value="">{t('admin.selectAdminPlaceholder')}</option>
                 {users.map((user) => (
                   <option key={user.id} value={user.id}>
                     {user.username} ({user.email}) - {user.role}
                   </option>
                 ))}
               </select>
-              <p className="text-xs text-gray-500 mt-2">
-                Only users with 'admin' or 'superadmin' role are shown
+              <p className={`text-xs ${darkMode ? 'text-gray-500' : 'text-gray-500'} mt-2`}>
+                {t('admin.onlyAdminRolesShown')}
               </p>
             </div>
 
             <div className="flex space-x-3">
               <button
                 onClick={() => setShowAssignModal(false)}
-                className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                className={`flex-1 px-4 py-2 border ${darkMode ? 'border-gray-600 text-gray-300 hover:bg-gray-700' : 'border-gray-300 text-gray-700 hover:bg-gray-50'} rounded-lg transition-colors`}
               >
-                Cancel
+                {t('post.cancel')}
               </button>
               <button
                 onClick={handleAssignAdmin}
                 disabled={!selectedUserId}
-                className="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className={`flex-1 px-4 py-2 ${darkMode ? 'bg-blue-700 hover:bg-blue-600' : 'bg-indigo-600 hover:bg-indigo-700'} text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed`}
               >
-                Assign Admin
+                {t('admin.assignAdmin')}
               </button>
             </div>
           </div>
