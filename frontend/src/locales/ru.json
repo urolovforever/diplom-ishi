@@ -118,7 +118,13 @@
     "noSubscribedAdmins": "Нет администраторов подписанных конфессий",
     "subscribeToMessage": "Подпишитесь на конфессии, чтобы писать их администраторам",
     "adminOf": "админ",
-    "confessions": "конфессий"
+    "confessions": "конфессий",
+    "you": "Вы",
+    "in": "в",
+    "pleaseLoginToSendMessages": "Пожалуйста, войдите, чтобы отправлять сообщения",
+    "conversationOpened": "Разговор открыт!",
+    "failedToOpenConversation": "Не удалось открыть разговор",
+    "pleaseLoginToAccessMessages": "Пожалуйста, войдите, чтобы получить доступ к сообщениям"
   },
   "profile": {
     "profileInformation": "Информация профиля",

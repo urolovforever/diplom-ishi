@@ -1,4 +1,5 @@
 import { formatDistanceToNow } from 'date-fns';
+import { enUS, ru, uz } from 'date-fns/locale';
 import { useLanguage } from '../../contexts/LanguageContext';
 
 const ConversationList = ({
@@ -8,7 +9,16 @@ const ConversationList = ({
   isLoading,
   currentUser,
 }) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+
+  // Map language codes to date-fns locales
+  const localeMap = {
+    en: enUS,
+    ru: ru,
+    uz: uz,
+  };
+
+  const currentLocale = localeMap[language] || enUS;
   if (isLoading) {
     return (
       <div className="flex items-center justify-center p-8">
@@ -79,6 +89,7 @@ const ConversationList = ({
                   <p className="text-xs text-gray-500 dark:text-gray-400">
                     {formatDistanceToNow(new Date(conversation.last_message_preview.created_at), {
                       addSuffix: true,
+                      locale: currentLocale,
                     })}
                   </p>
                 )}
@@ -86,14 +97,14 @@ const ConversationList = ({
 
               {conversation.confession && (
                 <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">
-                  in {conversation.confession.name}
+                  {t('messages.in')} {conversation.confession.name}
                 </p>
               )}
 
               {conversation.last_message_preview && (
                 <p className="text-sm text-gray-600 dark:text-gray-300 truncate">
                   {currentUser && conversation.last_message_preview.sender === currentUser.username
-                    ? `You: ${conversation.last_message_preview.content}`
+                    ? `${t('messages.you')}: ${conversation.last_message_preview.content}`
                     : conversation.last_message_preview.content}
                 </p>
               )}
