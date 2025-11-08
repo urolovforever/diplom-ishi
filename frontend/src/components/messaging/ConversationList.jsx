@@ -10,14 +10,14 @@ const ConversationList = ({
   if (isLoading) {
     return (
       <div className="flex items-center justify-center p-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 dark:border-indigo-400"></div>
       </div>
     );
   }
 
   if (conversations.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center p-8 text-gray-500">
+      <div className="flex flex-col items-center justify-center p-8 text-gray-500 dark:text-gray-400">
         <svg
           className="h-12 w-12 mb-4"
           fill="none"
@@ -55,9 +55,9 @@ const ConversationList = ({
             key={conversation.id}
             onClick={() => onSelectConversation(conversation)}
             className={`
-              flex items-center p-4 cursor-pointer border-b border-gray-200
-              hover:bg-gray-50 transition-colors
-              ${isSelected ? 'bg-indigo-50 border-l-4 border-l-indigo-600' : ''}
+              flex items-center p-4 cursor-pointer border-b border-gray-200 dark:border-gray-700
+              hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors
+              ${isSelected ? 'bg-indigo-50 dark:bg-indigo-900/30 border-l-4 border-l-indigo-600 dark:border-l-indigo-400' : ''}
             `}
           >
             {/* Avatar */}
@@ -70,11 +70,11 @@ const ConversationList = ({
             {/* Conversation Info */}
             <div className="ml-3 flex-1 min-w-0">
               <div className="flex items-center justify-between">
-                <p className="text-sm font-semibold text-gray-900 truncate">
+                <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">
                   {displayName}
                 </p>
                 {conversation.last_message_preview && (
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
                     {formatDistanceToNow(new Date(conversation.last_message_preview.created_at), {
                       addSuffix: true,
                     })}
@@ -83,13 +83,13 @@ const ConversationList = ({
               </div>
 
               {conversation.confession && (
-                <p className="text-xs text-gray-500 mb-1">
+                <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">
                   in {conversation.confession.name}
                 </p>
               )}
 
               {conversation.last_message_preview && (
-                <p className="text-sm text-gray-600 truncate">
+                <p className="text-sm text-gray-600 dark:text-gray-300 truncate">
                   {currentUser && conversation.last_message_preview.sender === currentUser.username
                     ? `You: ${conversation.last_message_preview.content}`
                     : conversation.last_message_preview.content}
@@ -98,7 +98,7 @@ const ConversationList = ({
 
               {conversation.unread_count > 0 && (
                 <div className="mt-1">
-                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-indigo-600 text-white">
+                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-indigo-600 dark:bg-indigo-500 text-white">
                     {conversation.unread_count}
                   </span>
                 </div>

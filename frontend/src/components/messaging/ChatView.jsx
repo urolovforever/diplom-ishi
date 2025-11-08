@@ -232,34 +232,34 @@ const ChatView = ({ conversationId }) => {
   const allMessages = conversationMessages.filter((msg) => !msg.is_deleted);
 
   return (
-    <div className="flex flex-col h-full bg-gray-50">
+    <div className="flex flex-col h-full bg-gray-50 dark:bg-gray-900">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 p-4 flex items-center justify-between">
+      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-4 flex items-center justify-between">
         <div className="flex items-center">
           <div className="h-10 w-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold mr-3">
             {currentConversation?.participants[0]?.username?.charAt(0).toUpperCase() || 'U'}
           </div>
           <div>
-            <h2 className="text-lg font-semibold text-gray-900">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
               {currentConversation?.participants
                 .map((p) => p.username)
                 .join(', ') || 'Conversation'}
             </h2>
             {currentConversation?.confession && (
-              <p className="text-sm text-gray-500">in {currentConversation.confession.name}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">in {currentConversation.confession.name}</p>
             )}
           </div>
         </div>
 
         <div className="flex items-center space-x-2">
           {isConnected ? (
-            <span className="flex items-center text-sm text-green-600">
-              <span className="h-2 w-2 rounded-full bg-green-600 mr-2 animate-pulse"></span>
+            <span className="flex items-center text-sm text-green-600 dark:text-green-400">
+              <span className="h-2 w-2 rounded-full bg-green-600 dark:bg-green-400 mr-2 animate-pulse"></span>
               Connected
             </span>
           ) : (
-            <span className="flex items-center text-sm text-gray-500">
-              <span className="h-2 w-2 rounded-full bg-gray-400 mr-2"></span>
+            <span className="flex items-center text-sm text-gray-500 dark:text-gray-400">
+              <span className="h-2 w-2 rounded-full bg-gray-400 dark:bg-gray-500 mr-2"></span>
               Connecting...
             </span>
           )}
@@ -270,19 +270,19 @@ const ChatView = ({ conversationId }) => {
       {pinnedMessage && (
         <div
           onClick={() => scrollToMessage(pinnedMessage.id)}
-          className="bg-gradient-to-r from-yellow-50 to-amber-50 border-b border-yellow-200 p-3 cursor-pointer hover:from-yellow-100 hover:to-amber-100 transition-colors"
+          className="bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-900/30 dark:to-amber-900/30 border-b border-yellow-200 dark:border-yellow-800 p-3 cursor-pointer hover:from-yellow-100 hover:to-amber-100 dark:hover:from-yellow-900/50 dark:hover:to-amber-900/50 transition-colors"
         >
           <div className="flex items-center space-x-2">
-            <svg className="h-4 w-4 text-yellow-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+            <svg className="h-4 w-4 text-yellow-600 dark:text-yellow-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
               <path d="M10 2a1 1 0 011 1v1.323l3.954 1.582 1.599-.8a1 1 0 01.894 1.79l-1.233.616 1.738 5.42a1 1 0 01-.285 1.05A3.989 3.989 0 0115 15a3.989 3.989 0 01-2.667-1.019 1 1 0 01-.285-1.05l1.738-5.42-1.233-.617a1 1 0 01.894-1.788l1.599.799L11 4.323V3a1 1 0 011-1zm-5 8.274l-.818 2.552c-.25.78-.03 1.632.548 2.138.578.506 1.39.686 2.154.503l1.196-.28a1 1 0 00.782-.949V10a1 1 0 00-1-1H6a1 1 0 00-1 1v.274z" />
             </svg>
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-semibold text-yellow-800">Pinned Message</p>
-              <p className="text-sm text-gray-900 truncate">
+              <p className="text-xs font-semibold text-yellow-800 dark:text-yellow-300">Pinned Message</p>
+              <p className="text-sm text-gray-900 dark:text-gray-100 truncate">
                 <span className="font-medium">{pinnedMessage.sender.username}:</span> {pinnedMessage.content}
               </p>
             </div>
-            <svg className="h-5 w-5 text-yellow-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="h-5 w-5 text-yellow-600 dark:text-yellow-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
             </svg>
           </div>
@@ -292,7 +292,7 @@ const ChatView = ({ conversationId }) => {
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {allMessages.length === 0 ? (
-          <div className="flex items-center justify-center h-full text-gray-500">
+          <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-400">
             <p>No messages yet. Start the conversation!</p>
           </div>
         ) : (
