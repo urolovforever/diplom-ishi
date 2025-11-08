@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../store/authStore'
+import { useLanguage } from '../contexts/LanguageContext'
 import { FiHome, FiUser, FiSettings, FiLogOut, FiMenu, FiX } from 'react-icons/fi'
 
 const Navbar = () => {
+  const { t } = useLanguage()
   const { user, logout } = useAuthStore()
   const navigate = useNavigate()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -31,20 +33,20 @@ const Navbar = () => {
           <div className="hidden md:flex items-center space-x-6">
             <Link to="/" className="flex items-center space-x-1 text-gray-700 hover:text-blue-600">
               <FiHome />
-              <span>Home</span>
+              <span>{t('nav.home')}</span>
             </Link>
 
             {user ? (
               <>
                 <Link to="/profile" className="flex items-center space-x-1 text-gray-700 hover:text-blue-600">
                   <FiUser />
-                  <span>Profile</span>
+                  <span>{t('nav.profile')}</span>
                 </Link>
 
                 {(user.role === 'admin' || user.role === 'superadmin') && (
                   <Link to="/admin" className="flex items-center space-x-1 text-gray-700 hover:text-blue-600">
                     <FiSettings />
-                    <span>Admin Panel</span>
+                    <span>{t('nav.admin')}</span>
                   </Link>
                 )}
 
@@ -67,16 +69,16 @@ const Navbar = () => {
                   className="flex items-center space-x-1 text-red-600 hover:text-red-700 font-medium"
                 >
                   <FiLogOut />
-                  <span>Logout</span>
+                  <span>{t('settings.logout')}</span>
                 </button>
               </>
             ) : (
               <>
                 <Link to="/login" className="px-4 py-2 text-blue-600 hover:text-blue-700 font-medium">
-                  Login
+                  {t('auth.login')}
                 </Link>
                 <Link to="/register" className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                  Register
+                  {t('auth.register')}
                 </Link>
               </>
             )}
@@ -99,7 +101,7 @@ const Navbar = () => {
               className="block py-2 text-gray-700 hover:text-blue-600"
               onClick={() => setIsMenuOpen(false)}
             >
-              Home
+              {t('nav.home')}
             </Link>
 
             {user ? (
@@ -109,7 +111,7 @@ const Navbar = () => {
                   className="block py-2 text-gray-700 hover:text-blue-600"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  Profile
+                  {t('nav.profile')}
                 </Link>
 
                 {(user.role === 'admin' || user.role === 'superadmin') && (
@@ -118,7 +120,7 @@ const Navbar = () => {
                     className="block py-2 text-gray-700 hover:text-blue-600"
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    Admin Panel
+                    {t('nav.admin')}
                   </Link>
                 )}
 
@@ -129,7 +131,7 @@ const Navbar = () => {
                   }}
                   className="block w-full text-left py-2 text-red-600 hover:text-red-700"
                 >
-                  Logout
+                  {t('settings.logout')}
                 </button>
               </>
             ) : (
@@ -139,14 +141,14 @@ const Navbar = () => {
                   className="block py-2 text-gray-700 hover:text-blue-600"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  Login
+                  {t('auth.login')}
                 </Link>
                 <Link
                   to="/register"
                   className="block py-2 text-gray-700 hover:text-blue-600"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  Register
+                  {t('auth.register')}
                 </Link>
               </>
             )}
