@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { confessionAPI } from '../api/confession'
 import { useAuthStore } from '../store/authStore'
+import { useLanguage } from '../contexts/LanguageContext'
 import MainLayout from '../components/layout/MainLayout'
 import Loading from '../components/Loading'
 import { FiUsers, FiFileText, FiUserPlus, FiUserMinus, FiEdit2, FiX, FiImage, FiTrash2, FiEye, FiHeart, FiMessageCircle, FiArrowLeft, FiVideo } from 'react-icons/fi'
@@ -11,6 +12,7 @@ const ConfessionPage = () => {
   const { slug } = useParams()
   const navigate = useNavigate()
   const { user } = useAuthStore()
+  const { t } = useLanguage()
 
   const [confession, setConfession] = useState(null)
   const [posts, setPosts] = useState([])
@@ -46,7 +48,7 @@ const ConfessionPage = () => {
       const postsData = await confessionAPI.getPosts({ confession: confessionData.id })
       setPosts(postsData.results || postsData)
     } catch (error) {
-      toast.error('Failed to load confession')
+      toast.error(t('confession.loadFailed'))
       console.error(error)
     } finally {
       setLoading(false)
@@ -55,7 +57,7 @@ const ConfessionPage = () => {
 
   const handleSubscribe = async () => {
     if (!user) {
-      toast.error('Please login to subscribe')
+      toast.error(t('confession.loginToSubscribe'))
       return
     }
 
@@ -64,14 +66,14 @@ const ConfessionPage = () => {
       if (confession.is_subscribed) {
         await confessionAPI.unsubscribe(slug)
         setConfession({ ...confession, is_subscribed: false })
-        toast.success('Unsubscribed successfully')
+        toast.success(t('confession.unsubscribedSuccess'))
       } else {
         await confessionAPI.subscribe(slug)
         setConfession({ ...confession, is_subscribed: true })
-        toast.success('Subscribed successfully')
+        toast.success(t('confession.subscribedSuccess'))
       }
     } catch (error) {
-      toast.error('Failed to update subscription')
+      toast.error(t('confession.subscriptionFailed'))
     } finally {
       setSubscribing(false)
     }
@@ -86,7 +88,7 @@ const ConfessionPage = () => {
           : post
       ))
     } catch (error) {
-      toast.error('Failed to like post')
+      toast.error(t('common.error'))
     }
   }
 
@@ -99,7 +101,7 @@ const ConfessionPage = () => {
           : post
       ))
     } catch (error) {
-      toast.error('Failed to unlike post')
+      toast.error(t('common.error'))
     }
   }
 
@@ -145,26 +147,26 @@ const ConfessionPage = () => {
 
       const updatedConfession = await confessionAPI.updateConfession(slug, formData)
       setConfession(updatedConfession)
-      toast.success('Confession updated successfully!')
+      toast.success(t('confession.updatedSuccess'))
       setShowEditModal(false)
     } catch (error) {
-      toast.error(error.response?.data?.name?.[0] || 'Failed to update confession')
+      toast.error(error.response?.data?.name?.[0] || t('confession.updateFailed'))
     } finally {
       setUpdating(false)
     }
   }
 
   const handlePostDelete = async (postId) => {
-    if (!window.confirm('Are you sure you want to delete this post?')) {
+    if (!window.confirm(t('home.deletePostConfirm'))) {
       return
     }
 
     try {
       await confessionAPI.deletePost(postId)
       setPosts(posts.filter(post => post.id !== postId))
-      toast.success('Post deleted successfully!')
+      toast.success(t('home.postDeleted'))
     } catch (error) {
-      toast.error('Failed to delete post')
+      toast.error(t('common.error'))
     }
   }
 
@@ -172,12 +174,12 @@ const ConfessionPage = () => {
     const canView = user && (confession.is_subscribed || isConfessionAdmin || user.role === 'superadmin')
 
     if (!user) {
-      toast.error('Please login to view posts')
+      toast.error(t('confession.loginToView'))
       return
     }
 
     if (!canView) {
-      toast.error('Subscribe to this confession to view posts')
+      toast.error(t('confession.subscribeToView'))
       return
     }
 
@@ -205,7 +207,7 @@ const ConfessionPage = () => {
 
   if (!confession) return (
     <MainLayout>
-      <div className="text-center py-12">Confession not found</div>
+      <div className="text-center py-12">{t('confession.notFound')}</div>
     </MainLayout>
   )
 
@@ -218,7 +220,7 @@ const ConfessionPage = () => {
         className="inline-flex items-center space-x-2 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 mb-4 transition-colors"
       >
         <FiArrowLeft />
-        <span>Back</span>
+        <span>{t('common.back')}</span>
       </button>
 
       {/* Header */}
@@ -244,11 +246,11 @@ const ConfessionPage = () => {
                   className="flex items-center space-x-1 hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer"
                 >
                   <FiUsers />
-                  <span>{confession.subscribers_count} followers</span>
+                  <span>{confession.subscribers_count} {t('confession.followers')}</span>
                 </Link>
                 <div className="flex items-center space-x-1">
                   <FiFileText />
-                  <span>{confession.posts_count} posts</span>
+                  <span>{confession.posts_count} {t('common.posts')}</span>
                 </div>
               </div>
             </div>
@@ -261,7 +263,7 @@ const ConfessionPage = () => {
                 className="flex items-center space-x-2 px-4 py-2 bg-purple-600 dark:bg-purple-500 text-white rounded-lg hover:bg-purple-700 dark:hover:bg-purple-600 transition-colors"
               >
                 <FiEdit2 />
-                <span>Edit</span>
+                <span>{t('common.edit')}</span>
               </button>
             )}
             {user && (
@@ -275,7 +277,7 @@ const ConfessionPage = () => {
                 }`}
               >
                 {confession.is_subscribed ? <FiUserMinus /> : <FiUserPlus />}
-                <span>{confession.is_subscribed ? 'Unsubscribe' : 'Subscribe'}</span>
+                <span>{confession.is_subscribed ? t('confession.unsubscribe') : t('confession.subscribe')}</span>
               </button>
             )}
           </div>
@@ -284,11 +286,11 @@ const ConfessionPage = () => {
 
       {/* Posts Grid */}
       <div>
-        <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6 px-4">Posts</h2>
+        <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6 px-4">{t('common.posts')}</h2>
 
         {posts.length === 0 ? (
           <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-xl shadow-md border border-transparent dark:border-gray-700">
-            <p className="text-gray-500 dark:text-gray-400 text-lg">No posts yet</p>
+            <p className="text-gray-500 dark:text-gray-400 text-lg">{t('confession.noPosts')}</p>
           </div>
         ) : (
           <div className="grid grid-cols-3 gap-1 md:gap-2">
@@ -410,14 +412,14 @@ const ConfessionPage = () => {
                         <button
                           onClick={(e) => handleEditPost(e, post.id)}
                           className="p-2 bg-blue-500 rounded-full hover:bg-blue-600 transition-colors"
-                          title="Edit post"
+                          title={t('confession.editPost')}
                         >
                           <FiEdit2 size={16} />
                         </button>
                         <button
                           onClick={(e) => handleDeletePost(e, post.id)}
                           className="p-2 bg-red-500 rounded-full hover:bg-red-600 transition-colors"
-                          title="Delete post"
+                          title={t('confession.deletePost')}
                         >
                           <FiTrash2 size={16} />
                         </button>
@@ -436,7 +438,7 @@ const ConfessionPage = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-70 flex items-center justify-center z-50 p-4">
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
-              <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">Edit Confession</h2>
+              <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">{t('confession.editConfession')}</h2>
               <button
                 onClick={() => setShowEditModal(false)}
                 className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors text-gray-600 dark:text-gray-400"
@@ -449,7 +451,7 @@ const ConfessionPage = () => {
               {/* Name */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                  Confession Name <span className="text-red-500 dark:text-red-400">*</span>
+                  {t('confession.confessionName')} <span className="text-red-500 dark:text-red-400">*</span>
                 </label>
                 <input
                   type="text"
@@ -464,7 +466,7 @@ const ConfessionPage = () => {
               {/* Description */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                  Description <span className="text-red-500 dark:text-red-400">*</span>
+                  {t('confession.description')} <span className="text-red-500 dark:text-red-400">*</span>
                 </label>
                 <textarea
                   name="description"
@@ -479,7 +481,7 @@ const ConfessionPage = () => {
               {/* Logo */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                  Logo
+                  {t('confession.logo')}
                 </label>
                 {logoPreview ? (
                   <div className="relative">
@@ -502,7 +504,7 @@ const ConfessionPage = () => {
                 ) : (
                   <label className="flex flex-col items-center justify-center w-32 h-32 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-full cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                     <FiImage size={32} className="text-gray-400 dark:text-gray-500 mb-2" />
-                    <span className="text-xs text-gray-500 dark:text-gray-400">Upload</span>
+                    <span className="text-xs text-gray-500 dark:text-gray-400">{t('confession.upload')}</span>
                     <input
                       type="file"
                       accept="image/*"
@@ -520,14 +522,14 @@ const ConfessionPage = () => {
                   disabled={updating}
                   className="flex-1 px-6 py-3 bg-blue-600 dark:bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-700 dark:hover:bg-blue-600 disabled:bg-blue-300 dark:disabled:bg-blue-700 disabled:cursor-not-allowed transition-colors"
                 >
-                  {updating ? 'Updating...' : 'Update Confession'}
+                  {updating ? t('confession.updating') : t('confession.updateConfession')}
                 </button>
                 <button
                   type="button"
                   onClick={() => setShowEditModal(false)}
                   className="px-6 py-3 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
                 >
-                  Cancel
+                  {t('common.cancel')}
                 </button>
               </div>
             </form>
