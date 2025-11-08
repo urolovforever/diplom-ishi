@@ -12,6 +12,7 @@ import {
   FiLogOut,
   FiMenu,
   FiX,
+  FiArrowLeft,
 } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 
@@ -81,8 +82,19 @@ const AdminLayout = () => {
           </div>
         </div>
 
+        {/* Return to Site Button */}
+        <div className="p-4">
+          <button
+            onClick={() => navigate('/')}
+            className={`flex items-center space-x-3 px-4 py-3 rounded-lg w-full ${darkMode ? 'bg-blue-700 hover:bg-blue-600 text-white' : 'bg-indigo-600 hover:bg-indigo-700 text-white'} transition-all shadow-md`}
+          >
+            <FiArrowLeft size={20} />
+            {sidebarOpen && <span className="font-medium">{t('admin.returnToSite')}</span>}
+          </button>
+        </div>
+
         {/* Navigation */}
-        <nav className="flex-1 p-4 space-y-2">
+        <nav className="flex-1 p-4 pt-0 space-y-2">
           {navigation.map((item) => (
             <NavLink
               key={item.name}

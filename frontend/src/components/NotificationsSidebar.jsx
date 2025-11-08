@@ -18,20 +18,34 @@ const NotificationsSidebar = ({ isOpen, onClose, onNotificationsRead }) => {
     const actorUsername = notification.actor.username;
     const postTitle = notification.post?.title || '';
 
+    console.log('Notification type:', notification.notification_type);
+    console.log('Actor username:', actorUsername);
+    console.log('Post title:', postTitle);
+    console.log('Current language:', language);
+
+    let translatedMessage = '';
     switch (notification.notification_type) {
       case 'subscribe':
-        return t('notifications.subscribed', { username: actorUsername });
+        translatedMessage = t('notifications.subscribed', { username: actorUsername });
+        break;
       case 'like':
-        return t('notifications.likedPost', { username: actorUsername, title: postTitle });
+        translatedMessage = t('notifications.likedPost', { username: actorUsername, title: postTitle });
+        break;
       case 'comment':
-        return t('notifications.commentedPost', { username: actorUsername, title: postTitle });
+        translatedMessage = t('notifications.commentedPost', { username: actorUsername, title: postTitle });
+        break;
       case 'comment_like':
-        return t('notifications.likedComment', { username: actorUsername, title: postTitle });
+        translatedMessage = t('notifications.likedComment', { username: actorUsername, title: postTitle });
+        break;
       case 'comment_reply':
-        return t('notifications.repliedComment', { username: actorUsername, title: postTitle });
+        translatedMessage = t('notifications.repliedComment', { username: actorUsername, title: postTitle });
+        break;
       default:
-        return t('notifications.interacted', { username: actorUsername });
+        translatedMessage = t('notifications.interacted', { username: actorUsername });
     }
+
+    console.log('Translated message:', translatedMessage);
+    return translatedMessage;
   };
 
   useEffect(() => {
