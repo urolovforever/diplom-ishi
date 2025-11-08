@@ -143,14 +143,19 @@
     "startFollowing": "Start following confessions to see their posts in your feed and stay updated with their content.",
     "saving": "Saving...",
     "change": "Change",
-    "changePhoto": "Change photo"
+    "changePhoto": "Change photo",
+    "subscribed": "Subscribed"
   },
   "notifications": {
     "likedYourPost": "liked your post",
     "commented": "commented on your post",
     "replied": "replied to your comment",
     "followedYou": "followed you",
-    "mentionedYou": "mentioned you"
+    "mentionedYou": "mentioned you",
+    "failedToLoad": "Failed to load notifications",
+    "allMarkedRead": "All notifications marked as read",
+    "markAllReadFailed": "Failed to mark all as read",
+    "in": "in"
   },
   "post": {
     "create": "Create New Post",
@@ -245,6 +250,7 @@
   },
   "admin": {
     "panel": "Admin Panel",
+    "returnToSite": "Return to Site",
     "createNewPost": "Create New Post",
     "confessionManagement": "Confession Management",
     "assignAdminsToConfessions": "Assign admins to confessions",
@@ -277,5 +283,14 @@
     "currentAdmin": "Current Admin:",
     "notAssigned": "Not assigned",
     "selectAdminToAssign": "Select admin to assign..."
+  },
+  "followers": {
+    "listPrivate": "Followers list is private",
+    "subscribeToView": "Subscribe to this confession to view followers",
+    "goToConfession": "Go to Confession",
+    "noFollowersYet": "No followers yet",
+    "viewProfile": "View profile",
+    "pleaseLoginToView": "Please login to view followers",
+    "failedToLoad": "Failed to load followers"
   }
 }

@@ -143,14 +143,19 @@
     "startFollowing": "Feed'ingizda postlarini ko'rish va yangilanishlardan xabardor bo'lish uchun konfessiyalarga obuna bo'lishni boshlang.",
     "saving": "Saqlanmoqda...",
     "change": "O'zgartirish",
-    "changePhoto": "Rasmni o'zgartirish"
+    "changePhoto": "Rasmni o'zgartirish",
+    "subscribed": "Obuna bo'lindi"
   },
   "notifications": {
     "likedYourPost": "postingizni yoqtirdi",
     "commented": "izoh qoldirdi",
     "replied": "javob berdi",
     "followedYou": "sizga obuna bo'ldi",
-    "mentionedYou": "sizni eslatdi"
+    "mentionedYou": "sizni eslatdi",
+    "failedToLoad": "Bildirishnomalarni yuklashda xatolik",
+    "allMarkedRead": "Barcha bildirishnomalar o'qilgan deb belgilandi",
+    "markAllReadFailed": "Barcha bildirishnomalarni o'qilgan deb belgilashda xatolik",
+    "in": "da"
   },
   "post": {
     "create": "Yangi post yaratish",
@@ -245,6 +250,7 @@
   },
   "admin": {
     "panel": "Admin Panel",
+    "returnToSite": "Saytga qaytish",
     "createNewPost": "Yangi post yaratish",
     "confessionManagement": "Konfessiyalarni boshqarish",
     "assignAdminsToConfessions": "Konfessiyalarga adminlar tayinlash",
@@ -277,5 +283,14 @@
     "currentAdmin": "Joriy admin:",
     "notAssigned": "Tayinlanmagan",
     "selectAdminToAssign": "Tayinlash uchun adminni tanlang..."
+  },
+  "followers": {
+    "listPrivate": "Obunachilar ro'yxati yopiq",
+    "subscribeToView": "Obunachilarni ko'rish uchun bu konfessiyaga obuna bo'ling",
+    "goToConfession": "Konfessiyaga o'tish",
+    "noFollowersYet": "Hali obunachilar yo'q",
+    "viewProfile": "Profilni ko'rish",
+    "pleaseLoginToView": "Obunachilarni ko'rish uchun tizimga kiring",
+    "failedToLoad": "Obunachilarni yuklashda xatolik"
   }
 }

@@ -3,11 +3,10 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { confessionAPI } from '../api/confession'
 import { useAuthStore } from '../store/authStore'
-import { formatDistanceToNow } from 'date-fns'
 import { FiTrash2, FiSend, FiHeart, FiEdit3, FiCheck, FiX, FiChevronDown, FiChevronUp, FiMessageCircle } from 'react-icons/fi'
 import { FaHeart, FaHeart as FaHeartSolid } from 'react-icons/fa'
 import { BsPinFill, BsPin } from 'react-icons/bs'
-import { formatUsername } from '../utils/formatters'
+import { formatUsername, formatRelativeTime } from '../utils/formatters'
 import { useLanguage } from '../contexts/LanguageContext'
 
 // Helper function to convert URLs to clickable links
@@ -149,7 +148,7 @@ const CommentItem = ({ comment, post, user, onDelete, onLikeToggle, onReply, onE
               {formatUsername(comment.author.username)}
             </button>
             <span className="text-xs text-gray-500 dark:text-gray-400">
-              {formatDistanceToNow(new Date(comment.created_at), { addSuffix: true })}
+              {formatRelativeTime(comment.created_at, language)}
             </span>
             {comment.is_edited && (
               <span className="text-xs text-gray-400 dark:text-gray-500 italic">{t('common.edited')}</span>
@@ -343,7 +342,7 @@ const CommentItem = ({ comment, post, user, onDelete, onLikeToggle, onReply, onE
 
 const CommentSection = ({ postId, commentsEnabled = true }) => {
   const { user } = useAuthStore()
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
   const [comments, setComments] = useState([])
   const [newComment, setNewComment] = useState('')
   const [loading, setLoading] = useState(false)

@@ -7,11 +7,11 @@ import { useAuthStore } from '../store/authStore'
 import MainLayout from '../components/layout/MainLayout'
 import Loading from '../components/Loading'
 import { FiEdit2, FiSave, FiX, FiLock, FiImage, FiCompass, FiShield } from 'react-icons/fi'
-import { formatDistanceToNow } from 'date-fns'
+import { formatRelativeTime } from '../utils/formatters'
 import { useLanguage } from '../contexts/LanguageContext'
 
 const Profile = () => {
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
   const { user, updateUser } = useAuthStore()
 
   const [isEditing, setIsEditing] = useState(false)
@@ -492,7 +492,7 @@ const Profile = () => {
                       {sub.confession.name}
                     </h4>
                     <p className="text-xs text-gray-500 dark:text-gray-400">
-                      Subscribed {formatDistanceToNow(new Date(sub.subscribed_at), { addSuffix: true })}
+                      {t('profile.subscribed')} {formatRelativeTime(sub.subscribed_at, language)}
                     </p>
                   </div>
                 </Link>

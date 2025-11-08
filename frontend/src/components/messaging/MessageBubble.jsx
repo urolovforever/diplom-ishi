@@ -1,8 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
-import { formatDistanceToNow } from 'date-fns';
 import { FiCheck, FiCheckCircle } from 'react-icons/fi';
+import { formatRelativeTime } from '../../utils/formatters';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 const MessageBubble = ({ message, isOwnMessage, onEdit, onDelete, onPin, onReply }) => {
+  const { language } = useLanguage();
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(message.content);
   const [showContextMenu, setShowContextMenu] = useState(false);
@@ -184,7 +186,7 @@ const MessageBubble = ({ message, isOwnMessage, onEdit, onDelete, onPin, onReply
 
             {/* Message metadata */}
             <div className={`flex items-center space-x-1 mt-1.5 text-xs ${isOwnMessage ? 'text-indigo-200 dark:text-indigo-300 justify-end' : 'text-gray-500 dark:text-gray-400'}`}>
-              <span>{formatDistanceToNow(new Date(message.created_at), { addSuffix: true })}</span>
+              <span>{formatRelativeTime(message.created_at, language)}</span>
               {message.is_edited && <span>• edited</span>}
               {getStatusIcon()}
             </div>
