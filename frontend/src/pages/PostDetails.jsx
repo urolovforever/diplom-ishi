@@ -11,6 +11,7 @@ import VideoPlayer from '../components/VideoPlayer'
 import { FiHeart, FiMessageCircle, FiArrowLeft, FiEye, FiFileText } from 'react-icons/fi'
 import { BsPinFill } from 'react-icons/bs'
 import { formatDistanceToNow } from 'date-fns'
+import { formatUsername } from '../utils/formatters'
 
 const PostDetails = () => {
   const { id } = useParams()
@@ -107,7 +108,7 @@ const PostDetails = () => {
                   {post.confession.name}
                 </h3>
                 <p className="text-sm text-gray-500">
-                  by {post.author.username} • {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
+                  by {formatUsername(post.author.username)} • {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
                 </p>
               </div>
             </Link>
