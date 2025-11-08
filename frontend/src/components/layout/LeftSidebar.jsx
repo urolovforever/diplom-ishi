@@ -112,7 +112,7 @@ const LeftSidebar = () => {
       setNotifications(data.results || data)
     } catch (error) {
       console.error('Failed to fetch notifications:', error)
-      toast.error('Failed to load notifications')
+      toast.error(t('notifications.failedToLoad'))
     } finally {
       setLoadingNotifications(false)
     }
@@ -152,10 +152,10 @@ const LeftSidebar = () => {
       // Refresh unread count
       const data = await getUnreadCount()
       setUnreadCount(data.count)
-      toast.success('All notifications marked as read')
+      toast.success(t('notifications.allMarkedRead'))
     } catch (error) {
       console.error('Failed to mark all as read:', error)
-      toast.error('Failed to mark all as read')
+      toast.error(t('notifications.markAllReadFailed'))
     }
   }
 
@@ -175,6 +175,35 @@ const LeftSidebar = () => {
         return <FaUserCircle className="text-gray-500" size={20} />
     }
   }
+
+  // Generate translated notification message
+  const getNotificationMessage = (notification) => {
+    const actorUsername = notification.actor.username;
+    const postTitle = notification.post?.title || '';
+
+    let translatedMessage = '';
+    switch (notification.notification_type) {
+      case 'subscribe':
+        translatedMessage = t('notifications.subscribed', { username: actorUsername });
+        break;
+      case 'like':
+        translatedMessage = t('notifications.likedPost', { username: actorUsername, title: postTitle });
+        break;
+      case 'comment':
+        translatedMessage = t('notifications.commentedPost', { username: actorUsername, title: postTitle });
+        break;
+      case 'comment_like':
+        translatedMessage = t('notifications.likedComment', { username: actorUsername, title: postTitle });
+        break;
+      case 'comment_reply':
+        translatedMessage = t('notifications.repliedComment', { username: actorUsername, title: postTitle });
+        break;
+      default:
+        translatedMessage = t('notifications.interacted', { username: actorUsername });
+    }
+
+    return translatedMessage;
+  };
 
   const NavItem = ({ to, icon: Icon, label, onClick, badge, isButton }) => {
     const content = (
@@ -276,7 +305,7 @@ const LeftSidebar = () => {
                 onClick={handleMarkAllRead}
                 className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium"
               >
-                Mark all as read
+                {t('common.markAllRead')}
               </button>
             </div>
           )}
@@ -290,7 +319,7 @@ const LeftSidebar = () => {
             ) : notifications.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full text-gray-500 dark:text-gray-400 px-4">
                 <FaUserCircle size={48} className="mb-4 opacity-50" />
-                <p>No notifications yet</p>
+                <p>{t('common.noNotifications')}</p>
               </div>
             ) : (
               <div className="divide-y divide-gray-200 dark:divide-gray-700">
@@ -335,13 +364,13 @@ const LeftSidebar = () => {
 
                         {/* Message */}
                         <p className="text-sm text-gray-700 dark:text-gray-300 mb-1 line-clamp-2">
-                          {notification.message}
+                          {getNotificationMessage(notification)}
                         </p>
 
                         {/* Confession name (if available) */}
                         {notification.confession && (
                           <p className="text-xs text-gray-500 dark:text-gray-400 mb-1 truncate">
-                            in {notification.confession.name}
+                            {t('notifications.in')} {notification.confession.name}
                           </p>
                         )}
 
