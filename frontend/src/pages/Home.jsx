@@ -95,14 +95,14 @@ const Home = () => {
   }
 
   const handlePostDelete = async (postId) => {
-    if (!window.confirm('Are you sure you want to delete this post?')) {
+    if (!window.confirm(t('home.deletePostConfirm'))) {
       return
     }
 
     try {
       await confessionAPI.deletePost(postId)
       setPosts(posts.filter(post => post.id !== postId))
-      toast.success('Post deleted successfully!')
+      toast.success(t('home.postDeleted'))
     } catch (error) {
       toast.error('Failed to delete post')
     }
@@ -124,23 +124,23 @@ const Home = () => {
         {!user ? (
           <div className="text-center py-16 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
             <div className="text-6xl mb-4">🔒</div>
-            <p className="text-gray-700 dark:text-gray-200 text-xl font-semibold mb-2">Login Required</p>
+            <p className="text-gray-700 dark:text-gray-200 text-xl font-semibold mb-2">{t('home.loginRequired')}</p>
             <p className="text-gray-500 dark:text-gray-400 mb-6">
-              Please login to view posts from confessions you follow
+              {t('home.loginToViewPosts')}
             </p>
             <Link
               to="/login"
               className="inline-block px-6 py-3 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors font-semibold"
             >
-              Login Now
+              {t('home.loginNow')}
             </Link>
           </div>
         ) : posts.length === 0 ? (
           <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
             <div className="text-6xl mb-4">📭</div>
-            <p className="text-gray-500 dark:text-gray-400 text-lg mb-2">No posts to show</p>
+            <p className="text-gray-500 dark:text-gray-400 text-lg mb-2">{t('home.noPostsYet')}</p>
             <p className="text-gray-400 dark:text-gray-500 text-sm">
-              Subscribe to confessions to see their posts here
+              {t('home.subscribeToSeePosts')}
             </p>
           </div>
         ) : (

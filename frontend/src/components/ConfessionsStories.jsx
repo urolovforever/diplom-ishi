@@ -3,8 +3,10 @@ import { Link } from 'react-router-dom'
 import { confessionAPI } from '../api/confession'
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi'
 import { useAuthStore } from '../store/authStore'
+import { useLanguage } from '../contexts/LanguageContext'
 
 const ConfessionsStories = ({ onConfessionSelect }) => {
+  const { t } = useLanguage()
   const [confessions, setConfessions] = useState([])
   const [subscriptions, setSubscriptions] = useState([])
   const [loading, setLoading] = useState(true)
@@ -82,13 +84,13 @@ const ConfessionsStories = ({ onConfessionSelect }) => {
       {user && confessions.length === 0 && (
         <div className="text-center py-4">
           <p className="text-gray-600 dark:text-gray-400 text-sm mb-2">
-            You haven't subscribed to any confessions yet
+            {t('home.noSubscriptionsYet')}
           </p>
           <Link
             to="/explore"
             className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm font-semibold"
           >
-            Explore Confessions →
+            {t('home.exploreConfessionsLink')}
           </Link>
         </div>
       )}
@@ -131,10 +133,10 @@ const ConfessionsStories = ({ onConfessionSelect }) => {
                     : 'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600'
                 }`}
               >
-                <span className="text-white font-bold text-xl">All</span>
+                <span className="text-white font-bold text-xl">{t('home.all')}</span>
               </div>
               <span className="text-xs text-gray-600 dark:text-gray-400 font-medium text-center w-20 truncate">
-                All Posts
+                {t('home.allPosts')}
               </span>
             </button>
           )}
