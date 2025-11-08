@@ -3,10 +3,12 @@ import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { confessionAPI } from '../../api/confession'
 import { useAuthStore } from '../../store/authStore'
+import { useLanguage } from '../../contexts/LanguageContext'
 import { FiClock, FiUsers } from 'react-icons/fi'
 
 const RightSidebar = () => {
   const { user } = useAuthStore()
+  const { t } = useLanguage()
   const [activeConfessions, setActiveConfessions] = useState([])
   const [suggestions, setSuggestions] = useState([])
   const [subscribedIds, setSubscribedIds] = useState([])
@@ -103,7 +105,7 @@ const RightSidebar = () => {
           {confession.name}
         </p>
         <p className="text-xs text-gray-500 dark:text-gray-400">
-          {confession.subscribers_count || 0} followers
+          {confession.subscribers_count || 0} {t('common.followers')}
         </p>
       </div>
       {showButton && user && (
@@ -112,7 +114,7 @@ const RightSidebar = () => {
           disabled={subscribing[confession.id]}
           className="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 px-3 py-1 rounded-full hover:bg-blue-50 dark:hover:bg-blue-900/30 disabled:opacity-50"
         >
-          {subscribing[confession.id] ? '...' : 'Follow'}
+          {subscribing[confession.id] ? '...' : t('common.follow')}
         </button>
       )}
     </Link>
@@ -133,7 +135,7 @@ const RightSidebar = () => {
     <div className="fixed right-0 top-0 h-screen w-96 bg-gray-50 dark:bg-gray-950 overflow-y-auto p-5">
       {/* Active/My Confessions */}
       {user && activeConfessions.length > 0 && (
-        <SidebarCard title="My Confessions" icon={FiClock}>
+        <SidebarCard title={t('home.myConfessions')} icon={FiClock}>
           <div className="space-y-1">
             {activeConfessions.map((confession) => (
               <ConfessionItem key={confession.id} confession={confession} />
@@ -143,7 +145,7 @@ const RightSidebar = () => {
       )}
 
       {/* Suggestions */}
-      <SidebarCard title="Suggestions For You" icon={FiUsers}>
+      <SidebarCard title={t('home.suggestionsForYou')} icon={FiUsers}>
         <div className="space-y-1">
           {suggestions.length > 0 ? (
             suggestions.map((confession) => (
@@ -151,7 +153,7 @@ const RightSidebar = () => {
             ))
           ) : (
             <p className="text-sm text-gray-500 dark:text-gray-400 py-2">
-              {user ? 'No more suggestions' : 'Login to get personalized suggestions'}
+              {user ? t('home.noMoreSuggestions') : t('home.loginForSuggestions')}
             </p>
           )}
         </div>

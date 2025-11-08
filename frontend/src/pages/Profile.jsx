@@ -8,8 +8,10 @@ import MainLayout from '../components/layout/MainLayout'
 import Loading from '../components/Loading'
 import { FiEdit2, FiSave, FiX, FiLock, FiImage, FiCompass, FiShield } from 'react-icons/fi'
 import { formatDistanceToNow } from 'date-fns'
+import { useLanguage } from '../contexts/LanguageContext'
 
 const Profile = () => {
+  const { t } = useLanguage()
   const { user, updateUser } = useAuthStore()
 
   const [isEditing, setIsEditing] = useState(false)
@@ -184,7 +186,7 @@ const Profile = () => {
                     />
                     <div className="absolute bottom-full right-0 mb-2 hidden group-hover:block">
                       <div className="bg-gray-800 dark:bg-gray-900 text-white text-xs py-1 px-2 rounded whitespace-nowrap">
-                        Change photo
+                        {t('profile.changePhoto')}
                       </div>
                     </div>
                   </label>
@@ -227,7 +229,7 @@ const Profile = () => {
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-100 flex items-center">
                 <FiEdit2 className="mr-2 text-blue-600 dark:text-blue-400" size={24} />
-                Profile Information
+                {t('profile.profileInformation')}
               </h3>
 
               {!isEditing ? (
@@ -236,7 +238,7 @@ const Profile = () => {
                   className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-500 dark:to-blue-600 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 dark:hover:from-blue-600 dark:hover:to-blue-700 shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105"
                 >
                   <FiEdit2 size={16} />
-                  <span className="font-semibold">Edit</span>
+                  <span className="font-semibold">{t('common.edit')}</span>
                 </button>
               ) : (
                 <div className="flex space-x-2">
@@ -246,7 +248,7 @@ const Profile = () => {
                     className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-green-600 to-green-700 dark:from-green-500 dark:to-green-600 text-white rounded-lg hover:from-green-700 hover:to-green-800 dark:hover:from-green-600 dark:hover:to-green-700 disabled:opacity-50 shadow-md hover:shadow-lg transition-all duration-200"
                   >
                     <FiSave size={16} />
-                    <span className="font-semibold">{loading ? 'Saving...' : 'Save'}</span>
+                    <span className="font-semibold">{loading ? t('profile.saving') : t('common.save')}</span>
                   </button>
                   <button
                     onClick={cancelEdit}
@@ -262,7 +264,7 @@ const Profile = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                    First Name
+                    {t('profile.firstName')}
                   </label>
                   <input
                     type="text"
@@ -271,13 +273,13 @@ const Profile = () => {
                     onChange={handleChange}
                     disabled={!isEditing}
                     className="w-full px-4 py-2.5 border-2 border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400 disabled:bg-gray-50 dark:disabled:bg-gray-800 disabled:text-gray-600 dark:disabled:text-gray-400 transition-colors"
-                    placeholder="First name"
+                    placeholder={t('profile.firstName')}
                   />
                 </div>
 
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                    Last Name
+                    {t('profile.lastName')}
                   </label>
                   <input
                     type="text"
@@ -286,14 +288,14 @@ const Profile = () => {
                     onChange={handleChange}
                     disabled={!isEditing}
                     className="w-full px-4 py-2.5 border-2 border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400 disabled:bg-gray-50 dark:disabled:bg-gray-800 disabled:text-gray-600 dark:disabled:text-gray-400 transition-colors"
-                    placeholder="Last name"
+                    placeholder={t('profile.lastName')}
                   />
                 </div>
               </div>
 
               <div>
                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                  Bio
+                  {t('profile.bio')}
                 </label>
                 <textarea
                   name="bio"
@@ -304,7 +306,7 @@ const Profile = () => {
                   className={`w-full px-4 py-2.5 border-2 border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400 resize-none transition-colors ${
                     !isEditing ? 'bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400 italic' : ''
                   }`}
-                  placeholder="Tell us about yourself..."
+                  placeholder={t('profile.tellAboutYourself')}
                 />
               </div>
             </form>
@@ -315,7 +317,7 @@ const Profile = () => {
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-100 flex items-center">
                 <FiLock className="mr-2 text-blue-600 dark:text-blue-400" size={24} />
-                Security
+                {t('profile.security')}
               </h3>
 
               {!showPasswordChange && (
@@ -324,7 +326,7 @@ const Profile = () => {
                   className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-500 dark:to-purple-500 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 dark:hover:from-blue-600 dark:hover:to-purple-600 shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105"
                 >
                   <FiLock size={16} />
-                  <span className="font-semibold">Change</span>
+                  <span className="font-semibold">{t('profile.change')}</span>
                 </button>
               )}
             </div>
@@ -333,7 +335,7 @@ const Profile = () => {
               <form onSubmit={handlePasswordSubmit} className="space-y-4">
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                    Current Password
+                    {t('profile.currentPassword')}
                   </label>
                   <input
                     type="password"
@@ -342,13 +344,13 @@ const Profile = () => {
                     onChange={handlePasswordChange}
                     required
                     className="w-full px-4 py-2.5 border-2 border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400 transition-colors"
-                    placeholder="Current password"
+                    placeholder={t('profile.currentPassword')}
                   />
                 </div>
 
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                    New Password
+                    {t('profile.newPassword')}
                   </label>
                   <input
                     type="password"
@@ -357,13 +359,13 @@ const Profile = () => {
                     onChange={handlePasswordChange}
                     required
                     className="w-full px-4 py-2.5 border-2 border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400 transition-colors"
-                    placeholder="New password"
+                    placeholder={t('profile.newPassword')}
                   />
                 </div>
 
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                    Confirm Password
+                    {t('profile.confirmPassword')}
                   </label>
                   <input
                     type="password"
@@ -378,7 +380,7 @@ const Profile = () => {
                           ? 'border-green-500 dark:border-green-400 focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 focus:border-green-500 dark:focus:border-green-400'
                           : 'border-red-500 dark:border-red-400 focus:ring-2 focus:ring-red-500 dark:focus:ring-red-400 focus:border-red-500 dark:focus:border-red-400'
                     }`}
-                    placeholder="Confirm password"
+                    placeholder={t('profile.confirmPassword')}
                   />
                   {passwordData.confirm_password !== '' && (
                     <p className={`text-sm mt-1 font-medium ${
@@ -387,8 +389,8 @@ const Profile = () => {
                         : 'text-red-600 dark:text-red-400'
                     }`}>
                       {passwordData.new_password === passwordData.confirm_password
-                        ? '✓ Passwords match'
-                        : '✗ Passwords do not match'}
+                        ? t('profile.passwordsMatch')
+                        : t('profile.passwordsDontMatch')}
                     </p>
                   )}
                 </div>
@@ -399,7 +401,7 @@ const Profile = () => {
                     disabled={loading}
                     className="flex-1 px-4 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-500 dark:to-purple-500 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 dark:hover:from-blue-600 dark:hover:to-purple-600 disabled:opacity-50 shadow-md hover:shadow-lg transition-all duration-200 font-semibold"
                   >
-                    {loading ? 'Updating...' : 'Update Password'}
+                    {loading ? t('profile.updating') : t('profile.updatePassword')}
                   </button>
                   <button
                     type="button"
@@ -413,7 +415,7 @@ const Profile = () => {
                     }}
                     className="px-4 py-2.5 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 shadow-md transition-all duration-200 font-semibold"
                   >
-                    Cancel
+                    {t('common.cancel')}
                   </button>
                 </div>
               </form>
@@ -423,16 +425,16 @@ const Profile = () => {
                   <FiLock className="text-blue-600 dark:text-blue-400" size={36} />
                 </div>
                 <h4 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                  Password Protection
+                  {t('profile.passwordProtection')}
                 </h4>
                 <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-                  Keep your account secure by updating your password regularly
+                  {t('profile.keepAccountSecure')}
                 </p>
                 <button
                   onClick={() => setShowPasswordChange(true)}
                   className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-semibold text-sm"
                 >
-                  Click here to change →
+                  {t('profile.clickToChange')}
                 </button>
               </div>
             )}
@@ -443,7 +445,7 @@ const Profile = () => {
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 p-6 border border-gray-100 dark:border-gray-700">
           <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6 flex items-center">
             <span className="mr-2">📚</span>
-            My Subscriptions
+            {t('profile.mySubscriptions')}
             <span className="ml-2 text-lg text-gray-500 dark:text-gray-400">({subscriptions.length})</span>
           </h3>
 
@@ -453,17 +455,17 @@ const Profile = () => {
                 <FiCompass className="text-blue-600 dark:text-blue-400" size={48} />
               </div>
               <h4 className="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                No subscriptions yet
+                {t('profile.noSubscriptionsYet')}
               </h4>
               <p className="text-gray-500 dark:text-gray-400 mb-6 max-w-md">
-                Start following confessions to see their posts in your feed and stay updated with their content.
+                {t('profile.startFollowing')}
               </p>
               <Link
                 to="/explore"
                 className="inline-flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-500 dark:to-purple-500 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 dark:hover:from-blue-600 dark:hover:to-purple-600 shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105 font-semibold"
               >
                 <FiCompass size={20} />
-                <span>Explore Confessions</span>
+                <span>{t('explore.exploreConfessions')}</span>
               </Link>
             </div>
           ) : (

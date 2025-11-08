@@ -5,8 +5,10 @@ import MainLayout from '../components/layout/MainLayout'
 import ConfessionCard from '../components/ConfessionCard'
 import Loading from '../components/Loading'
 import { FiSearch } from 'react-icons/fi'
+import { useLanguage } from '../contexts/LanguageContext'
 
 const Explore = () => {
+  const { t } = useLanguage()
   const [confessions, setConfessions] = useState([])
   const [filteredConfessions, setFilteredConfessions] = useState([])
   const [loading, setLoading] = useState(true)
@@ -59,14 +61,14 @@ const Explore = () => {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-4">
-            Explore Confessions
+            {t('explore.exploreConfessions')}
           </h1>
 
           {/* Search Bar */}
           <div className="relative">
             <input
               type="text"
-              placeholder="Search confessions..."
+              placeholder={t('explore.searchConfessions')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full px-4 py-3 pl-12 bg-white dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-400 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent"
@@ -79,10 +81,7 @@ const Explore = () => {
         {filteredConfessions.length === 0 ? (
           <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
             <div className="text-6xl mb-4">🔍</div>
-            <p className="text-gray-500 dark:text-gray-400 text-lg mb-2">No confessions found</p>
-            <p className="text-gray-400 dark:text-gray-500 text-sm">
-              Try adjusting your search terms
-            </p>
+            <p className="text-gray-500 dark:text-gray-400 text-lg mb-2">{t('explore.noConfessionsFound')}</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
