@@ -8,8 +8,10 @@ import messagingAPI from '../api/messaging';
 import ConversationList from '../components/messaging/ConversationList';
 import ChatView from '../components/messaging/ChatView';
 import { FiMessageCircle, FiUsers, FiArrowLeft } from 'react-icons/fi';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const Messages = () => {
+  const { t } = useLanguage();
   const { conversationId } = useParams();
   const navigate = useNavigate();
   const { user } = useAuthStore();
@@ -140,7 +142,7 @@ const Messages = () => {
             >
               <FiArrowLeft size={20} className="text-gray-600 dark:text-gray-400" />
             </button>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Messages</h1>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{t('messages.messages')}</h1>
           </div>
         </div>
 
@@ -154,7 +156,7 @@ const Messages = () => {
               <span className="flex items-center space-x-2">
                 <FiMessageCircle size={18} />
                 <span className="font-medium">
-                  {showAdminsList ? 'Show Conversations' : 'Start New Conversation'}
+                  {showAdminsList ? t('messages.showConversations') : t('messages.startNewConversation')}
                 </span>
               </span>
               <FiUsers size={18} />
@@ -168,7 +170,7 @@ const Messages = () => {
             <div className="p-4">
               <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center">
                 <FiUsers className="mr-2" />
-                Subscribed Confession Admins
+                {t('messages.subscribedConfessionAdmins')}
               </h2>
               {loadingAdmins ? (
                 <div className="flex items-center justify-center p-8">
@@ -176,8 +178,8 @@ const Messages = () => {
                 </div>
               ) : subscribedAdmins.length === 0 ? (
                 <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-                  <p className="text-sm">No subscribed confession admins</p>
-                  <p className="text-xs mt-1">Subscribe to confessions to message their admins</p>
+                  <p className="text-sm">{t('messages.noSubscribedAdmins')}</p>
+                  <p className="text-xs mt-1">{t('messages.subscribeToMessage')}</p>
                 </div>
               ) : (
                 <div className="space-y-3">
@@ -192,7 +194,7 @@ const Messages = () => {
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="font-semibold text-gray-900 dark:text-gray-100 truncate">{admin.username}</p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">Admin of {admin.confessions.length} confession(s)</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">{admin.confessions.length} {t('messages.confessions')} {t('messages.adminOf')}</p>
                         </div>
                       </div>
                       <div className="space-y-1">
@@ -245,8 +247,8 @@ const Messages = () => {
                   d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
                 />
               </svg>
-              <p className="text-lg font-medium">Select a conversation</p>
-              <p className="text-sm">Choose a conversation from the list to start messaging</p>
+              <p className="text-lg font-medium">{t('messages.selectConversation')}</p>
+              <p className="text-sm">{t('messages.chooseConversation')}</p>
             </div>
           </div>
         )}

@@ -5,8 +5,10 @@ import { useAuthStore } from '../../store/authStore';
 import WebSocketManager from '../../utils/websocket';
 import MessageBubble from './MessageBubble';
 import MessageInput from './MessageInput';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 const ChatView = ({ conversationId }) => {
+  const { t } = useLanguage();
   const messagesEndRef = useRef(null);
   const wsRef = useRef(null);
   const typingTimeoutRef = useRef(null);
@@ -255,12 +257,12 @@ const ChatView = ({ conversationId }) => {
           {isConnected ? (
             <span className="flex items-center text-sm text-green-600 dark:text-green-400">
               <span className="h-2 w-2 rounded-full bg-green-600 dark:bg-green-400 mr-2 animate-pulse"></span>
-              Connected
+              {t('messages.connected')}
             </span>
           ) : (
             <span className="flex items-center text-sm text-gray-500 dark:text-gray-400">
               <span className="h-2 w-2 rounded-full bg-gray-400 dark:bg-gray-500 mr-2"></span>
-              Connecting...
+              {t('messages.connecting')}
             </span>
           )}
         </div>
@@ -277,7 +279,7 @@ const ChatView = ({ conversationId }) => {
               <path d="M10 2a1 1 0 011 1v1.323l3.954 1.582 1.599-.8a1 1 0 01.894 1.79l-1.233.616 1.738 5.42a1 1 0 01-.285 1.05A3.989 3.989 0 0115 15a3.989 3.989 0 01-2.667-1.019 1 1 0 01-.285-1.05l1.738-5.42-1.233-.617a1 1 0 01.894-1.788l1.599.799L11 4.323V3a1 1 0 011-1zm-5 8.274l-.818 2.552c-.25.78-.03 1.632.548 2.138.578.506 1.39.686 2.154.503l1.196-.28a1 1 0 00.782-.949V10a1 1 0 00-1-1H6a1 1 0 00-1 1v.274z" />
             </svg>
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-semibold text-yellow-800 dark:text-yellow-300">Pinned Message</p>
+              <p className="text-xs font-semibold text-yellow-800 dark:text-yellow-300">{t('messages.pinnedMessage')}</p>
               <p className="text-sm text-gray-900 dark:text-gray-100 truncate">
                 <span className="font-medium">{pinnedMessage.sender.username}:</span> {pinnedMessage.content}
               </p>
@@ -293,7 +295,7 @@ const ChatView = ({ conversationId }) => {
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {allMessages.length === 0 ? (
           <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-400">
-            <p>No messages yet. Start the conversation!</p>
+            <p>{t('messages.noMessagesYet')}</p>
           </div>
         ) : (
           allMessages.map((message) => (

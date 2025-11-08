@@ -1,6 +1,8 @@
 import { useState, useRef } from 'react';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 const MessageInput = ({ onSendMessage, onTyping, isSending, replyingTo, onCancelReply }) => {
+  const { t } = useLanguage();
   const [message, setMessage] = useState('');
   const [attachments, setAttachments] = useState([]);
   const fileInputRef = useRef(null);
@@ -37,7 +39,7 @@ const MessageInput = ({ onSendMessage, onTyping, isSending, replyingTo, onCancel
         <div className="mb-2 flex items-center justify-between bg-gray-100 dark:bg-gray-700 rounded-lg p-2">
           <div className="flex-1 min-w-0">
             <p className="text-xs font-medium text-gray-900 dark:text-gray-100">
-              Replying to {replyingTo.sender.username}
+              {t('messages.replyingTo')} {replyingTo.sender.username}
             </p>
             <p className="text-xs text-gray-600 dark:text-gray-400 truncate">{replyingTo.content}</p>
           </div>
@@ -122,7 +124,7 @@ const MessageInput = ({ onSendMessage, onTyping, isSending, replyingTo, onCancel
             onTyping();
           }}
           onKeyDown={handleKeyDown}
-          placeholder="Type a message..."
+          placeholder={t('messages.typeMessage')}
           className="flex-1 resize-none rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent"
           rows={1}
           style={{ minHeight: '40px', maxHeight: '120px' }}
