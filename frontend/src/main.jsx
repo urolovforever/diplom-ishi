@@ -5,6 +5,8 @@ import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import './index.css'
 import App from './App'
+import { ThemeProvider } from './contexts/ThemeContext'
+import { LanguageProvider } from './contexts/LanguageContext'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -14,19 +16,23 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         v7_relativeSplatPath: true,
       }}
     >
-      <App />
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
+      <ThemeProvider>
+        <LanguageProvider>
+          <App />
+          <ToastContainer
+            position="top-right"
+            autoClose={3000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+          />
+        </LanguageProvider>
+      </ThemeProvider>
     </BrowserRouter>
   </React.StrictMode>,
 )

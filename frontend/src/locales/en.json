@@ -1,0 +1,55 @@
+{
+  "nav": {
+    "home": "Home",
+    "explore": "Explore",
+    "messages": "Messages",
+    "notifications": "Notifications",
+    "create": "Create",
+    "profile": "Profile",
+    "admin": "Admin Panel"
+  },
+  "settings": {
+    "darkMode": "Dark Mode",
+    "lightMode": "Light Mode",
+    "language": "Language",
+    "logout": "Logout"
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "username": "Username",
+    "password": "Password",
+    "email": "Email"
+  },
+  "post": {
+    "create": "Create New Post",
+    "title": "Title",
+    "content": "Content",
+    "image": "Image",
+    "video": "Video",
+    "pdf": "PDF Documents",
+    "uploadImages": "Upload Images",
+    "uploadVideo": "Upload Video",
+    "uploadPDFs": "Upload PDFs",
+    "addMore": "Add More",
+    "clearAll": "Clear All",
+    "commentsEnabled": "Allow comments on this post",
+    "pinPost": "Pin this post to the top of the confession",
+    "submit": "Create Post",
+    "cancel": "Cancel"
+  },
+  "common": {
+    "by": "by",
+    "pinned": "Pinned",
+    "loading": "Loading...",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "reply": "Reply",
+    "like": "Like",
+    "comment": "Comment",
+    "share": "Share",
+    "back": "Back",
+    "clickToView": "Click to view"
+  }
+}

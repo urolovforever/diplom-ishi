@@ -1,0 +1,55 @@
+{
+  "nav": {
+    "home": "Bosh sahifa",
+    "explore": "Kashf qilish",
+    "messages": "Xabarlar",
+    "notifications": "Bildirishnomalar",
+    "create": "Yaratish",
+    "profile": "Profil",
+    "admin": "Admin Panel"
+  },
+  "settings": {
+    "darkMode": "Tungi Rejim",
+    "lightMode": "Kunduzgi Rejim",
+    "language": "Til",
+    "logout": "Chiqish"
+  },
+  "auth": {
+    "login": "Kirish",
+    "register": "Ro'yxatdan o'tish",
+    "username": "Foydalanuvchi nomi",
+    "password": "Parol",
+    "email": "Email"
+  },
+  "post": {
+    "create": "Yangi post yaratish",
+    "title": "Sarlavha",
+    "content": "Mazmun",
+    "image": "Rasm",
+    "video": "Video",
+    "pdf": "PDF hujjatlar",
+    "uploadImages": "Rasmlarni yuklash",
+    "uploadVideo": "Video yuklash",
+    "uploadPDFs": "PDF yuklash",
+    "addMore": "Qo'shish",
+    "clearAll": "Hammasini o'chirish",
+    "commentsEnabled": "Bu postga izoh qo'shishga ruxsat berish",
+    "pinPost": "Bu postni konfessiya yuqori qismiga qadash",
+    "submit": "Post yaratish",
+    "cancel": "Bekor qilish"
+  },
+  "common": {
+    "by": "tomonidan",
+    "pinned": "Qadalgan",
+    "loading": "Yuklanmoqda...",
+    "save": "Saqlash",
+    "delete": "O'chirish",
+    "edit": "Tahrirlash",
+    "reply": "Javob berish",
+    "like": "Yoqtirish",
+    "comment": "Izoh",
+    "share": "Ulashish",
+    "back": "Orqaga",
+    "clickToView": "Ko'rish uchun bosing"
+  }
+}
