@@ -55,12 +55,16 @@ const NotificationsSidebar = ({ isOpen, onClose, onNotificationsRead }) => {
   }, [isOpen]);
 
   const fetchNotifications = async () => {
+    console.log('🔔 Fetching notifications...');
     setLoading(true);
     try {
       const data = await getNotifications();
-      setNotifications(data.results || data);
+      const notificationsList = data.results || data;
+      console.log('✅ Notifications fetched:', notificationsList.length, 'notifications');
+      console.log('📋 First notification:', notificationsList[0]);
+      setNotifications(notificationsList);
     } catch (error) {
-      console.error('Failed to fetch notifications:', error);
+      console.error('❌ Failed to fetch notifications:', error);
       toast.error(t('notifications.failedToLoad'));
     } finally {
       setLoading(false);
