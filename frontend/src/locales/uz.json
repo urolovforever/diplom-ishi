@@ -161,7 +161,13 @@
     "failedToLoad": "Bildirishnomalarni yuklashda xatolik",
     "allMarkedRead": "Barcha bildirishnomalar o'qilgan deb belgilandi",
     "markAllReadFailed": "Barcha bildirishnomalarni o'qilgan deb belgilashda xatolik",
-    "in": "da"
+    "in": "da",
+    "subscribed": "@{{username}} konfessiyangizga obuna bo'ldi.",
+    "likedPost": "@{{username}} '{{title}}' postingizni yoqtirdi.",
+    "commentedPost": "@{{username}} '{{title}}' postingizga izoh qoldirdi.",
+    "likedComment": "@{{username}} '{{title}}' postdagi izohingizni yoqtirdi.",
+    "repliedComment": "@{{username}} '{{title}}' postdagi izohingizga javob berdi.",
+    "interacted": "@{{username}} konfessiyangiz bilan o'zaro aloqada bo'ldi."
   },
   "post": {
     "create": "Yangi post yaratish",

@@ -13,6 +13,27 @@ const NotificationsSidebar = ({ isOpen, onClose, onNotificationsRead }) => {
   const navigate = useNavigate();
   const { t, language } = useLanguage();
 
+  // Generate translated notification message
+  const getNotificationMessage = (notification) => {
+    const actorUsername = notification.actor.username;
+    const postTitle = notification.post?.title || '';
+
+    switch (notification.notification_type) {
+      case 'subscribe':
+        return t('notifications.subscribed', { username: actorUsername });
+      case 'like':
+        return t('notifications.likedPost', { username: actorUsername, title: postTitle });
+      case 'comment':
+        return t('notifications.commentedPost', { username: actorUsername, title: postTitle });
+      case 'comment_like':
+        return t('notifications.likedComment', { username: actorUsername, title: postTitle });
+      case 'comment_reply':
+        return t('notifications.repliedComment', { username: actorUsername, title: postTitle });
+      default:
+        return t('notifications.interacted', { username: actorUsername });
+    }
+  };
+
   useEffect(() => {
     if (isOpen) {
       fetchNotifications();
@@ -162,7 +183,7 @@ const NotificationsSidebar = ({ isOpen, onClose, onNotificationsRead }) => {
 
                       {/* Message */}
                       <p className="text-sm text-gray-700 dark:text-gray-300 mb-1">
-                        {notification.message}
+                        {getNotificationMessage(notification)}
                       </p>
 
                       {/* Confession name */}

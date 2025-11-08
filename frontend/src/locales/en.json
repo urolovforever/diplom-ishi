@@ -161,7 +161,13 @@
     "failedToLoad": "Failed to load notifications",
     "allMarkedRead": "All notifications marked as read",
     "markAllReadFailed": "Failed to mark all as read",
-    "in": "in"
+    "in": "in",
+    "subscribed": "@{{username}} followed your confession.",
+    "likedPost": "@{{username}} liked your post '{{title}}'.",
+    "commentedPost": "@{{username}} commented on your post '{{title}}'.",
+    "likedComment": "@{{username}} liked your comment on '{{title}}'.",
+    "repliedComment": "@{{username}} replied to your comment on '{{title}}'.",
+    "interacted": "@{{username}} interacted with your confession."
   },
   "post": {
     "create": "Create New Post",

@@ -161,7 +161,13 @@
     "failedToLoad": "Не удалось загрузить уведомления",
     "allMarkedRead": "Все уведомления отмечены как прочитанные",
     "markAllReadFailed": "Не удалось отметить все как прочитанное",
-    "in": "в"
+    "in": "в",
+    "subscribed": "@{{username}} подписался на вашу конфессию.",
+    "likedPost": "@{{username}} понравился ваш пост '{{title}}'.",
+    "commentedPost": "@{{username}} прокомментировал ваш пост '{{title}}'.",
+    "likedComment": "@{{username}} понравился ваш комментарий к '{{title}}'.",
+    "repliedComment": "@{{username}} ответил на ваш комментарий к '{{title}}'.",
+    "interacted": "@{{username}} взаимодействовал с вашей конфессией."
   },
   "post": {
     "create": "Создать новый пост",
