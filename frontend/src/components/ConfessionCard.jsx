@@ -15,7 +15,7 @@ const ConfessionCard = ({ confession }) => {
   return (
     <Link
       to={`/confession/${confession.slug}`}
-      className="block bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden card-hover"
+      className="block bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden card-hover border border-transparent dark:border-gray-700"
     >
       {/* Header with logo */}
       <div className="relative h-32 bg-gradient-to-r from-blue-500 to-purple-600">
@@ -34,7 +34,7 @@ const ConfessionCard = ({ confession }) => {
         )}
 
         {confession.is_subscribed && (
-          <div className="absolute top-2 right-2 bg-green-500 text-white px-2 py-1 rounded-full text-xs flex items-center space-x-1">
+          <div className="absolute top-2 right-2 bg-green-500 dark:bg-green-600 text-white px-2 py-1 rounded-full text-xs flex items-center space-x-1">
             <FiCheckCircle size={12} />
             <span>Subscribed</span>
           </div>
@@ -43,16 +43,16 @@ const ConfessionCard = ({ confession }) => {
 
       {/* Content */}
       <div className="p-4">
-        <h3 className="text-xl font-bold text-gray-800 mb-2">
+        <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2">
           {confession.name}
         </h3>
 
-        <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+        <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2">
           {confession.description}
         </p>
 
         {/* Stats */}
-        <div className="flex items-center justify-between text-sm text-gray-500">
+        <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
           <div className="flex items-center space-x-1">
             <FiUsers size={16} />
             <span>{confession.subscribers_count} followers</span>
@@ -66,12 +66,12 @@ const ConfessionCard = ({ confession }) => {
 
         {/* Admin info */}
         {confession.admin && (
-          <div className="mt-3 pt-3 border-t border-gray-100">
-            <p className="text-xs text-gray-500">
+          <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
+            <p className="text-xs text-gray-500 dark:text-gray-400">
               Admin:{' '}
               <button
                 onClick={(e) => handleAdminClick(e, confession.admin.username)}
-                className="font-medium text-blue-600 hover:text-blue-800 transition-colors"
+                className="font-medium text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
               >
                 {formatUsername(confession.admin.username)}
               </button>

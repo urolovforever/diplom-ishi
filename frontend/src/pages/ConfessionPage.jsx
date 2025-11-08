@@ -215,33 +215,33 @@ const ConfessionPage = () => {
       {/* Back Button */}
       <button
         onClick={() => navigate(-1)}
-        className="inline-flex items-center space-x-2 text-blue-600 hover:text-blue-700 mb-4"
+        className="inline-flex items-center space-x-2 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 mb-4 transition-colors"
       >
         <FiArrowLeft />
         <span>Back</span>
       </button>
 
       {/* Header */}
-      <div className="bg-white rounded-xl shadow-md p-8 mb-8">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-transparent dark:border-gray-700 p-8 mb-8">
         <div className="flex items-start justify-between">
           <div className="flex items-start space-x-6">
             {confession.logo && (
               <img
                 src={confession.logo}
                 alt={confession.name}
-                className="w-24 h-24 rounded-full object-cover border-4 border-blue-500"
+                className="w-24 h-24 rounded-full object-cover border-4 border-blue-500 dark:border-blue-400"
               />
             )}
             <div>
-              <h1 className="text-4xl font-bold text-gray-800 mb-2">
+              <h1 className="text-4xl font-bold text-gray-800 dark:text-gray-100 mb-2">
                 {confession.name}
               </h1>
-              <p className="text-gray-600 mb-4">{confession.description}</p>
+              <p className="text-gray-600 dark:text-gray-400 mb-4">{confession.description}</p>
 
-              <div className="flex items-center space-x-6 text-sm text-gray-500">
+              <div className="flex items-center space-x-6 text-sm text-gray-500 dark:text-gray-400">
                 <Link
                   to={`/confession/${slug}/followers`}
-                  className="flex items-center space-x-1 hover:text-blue-600 transition-colors cursor-pointer"
+                  className="flex items-center space-x-1 hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer"
                 >
                   <FiUsers />
                   <span>{confession.subscribers_count} followers</span>
@@ -258,7 +258,7 @@ const ConfessionPage = () => {
             {isConfessionAdmin && (
               <button
                 onClick={handleEditClick}
-                className="flex items-center space-x-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+                className="flex items-center space-x-2 px-4 py-2 bg-purple-600 dark:bg-purple-500 text-white rounded-lg hover:bg-purple-700 dark:hover:bg-purple-600 transition-colors"
               >
                 <FiEdit2 />
                 <span>Edit</span>
@@ -270,8 +270,8 @@ const ConfessionPage = () => {
                 disabled={subscribing}
                 className={`flex items-center space-x-2 px-6 py-3 rounded-lg font-medium transition-all ${
                   confession.is_subscribed
-                    ? 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                    : 'bg-blue-600 text-white hover:bg-blue-700'
+                    ? 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600'
+                    : 'bg-blue-600 dark:bg-blue-500 text-white hover:bg-blue-700 dark:hover:bg-blue-600'
                 }`}
               >
                 {confession.is_subscribed ? <FiUserMinus /> : <FiUserPlus />}
@@ -284,11 +284,11 @@ const ConfessionPage = () => {
 
       {/* Posts Grid */}
       <div>
-        <h2 className="text-2xl font-bold text-gray-800 mb-6 px-4">Posts</h2>
+        <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6 px-4">Posts</h2>
 
         {posts.length === 0 ? (
-          <div className="text-center py-12 bg-white rounded-xl shadow-md">
-            <p className="text-gray-500 text-lg">No posts yet</p>
+          <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-xl shadow-md border border-transparent dark:border-gray-700">
+            <p className="text-gray-500 dark:text-gray-400 text-lg">No posts yet</p>
           </div>
         ) : (
           <div className="grid grid-cols-3 gap-1 md:gap-2">
@@ -296,7 +296,7 @@ const ConfessionPage = () => {
               <div
                 key={post.id}
                 onClick={() => handlePostClick(post.id)}
-                className="relative aspect-square cursor-pointer group overflow-hidden bg-gray-100"
+                className="relative aspect-square cursor-pointer group overflow-hidden bg-gray-100 dark:bg-gray-800"
               >
                 {/* Media Display - New system (media_files) or fallback */}
                 {post.media_files && post.media_files.length > 0 ? (
@@ -304,8 +304,8 @@ const ConfessionPage = () => {
                     {post.media_files[0].media_type === 'pdf' ? (
                       // PDF: Show PDF indicator
                       <>
-                        <div className="w-full h-full bg-gradient-to-br from-red-50 to-red-100 flex items-center justify-center">
-                          <FiFileText size={48} className="text-red-600" />
+                        <div className="w-full h-full bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/30 dark:to-red-800/30 flex items-center justify-center">
+                          <FiFileText size={48} className="text-red-600 dark:text-red-400" />
                         </div>
                         {/* PDF Badge */}
                         <div className="absolute top-2 right-2 bg-black/70 text-white px-2 py-1 rounded-full text-xs font-medium">
@@ -433,13 +433,13 @@ const ConfessionPage = () => {
 
       {/* Edit Modal */}
       {showEditModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-gray-200 flex items-center justify-between">
-              <h2 className="text-2xl font-bold text-gray-800">Edit Confession</h2>
+        <div className="fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-70 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+              <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">Edit Confession</h2>
               <button
                 onClick={() => setShowEditModal(false)}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors text-gray-600 dark:text-gray-400"
               >
                 <FiX size={24} />
               </button>
@@ -448,8 +448,8 @@ const ConfessionPage = () => {
             <form onSubmit={handleEditSubmit} className="p-6 space-y-6">
               {/* Name */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Confession Name <span className="text-red-500">*</span>
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                  Confession Name <span className="text-red-500 dark:text-red-400">*</span>
                 </label>
                 <input
                   type="text"
@@ -457,14 +457,14 @@ const ConfessionPage = () => {
                   value={editFormData.name}
                   onChange={handleEditChange}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
                 />
               </div>
 
               {/* Description */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Description <span className="text-red-500">*</span>
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                  Description <span className="text-red-500 dark:text-red-400">*</span>
                 </label>
                 <textarea
                   name="description"
@@ -472,13 +472,13 @@ const ConfessionPage = () => {
                   onChange={handleEditChange}
                   required
                   rows="4"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 resize-none"
                 />
               </div>
 
               {/* Logo */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                   Logo
                 </label>
                 {logoPreview ? (
@@ -486,7 +486,7 @@ const ConfessionPage = () => {
                     <img
                       src={logoPreview}
                       alt="Preview"
-                      className="w-32 h-32 rounded-full object-cover border-4 border-gray-200"
+                      className="w-32 h-32 rounded-full object-cover border-4 border-gray-200 dark:border-gray-600"
                     />
                     <button
                       type="button"
@@ -494,15 +494,15 @@ const ConfessionPage = () => {
                         setEditFormData(prev => ({ ...prev, logo: null }))
                         setLogoPreview(null)
                       }}
-                      className="absolute top-0 right-0 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
+                      className="absolute top-0 right-0 p-2 bg-red-500 dark:bg-red-600 text-white rounded-full hover:bg-red-600 dark:hover:bg-red-700 transition-colors"
                     >
                       <FiX size={16} />
                     </button>
                   </div>
                 ) : (
-                  <label className="flex flex-col items-center justify-center w-32 h-32 border-2 border-dashed border-gray-300 rounded-full cursor-pointer hover:bg-gray-50 transition-colors">
-                    <FiImage size={32} className="text-gray-400 mb-2" />
-                    <span className="text-xs text-gray-500">Upload</span>
+                  <label className="flex flex-col items-center justify-center w-32 h-32 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-full cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                    <FiImage size={32} className="text-gray-400 dark:text-gray-500 mb-2" />
+                    <span className="text-xs text-gray-500 dark:text-gray-400">Upload</span>
                     <input
                       type="file"
                       accept="image/*"
@@ -518,14 +518,14 @@ const ConfessionPage = () => {
                 <button
                   type="submit"
                   disabled={updating}
-                  className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 disabled:bg-blue-300 disabled:cursor-not-allowed transition-colors"
+                  className="flex-1 px-6 py-3 bg-blue-600 dark:bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-700 dark:hover:bg-blue-600 disabled:bg-blue-300 dark:disabled:bg-blue-700 disabled:cursor-not-allowed transition-colors"
                 >
                   {updating ? 'Updating...' : 'Update Confession'}
                 </button>
                 <button
                   type="button"
                   onClick={() => setShowEditModal(false)}
-                  className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300 transition-colors"
+                  className="px-6 py-3 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
                 >
                   Cancel
                 </button>
