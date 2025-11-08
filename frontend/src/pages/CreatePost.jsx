@@ -173,19 +173,19 @@ const CreatePost = () => {
   return (
     <MainLayout showRightSidebar={false}>
       <div className="max-w-3xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-800 mb-8">Create New Post</h1>
+        <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-8">Create New Post</h1>
 
-        <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 space-y-6">
+        <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 space-y-6">
           {/* Confession Selection */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
               Confession <span className="text-red-500">*</span>
             </label>
             <select
               name="confession"
               value={formData.confession}
               onChange={handleChange}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
               required
             >
               <option value="">Select a confession</option>
@@ -199,7 +199,7 @@ const CreatePost = () => {
 
           {/* Title */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
               Title <span className="text-red-500">*</span>
             </label>
             <input
@@ -208,14 +208,14 @@ const CreatePost = () => {
               value={formData.title}
               onChange={handleChange}
               placeholder="Enter post title"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
               required
             />
           </div>
 
           {/* Content */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
               Content <span className="text-red-500">*</span>
             </label>
             <textarea
@@ -224,7 +224,7 @@ const CreatePost = () => {
               onChange={handleChange}
               placeholder="Write your post content..."
               rows="8"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+              className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 resize-none"
               required
             />
           </div>
@@ -232,14 +232,14 @@ const CreatePost = () => {
           {/* Images Section */}
           <div className={`space-y-3 ${video || pdfs.length > 0 ? 'opacity-50 pointer-events-none' : ''}`}>
             <div className="flex items-center justify-between">
-              <label className="block text-sm font-semibold text-gray-700">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300">
                 📸 Images {images.length > 0 && `(${images.length})`}
               </label>
               {images.length > 0 && (
                 <button
                   type="button"
                   onClick={clearAllImages}
-                  className="text-sm text-red-600 hover:text-red-700 font-medium"
+                  className="text-sm text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 font-medium"
                 >
                   Clear All
                 </button>
@@ -271,9 +271,9 @@ const CreatePost = () => {
                   ))}
 
                   {/* Add More Button */}
-                  <label className="flex flex-col items-center justify-center aspect-square border-2 border-dashed border-blue-300 rounded-lg cursor-pointer hover:bg-blue-50 transition-colors group">
-                    <FiPlus size={32} className="text-blue-400 mb-1 group-hover:text-blue-600" />
-                    <span className="text-xs text-gray-600 font-medium">Add More</span>
+                  <label className="flex flex-col items-center justify-center aspect-square border-2 border-dashed border-blue-300 dark:border-blue-700 rounded-lg cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors group">
+                    <FiPlus size={32} className="text-blue-400 dark:text-blue-500 mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400" />
+                    <span className="text-xs text-gray-600 dark:text-gray-400 font-medium">Add More</span>
                     <input
                       type="file"
                       accept="image/*"
@@ -285,10 +285,10 @@ const CreatePost = () => {
                 </div>
               </div>
             ) : (
-              <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-blue-300 rounded-lg cursor-pointer hover:bg-blue-50 transition-colors group">
-                <FiImage size={32} className="text-blue-400 mb-2 group-hover:text-blue-600" />
-                <span className="text-sm text-gray-600 font-medium">Upload Images</span>
-                <span className="text-xs text-gray-500 mt-1">Multiple files allowed • JPG, PNG, GIF, WEBP</span>
+              <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-blue-300 dark:border-blue-700 rounded-lg cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors group">
+                <FiImage size={32} className="text-blue-400 dark:text-blue-500 mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400" />
+                <span className="text-sm text-gray-600 dark:text-gray-300 font-medium">Upload Images</span>
+                <span className="text-xs text-gray-500 dark:text-gray-400 mt-1">Multiple files allowed • JPG, PNG, GIF, WEBP</span>
                 <input
                   type="file"
                   accept="image/*"
@@ -304,14 +304,14 @@ const CreatePost = () => {
           {/* Video Section */}
           <div className={`space-y-3 ${images.length > 0 || pdfs.length > 0 ? 'opacity-50 pointer-events-none' : ''}`}>
             <div className="flex items-center justify-between">
-              <label className="block text-sm font-semibold text-gray-700">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300">
                 🎥 Video {video && '(1)'}
               </label>
               {video && (
                 <button
                   type="button"
                   onClick={removeVideo}
-                  className="text-sm text-red-600 hover:text-red-700 font-medium"
+                  className="text-sm text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 font-medium"
                 >
                   Remove
                 </button>
@@ -328,15 +328,15 @@ const CreatePost = () => {
                   />
                 </div>
                 <div className="mt-2 flex items-center justify-between px-2">
-                  <span className="text-sm text-gray-600">{video.name}</span>
-                  <span className="text-sm text-gray-500">{(video.size / 1024 / 1024).toFixed(1)} MB</span>
+                  <span className="text-sm text-gray-600 dark:text-gray-400">{video.name}</span>
+                  <span className="text-sm text-gray-500 dark:text-gray-500">{(video.size / 1024 / 1024).toFixed(1)} MB</span>
                 </div>
               </div>
             ) : (
-              <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-purple-300 rounded-lg cursor-pointer hover:bg-purple-50 transition-colors group">
-                <FiVideo size={32} className="text-purple-400 mb-2 group-hover:text-purple-600" />
-                <span className="text-sm text-gray-600 font-medium">Upload Video</span>
-                <span className="text-xs text-gray-500 mt-1">One file only • MP4, MOV, AVI, WEBM</span>
+              <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-purple-300 dark:border-purple-700 rounded-lg cursor-pointer hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors group">
+                <FiVideo size={32} className="text-purple-400 dark:text-purple-500 mb-2 group-hover:text-purple-600 dark:group-hover:text-purple-400" />
+                <span className="text-sm text-gray-600 dark:text-gray-300 font-medium">Upload Video</span>
+                <span className="text-xs text-gray-500 dark:text-gray-400 mt-1">One file only • MP4, MOV, AVI, WEBM</span>
                 <input
                   type="file"
                   accept="video/*"
@@ -351,14 +351,14 @@ const CreatePost = () => {
           {/* PDF Section */}
           <div className={`space-y-3 ${images.length > 0 || video ? 'opacity-50 pointer-events-none' : ''}`}>
             <div className="flex items-center justify-between">
-              <label className="block text-sm font-semibold text-gray-700">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300">
                 📄 PDF Documents {pdfs.length > 0 && `(${pdfs.length})`}
               </label>
               {pdfs.length > 0 && (
                 <button
                   type="button"
                   onClick={clearAllPdfs}
-                  className="text-sm text-red-600 hover:text-red-700 font-medium"
+                  className="text-sm text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 font-medium"
                 >
                   Clear All
                 </button>
@@ -371,13 +371,13 @@ const CreatePost = () => {
                 <div className="space-y-2">
                   {pdfs.map((file, index) => (
                     <div key={index} className="relative group">
-                      <div className="flex items-center space-x-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
-                        <div className="flex-shrink-0 w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
-                          <FiFileText size={24} className="text-red-600" />
+                      <div className="flex items-center space-x-3 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
+                        <div className="flex-shrink-0 w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-lg flex items-center justify-center">
+                          <FiFileText size={24} className="text-red-600 dark:text-red-400" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-gray-900 truncate">{file.name}</p>
-                          <p className="text-xs text-gray-500">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                          <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">{file.name}</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
                         </div>
                         <button
                           type="button"
@@ -391,9 +391,9 @@ const CreatePost = () => {
                   ))}
 
                   {/* Add More Button */}
-                  <label className="flex items-center justify-center p-4 border-2 border-dashed border-red-300 rounded-lg cursor-pointer hover:bg-red-50 transition-colors group">
-                    <FiPlus size={24} className="text-red-400 mr-2 group-hover:text-red-600" />
-                    <span className="text-sm text-gray-600 font-medium">Add More PDFs</span>
+                  <label className="flex items-center justify-center p-4 border-2 border-dashed border-red-300 dark:border-red-700 rounded-lg cursor-pointer hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors group">
+                    <FiPlus size={24} className="text-red-400 dark:text-red-500 mr-2 group-hover:text-red-600 dark:group-hover:text-red-400" />
+                    <span className="text-sm text-gray-600 dark:text-gray-300 font-medium">Add More PDFs</span>
                     <input
                       type="file"
                       accept=".pdf,application/pdf"
@@ -405,10 +405,10 @@ const CreatePost = () => {
                 </div>
               </div>
             ) : (
-              <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-red-300 rounded-lg cursor-pointer hover:bg-red-50 transition-colors group">
-                <FiFileText size={32} className="text-red-400 mb-2 group-hover:text-red-600" />
-                <span className="text-sm text-gray-600 font-medium">Upload PDFs</span>
-                <span className="text-xs text-gray-500 mt-1">Multiple files allowed • PDF format</span>
+              <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-red-300 dark:border-red-700 rounded-lg cursor-pointer hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors group">
+                <FiFileText size={32} className="text-red-400 dark:text-red-500 mb-2 group-hover:text-red-600 dark:group-hover:text-red-400" />
+                <span className="text-sm text-gray-600 dark:text-gray-300 font-medium">Upload PDFs</span>
+                <span className="text-xs text-gray-500 dark:text-gray-400 mt-1">Multiple files allowed • PDF format</span>
                 <input
                   type="file"
                   accept=".pdf,application/pdf"
@@ -422,32 +422,32 @@ const CreatePost = () => {
           </div>
 
           {/* Comments Toggle */}
-          <div className="flex items-center space-x-3 p-4 bg-gray-50 rounded-lg">
+          <div className="flex items-center space-x-3 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
             <input
               type="checkbox"
               name="comments_enabled"
               id="comments_enabled"
               checked={formData.comments_enabled}
               onChange={handleChange}
-              className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+              className="w-5 h-5 text-blue-600 border-gray-300 dark:border-gray-600 rounded focus:ring-blue-500"
             />
-            <label htmlFor="comments_enabled" className="text-sm font-medium text-gray-700 cursor-pointer">
+            <label htmlFor="comments_enabled" className="text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer">
               Allow comments on this post
             </label>
           </div>
 
           {/* Pin Post - Only for admins */}
           {(user.role === 'admin' || user.role === 'superadmin') && (
-            <div className="flex items-center space-x-3 p-4 bg-blue-50 rounded-lg">
+            <div className="flex items-center space-x-3 p-4 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
               <input
                 type="checkbox"
                 name="is_pinned"
                 id="is_pinned"
                 checked={formData.is_pinned}
                 onChange={handleChange}
-                className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                className="w-5 h-5 text-blue-600 border-gray-300 dark:border-gray-600 rounded focus:ring-blue-500"
               />
-              <label htmlFor="is_pinned" className="text-sm font-medium text-gray-700 cursor-pointer">
+              <label htmlFor="is_pinned" className="text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer">
                 Pin this post to the top of the confession
               </label>
             </div>
@@ -458,14 +458,14 @@ const CreatePost = () => {
             <button
               type="submit"
               disabled={submitting}
-              className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 disabled:bg-blue-300 disabled:cursor-not-allowed transition-colors"
+              className="flex-1 px-6 py-3 bg-blue-600 dark:bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-700 dark:hover:bg-blue-600 disabled:bg-blue-300 dark:disabled:bg-blue-800 disabled:cursor-not-allowed transition-colors"
             >
               {submitting ? 'Creating...' : 'Create Post'}
             </button>
             <button
               type="button"
               onClick={() => navigate('/')}
-              className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300 transition-colors"
+              className="px-6 py-3 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
             >
               Cancel
             </button>
