@@ -101,7 +101,7 @@ const AdminLayout = () => {
               to={item.href}
               end={item.href === '/admin'}
               className={({ isActive }) =>
-                `flex items-center space-x-3 px-4 py-3 rounded-lg transition-all ${
+                `flex items-center space-x-3 px-4 py-3 rounded-lg transition-all no-underline ${
                   isActive
                     ? `${darkMode ? 'bg-gray-700 text-white' : 'bg-indigo-700 text-white'} shadow-lg`
                     : `${darkMode ? 'text-gray-300 hover:bg-gray-700/70' : 'text-indigo-200 hover:bg-indigo-700/50'} hover:text-white`

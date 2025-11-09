@@ -220,7 +220,7 @@ const LeftSidebar = () => {
       </>
     )
 
-    const className = `flex items-center space-x-4 px-5 py-3.5 rounded-xl transition-all duration-200 relative ${
+    const className = `flex items-center space-x-4 px-5 py-3.5 rounded-xl transition-all duration-200 relative no-underline ${
       !isButton && isActive(to)
         ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-semibold'
         : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
@@ -244,7 +244,7 @@ const LeftSidebar = () => {
   return (
     <div className="fixed left-0 top-0 h-screen w-72 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 flex flex-col transition-colors duration-200">
       {/* Logo */}
-      <Link to="/" className="flex items-center space-x-3 px-6 py-6 border-b border-gray-200 dark:border-gray-700">
+      <Link to="/" className="flex items-center space-x-3 px-6 py-6 border-b border-gray-200 dark:border-gray-700 no-underline">
         <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
           <span className="text-white font-bold text-2xl">RP</span>
         </div>
@@ -487,13 +487,13 @@ const LeftSidebar = () => {
         <div className="px-4 py-4 border-t border-gray-200 dark:border-gray-700 space-y-2">
           <Link
             to="/login"
-            className="block w-full px-4 py-3 text-center text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg font-medium"
+            className="block w-full px-4 py-3 text-center text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg font-medium no-underline"
           >
             {t('auth.login')}
           </Link>
           <Link
             to="/register"
-            className="block w-full px-4 py-3 text-center bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium"
+            className="block w-full px-4 py-3 text-center bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium no-underline"
           >
             {t('auth.register')}
           </Link>
