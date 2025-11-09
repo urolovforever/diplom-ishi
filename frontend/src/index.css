@@ -14,7 +14,7 @@
     background-color: #f9fafb;
   }
 
-  /* Remove ALL link underlines at the base level */
+  /* Override Tailwind's text-decoration: inherit */
   a,
   a:link,
   a:visited,
@@ -26,77 +26,47 @@
 }
 
 @layer utilities {
-  /* Ultra-aggressive underline removal for utilities layer (highest priority) */
-  .no-underline,
-  a.no-underline,
-  a.no-underline:link,
-  a.no-underline:visited,
-  a.no-underline:hover,
-  a.no-underline:active,
-  a.no-underline:focus {
+  .no-underline {
     text-decoration: none !important;
-    text-decoration-line: none !important;
-    text-decoration-style: none !important;
-    text-decoration-color: transparent !important;
   }
 }
 
-/* CRITICAL: Global override AFTER all Tailwind layers for maximum priority */
-/* This ensures no browser default styles can add underlines */
+/* ULTRA CRITICAL: Place AFTER @tailwind utilities to override everything */
+/* Using only shorthand property to avoid specificity conflicts */
 a,
+a:any-link,
 a:link,
 a:visited,
 a:hover,
 a:active,
 a:focus,
-a *,
+a:focus-visible,
 button a,
 div a,
 span a,
 p a,
 nav a,
+header a,
+footer a,
+section a,
+article a,
+aside a,
 h1 a,
 h2 a,
 h3 a,
 h4 a,
 h5 a,
-h6 a {
+h6 a,
+a *,
+a > * {
   text-decoration: none !important;
-  text-decoration-line: none !important;
-  text-decoration-style: solid !important;
-  text-decoration-thickness: 0 !important;
-  text-decoration-color: transparent !important;
-  -webkit-text-decoration: none !important;
-  -webkit-text-decoration-line: none !important;
-  -webkit-text-decoration-style: solid !important;
-  -webkit-text-decoration-color: transparent !important;
-  -moz-text-decoration: none !important;
-  -moz-text-decoration-line: none !important;
-  -moz-text-decoration-style: solid !important;
-  -moz-text-decoration-color: transparent !important;
 }
 
-/* Extra safety: Target all child elements inside links */
-a > *,
-a span,
-a div,
-a p,
-a h1,
-a h2,
-a h3,
-a h4,
-a h5,
-a h6 {
+/* Force all elements to have no text-decoration */
+*,
+*::before,
+*::after {
   text-decoration: none !important;
-  text-decoration-line: none !important;
-  text-decoration-thickness: 0 !important;
-  -webkit-text-decoration: none !important;
-  -moz-text-decoration: none !important;
-}
-
-/* Universal selector - force inheritance */
-* {
-  text-decoration-thickness: 0 !important;
 }
 
 /* Custom scrollbar */
