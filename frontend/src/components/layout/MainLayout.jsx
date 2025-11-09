@@ -5,18 +5,29 @@ import RightSidebar from './RightSidebar'
 const MainLayout = ({ children, showRightSidebar = true }) => {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors duration-200">
-      {/* Left Sidebar */}
-      <LeftSidebar />
+      {/* Left Sidebar - Hidden on mobile, visible on desktop */}
+      <div className="hidden lg:block">
+        <LeftSidebar />
+      </div>
 
-      {/* Main Content */}
-      <div className={`ml-72 ${showRightSidebar ? 'mr-96' : ''} min-h-screen`}>
-        <div className="max-w-3xl mx-auto py-6 px-4">
+      {/* Main Content - Responsive margins */}
+      <div className={`
+        min-h-screen
+        lg:ml-72
+        ${showRightSidebar ? 'xl:mr-96' : ''}
+        pb-20 lg:pb-0
+      `}>
+        <div className="max-w-3xl mx-auto py-4 px-4 sm:py-6 sm:px-6">
           {children}
         </div>
       </div>
 
-      {/* Right Sidebar */}
-      {showRightSidebar && <RightSidebar />}
+      {/* Right Sidebar - Hidden on mobile and tablet, visible on xl screens */}
+      {showRightSidebar && (
+        <div className="hidden xl:block">
+          <RightSidebar />
+        </div>
+      )}
     </div>
   )
 }

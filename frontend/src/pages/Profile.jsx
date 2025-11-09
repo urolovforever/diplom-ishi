@@ -156,21 +156,21 @@ const Profile = () => {
 
   return (
     <MainLayout showRightSidebar={false}>
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6">
         {/* Profile Header Card - Full Width Horizontal */}
-        <div className="bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-800 dark:via-gray-800 dark:to-gray-900 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 p-8 border border-blue-100 dark:border-gray-700">
-          <div className="flex items-center space-x-8">
+        <div className="bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-800 dark:via-gray-800 dark:to-gray-900 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 p-4 sm:p-6 lg:p-8 border border-blue-100 dark:border-gray-700">
+          <div className="flex flex-col sm:flex-row items-center sm:space-x-6 lg:space-x-8 space-y-4 sm:space-y-0">
             {/* Avatar */}
             <div className="relative group">
               {(previewAvatar || user.avatar) && !removeAvatar ? (
                 <img
                   src={previewAvatar || user.avatar}
                   alt={user.username}
-                  className="w-32 h-32 rounded-full object-cover border-4 border-blue-500 dark:border-blue-400 shadow-lg transition-transform duration-300 group-hover:scale-105"
+                  className="w-24 h-24 sm:w-28 sm:h-28 lg:w-32 lg:h-32 rounded-full object-cover border-4 border-blue-500 dark:border-blue-400 shadow-lg transition-transform duration-300 group-hover:scale-105"
                 />
               ) : (
-                <div className="w-32 h-32 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center border-4 border-blue-500 dark:border-blue-400 shadow-lg">
-                  <span className="text-white font-bold text-5xl">{user.username[0].toUpperCase()}</span>
+                <div className="w-24 h-24 sm:w-28 sm:h-28 lg:w-32 lg:h-32 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center border-4 border-blue-500 dark:border-blue-400 shadow-lg">
+                  <span className="text-white font-bold text-3xl sm:text-4xl lg:text-5xl">{user.username[0].toUpperCase()}</span>
                 </div>
               )}
               {isEditing && (
@@ -205,16 +205,16 @@ const Profile = () => {
             </div>
 
             {/* User Info */}
-            <div className="flex-1">
-              <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+            <div className="flex-1 text-center sm:text-left">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2">
                 {user.username}
               </h1>
-              <p className="text-lg text-gray-600 dark:text-gray-400 mb-3">
+              <p className="text-sm sm:text-base lg:text-lg text-gray-600 dark:text-gray-400 mb-3">
                 {user.email}
               </p>
-              <div className="flex items-center space-x-3">
-                <span className="inline-flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-full text-sm font-semibold shadow-md">
-                  <FiShield size={16} />
+              <div className="flex items-center justify-center sm:justify-start space-x-3">
+                <span className="inline-flex items-center space-x-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-full text-xs sm:text-sm font-semibold shadow-md">
+                  <FiShield size={14} className="sm:w-4 sm:h-4" />
                   <span>{user.role === 'superadmin' ? 'Super Admin' : user.role === 'admin' ? 'Admin' : 'User'}</span>
                 </span>
               </div>
@@ -223,21 +223,21 @@ const Profile = () => {
         </div>
 
         {/* Profile Information and Change Password - Side by Side */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
           {/* Profile Information */}
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 p-6 border border-gray-100 dark:border-gray-700">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-100 flex items-center">
-                <FiEdit2 className="mr-2 text-blue-600 dark:text-blue-400" size={24} />
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 p-4 sm:p-6 border border-gray-100 dark:border-gray-700">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-3 sm:gap-0">
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-gray-100 flex items-center">
+                <FiEdit2 className="mr-2 text-blue-600 dark:text-blue-400" size={20} className="sm:w-6 sm:h-6" />
                 {t('profile.profileInformation')}
               </h3>
 
               {!isEditing ? (
                 <button
                   onClick={() => setIsEditing(true)}
-                  className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-500 dark:to-blue-600 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 dark:hover:from-blue-600 dark:hover:to-blue-700 shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105"
+                  className="flex items-center space-x-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-500 dark:to-blue-600 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 dark:hover:from-blue-600 dark:hover:to-blue-700 shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105 text-sm sm:text-base"
                 >
-                  <FiEdit2 size={16} />
+                  <FiEdit2 size={14} className="sm:w-4 sm:h-4" />
                   <span className="font-semibold">{t('common.edit')}</span>
                 </button>
               ) : (
@@ -245,16 +245,16 @@ const Profile = () => {
                   <button
                     onClick={handleSubmit}
                     disabled={loading}
-                    className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-green-600 to-green-700 dark:from-green-500 dark:to-green-600 text-white rounded-lg hover:from-green-700 hover:to-green-800 dark:hover:from-green-600 dark:hover:to-green-700 disabled:opacity-50 shadow-md hover:shadow-lg transition-all duration-200"
+                    className="flex items-center space-x-1.5 sm:space-x-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-gradient-to-r from-green-600 to-green-700 dark:from-green-500 dark:to-green-600 text-white rounded-lg hover:from-green-700 hover:to-green-800 dark:hover:from-green-600 dark:hover:to-green-700 disabled:opacity-50 shadow-md hover:shadow-lg transition-all duration-200 text-sm sm:text-base"
                   >
-                    <FiSave size={16} />
-                    <span className="font-semibold">{loading ? t('profile.saving') : t('common.save')}</span>
+                    <FiSave size={14} className="sm:w-4 sm:h-4" />
+                    <span className="font-semibold hidden sm:inline">{loading ? t('profile.saving') : t('common.save')}</span>
                   </button>
                   <button
                     onClick={cancelEdit}
-                    className="flex items-center space-x-2 px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 shadow-md transition-all duration-200"
+                    className="flex items-center px-3 py-1.5 sm:px-4 sm:py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 shadow-md transition-all duration-200"
                   >
-                    <FiX size={16} />
+                    <FiX size={14} className="sm:w-4 sm:h-4" />
                   </button>
                 </div>
               )}
@@ -313,19 +313,19 @@ const Profile = () => {
           </div>
 
           {/* Change Password */}
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 p-6 border border-gray-100 dark:border-gray-700">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-100 flex items-center">
-                <FiLock className="mr-2 text-blue-600 dark:text-blue-400" size={24} />
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 p-4 sm:p-6 border border-gray-100 dark:border-gray-700">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-3 sm:gap-0">
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-gray-100 flex items-center">
+                <FiLock className="mr-2 text-blue-600 dark:text-blue-400" size={20} className="sm:w-6 sm:h-6" />
                 {t('profile.security')}
               </h3>
 
               {!showPasswordChange && (
                 <button
                   onClick={() => setShowPasswordChange(true)}
-                  className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-500 dark:to-purple-500 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 dark:hover:from-blue-600 dark:hover:to-purple-600 shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105"
+                  className="flex items-center space-x-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-500 dark:to-purple-500 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 dark:hover:from-blue-600 dark:hover:to-purple-600 shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105 text-sm sm:text-base"
                 >
-                  <FiLock size={16} />
+                  <FiLock size={14} className="sm:w-4 sm:h-4" />
                   <span className="font-semibold">{t('profile.change')}</span>
                 </button>
               )}
@@ -395,11 +395,11 @@ const Profile = () => {
                   )}
                 </div>
 
-                <div className="flex space-x-2 pt-2">
+                <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 pt-2">
                   <button
                     type="submit"
                     disabled={loading}
-                    className="flex-1 px-4 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-500 dark:to-purple-500 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 dark:hover:from-blue-600 dark:hover:to-purple-600 disabled:opacity-50 shadow-md hover:shadow-lg transition-all duration-200 font-semibold"
+                    className="flex-1 px-4 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-500 dark:to-purple-500 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 dark:hover:from-blue-600 dark:hover:to-purple-600 disabled:opacity-50 shadow-md hover:shadow-lg transition-all duration-200 font-semibold text-sm sm:text-base"
                   >
                     {loading ? t('profile.updating') : t('profile.updatePassword')}
                   </button>
@@ -413,7 +413,7 @@ const Profile = () => {
                         confirm_password: ''
                       })
                     }}
-                    className="px-4 py-2.5 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 shadow-md transition-all duration-200 font-semibold"
+                    className="px-4 py-2.5 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 shadow-md transition-all duration-200 font-semibold text-sm sm:text-base"
                   >
                     {t('common.cancel')}
                   </button>
@@ -442,29 +442,29 @@ const Profile = () => {
         </div>
 
         {/* Subscriptions - Full Width */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 p-6 border border-gray-100 dark:border-gray-700">
-          <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6 flex items-center">
-            <span className="mr-2">📚</span>
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 p-4 sm:p-6 border border-gray-100 dark:border-gray-700">
+          <h3 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-gray-100 mb-4 sm:mb-6 flex items-center">
+            <span className="mr-2 text-xl sm:text-2xl">📚</span>
             {t('profile.mySubscriptions')}
-            <span className="ml-2 text-lg text-gray-500 dark:text-gray-400">({subscriptions.length})</span>
+            <span className="ml-2 text-base sm:text-lg text-gray-500 dark:text-gray-400">({subscriptions.length})</span>
           </h3>
 
           {subscriptions.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-12 text-center">
-              <div className="w-24 h-24 bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 rounded-full flex items-center justify-center mb-6">
-                <FiCompass className="text-blue-600 dark:text-blue-400" size={48} />
+            <div className="flex flex-col items-center justify-center py-8 sm:py-12 text-center px-4">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 rounded-full flex items-center justify-center mb-4 sm:mb-6">
+                <FiCompass className="text-blue-600 dark:text-blue-400" size={36} className="sm:w-12 sm:h-12" />
               </div>
-              <h4 className="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2">
+              <h4 className="text-lg sm:text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2">
                 {t('profile.noSubscriptionsYet')}
               </h4>
-              <p className="text-gray-500 dark:text-gray-400 mb-6 max-w-md">
+              <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 mb-4 sm:mb-6 max-w-md">
                 {t('profile.startFollowing')}
               </p>
               <Link
                 to="/explore"
-                className="inline-flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-500 dark:to-purple-500 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 dark:hover:from-blue-600 dark:hover:to-purple-600 shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105 font-semibold no-underline"
+                className="inline-flex items-center space-x-2 px-4 py-2 sm:px-6 sm:py-3 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-500 dark:to-purple-500 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 dark:hover:from-blue-600 dark:hover:to-purple-600 shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105 font-semibold no-underline text-sm sm:text-base"
               >
-                <FiCompass size={20} />
+                <FiCompass size={18} className="sm:w-5 sm:h-5" />
                 <span>{t('explore.exploreConfessions')}</span>
               </Link>
             </div>

@@ -117,9 +117,9 @@ const Messages = () => {
 
   if (!user) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-950">
+      <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-950 px-4">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
             {t('messages.pleaseLoginToAccessMessages')}
           </h2>
         </div>
@@ -131,35 +131,35 @@ const Messages = () => {
 
   return (
     <div className="h-screen flex bg-gray-100 dark:bg-gray-950">
-      {/* Conversations List */}
-      <div className="w-full md:w-96 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col">
-        <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-          <div className="flex items-center space-x-3">
+      {/* Conversations List - Hide on mobile when conversation is selected */}
+      <div className={`${selectedConversationId ? 'hidden md:flex' : 'flex'} w-full md:w-96 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex-col`}>
+        <div className="p-3 sm:p-4 border-b border-gray-200 dark:border-gray-700">
+          <div className="flex items-center space-x-2 sm:space-x-3">
             <button
               onClick={() => navigate('/')}
               className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
               title="Back to Home"
             >
-              <FiArrowLeft size={20} className="text-gray-600 dark:text-gray-400" />
+              <FiArrowLeft size={18} className="sm:w-5 sm:h-5 text-gray-600 dark:text-gray-400" />
             </button>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{t('messages.messages')}</h1>
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100">{t('messages.messages')}</h1>
           </div>
         </div>
 
         {/* Toggle button for admins list */}
         {subscribedAdmins.length > 0 && (
-          <div className="p-3 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+          <div className="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
             <button
               onClick={() => setShowAdminsList(!showAdminsList)}
-              className="w-full flex items-center justify-between px-4 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
+              className="w-full flex items-center justify-between px-3 py-2 sm:px-4 sm:py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors text-sm sm:text-base"
             >
-              <span className="flex items-center space-x-2">
-                <FiMessageCircle size={18} />
+              <span className="flex items-center space-x-1.5 sm:space-x-2">
+                <FiMessageCircle size={16} className="sm:w-[18px] sm:h-[18px]" />
                 <span className="font-medium">
                   {showAdminsList ? t('messages.showConversations') : t('messages.startNewConversation')}
                 </span>
               </span>
-              <FiUsers size={18} />
+              <FiUsers size={16} className="sm:w-[18px] sm:h-[18px]" />
             </button>
           </div>
         )}
@@ -227,15 +227,15 @@ const Messages = () => {
         )}
       </div>
 
-      {/* Chat View */}
-      <div className="flex-1 flex flex-col">
+      {/* Chat View - Show on mobile only when conversation is selected */}
+      <div className={`${selectedConversationId ? 'flex' : 'hidden md:flex'} flex-1 flex-col`}>
         {selectedConversationId ? (
           <ChatView conversationId={selectedConversationId} />
         ) : (
-          <div className="flex items-center justify-center h-full bg-gray-50 dark:bg-gray-900">
+          <div className="flex items-center justify-center h-full bg-gray-50 dark:bg-gray-900 px-4">
             <div className="text-center text-gray-500 dark:text-gray-400">
               <svg
-                className="mx-auto h-16 w-16 text-gray-400 dark:text-gray-500 mb-4"
+                className="mx-auto h-12 w-12 sm:h-16 sm:w-16 text-gray-400 dark:text-gray-500 mb-3 sm:mb-4"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -247,8 +247,8 @@ const Messages = () => {
                   d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
                 />
               </svg>
-              <p className="text-lg font-medium">{t('messages.selectConversation')}</p>
-              <p className="text-sm">{t('messages.chooseConversation')}</p>
+              <p className="text-base sm:text-lg font-medium">{t('messages.selectConversation')}</p>
+              <p className="text-xs sm:text-sm">{t('messages.chooseConversation')}</p>
             </div>
           </div>
         )}

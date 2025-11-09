@@ -13,6 +13,12 @@
     font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background-color: #f9fafb;
   }
+
+  /* Override Tailwind Preflight's a tag defaults */
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
 }
 
 /* Custom scrollbar */

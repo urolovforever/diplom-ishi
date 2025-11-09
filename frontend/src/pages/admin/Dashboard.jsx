@@ -122,36 +122,36 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Welcome Message */}
-      <div className={`${darkMode ? 'bg-gradient-to-r from-blue-800 to-purple-800' : 'bg-gradient-to-r from-indigo-600 to-purple-600'} text-white p-8 rounded-2xl shadow-xl`}>
-        <h1 className="text-3xl font-bold mb-2">{t('admin.welcomeToDashboard')}</h1>
-        <p className={`${darkMode ? 'text-blue-200' : 'text-indigo-100'}`}>
+      <div className={`${darkMode ? 'bg-gradient-to-r from-blue-800 to-purple-800' : 'bg-gradient-to-r from-indigo-600 to-purple-600'} text-white p-4 sm:p-6 lg:p-8 rounded-2xl shadow-xl`}>
+        <h1 className="text-2xl sm:text-3xl font-bold mb-2">{t('admin.welcomeToDashboard')}</h1>
+        <p className={`text-sm sm:text-base ${darkMode ? 'text-blue-200' : 'text-indigo-100'}`}>
           {t('admin.monitorPlatform')}
         </p>
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         {stats.map((stat) => (
           <Link
             key={stat.name}
             to={stat.link}
-            className={`${darkMode ? 'bg-gray-800 border-gray-700 hover:bg-gray-750' : 'bg-white border-gray-100'} rounded-xl shadow-md hover:shadow-xl transition-all p-6 border no-underline`}
+            className={`${darkMode ? 'bg-gray-800 border-gray-700 hover:bg-gray-750' : 'bg-white border-gray-100'} rounded-xl shadow-md hover:shadow-xl transition-all p-4 sm:p-6 border no-underline`}
           >
-            <div className="flex items-center justify-between mb-4">
-              <div className={`${stat.color} p-3 rounded-lg`}>
-                <stat.icon className="text-white" size={24} />
+            <div className="flex items-center justify-between mb-3 sm:mb-4">
+              <div className={`${stat.color} p-2 sm:p-3 rounded-lg`}>
+                <stat.icon className="text-white" size={20} className="sm:w-6 sm:h-6" />
               </div>
               <span className={`text-xs ${darkMode ? 'text-gray-400 bg-gray-700' : 'text-gray-500 bg-gray-100'} px-2 py-1 rounded-full`}>
                 {t('admin.days30')}
               </span>
             </div>
-            <h3 className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} text-sm font-medium mb-1`}>
+            <h3 className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} text-xs sm:text-sm font-medium mb-1`}>
               {stat.name}
             </h3>
             <div className="flex items-end justify-between">
-              <p className={`text-3xl font-bold ${darkMode ? 'text-gray-100' : 'text-gray-900'}`}>{stat.value}</p>
+              <p className={`text-2xl sm:text-3xl font-bold ${darkMode ? 'text-gray-100' : 'text-gray-900'}`}>{stat.value}</p>
             </div>
             <p className={`text-xs ${darkMode ? 'text-green-400' : 'text-green-600'} mt-2 font-medium`}>
               {stat.change}
@@ -161,12 +161,12 @@ const Dashboard = () => {
       </div>
 
       {/* Two Column Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         {/* Top Confessions */}
-        <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'} rounded-xl shadow-md p-6 border`}>
-          <h3 className={`text-lg font-bold ${darkMode ? 'text-gray-100' : 'text-gray-900'} mb-4 flex items-center`}>
-            <FiTrendingUp className={`mr-2 ${darkMode ? 'text-blue-400' : 'text-indigo-600'}`} />
-            {t('admin.topConfessionsBySubscribers')}
+        <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'} rounded-xl shadow-md p-4 sm:p-6 border`}>
+          <h3 className={`text-base sm:text-lg font-bold ${darkMode ? 'text-gray-100' : 'text-gray-900'} mb-3 sm:mb-4 flex items-center`}>
+            <FiTrendingUp size={18} className={`sm:w-5 sm:h-5 mr-2 ${darkMode ? 'text-blue-400' : 'text-indigo-600'}`} />
+            <span className="text-sm sm:text-base">{t('admin.topConfessionsBySubscribers')}</span>
           </h3>
           <div className="space-y-3">
             {dashboard.top_confessions.map((confession, index) => (
@@ -193,10 +193,10 @@ const Dashboard = () => {
         </div>
 
         {/* Top Posts */}
-        <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'} rounded-xl shadow-md p-6 border`}>
-          <h3 className={`text-lg font-bold ${darkMode ? 'text-gray-100' : 'text-gray-900'} mb-4 flex items-center`}>
-            <FiFileText className={`mr-2 ${darkMode ? 'text-green-400' : 'text-green-600'}`} />
-            {t('admin.topPostsByViews')}
+        <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'} rounded-xl shadow-md p-4 sm:p-6 border`}>
+          <h3 className={`text-base sm:text-lg font-bold ${darkMode ? 'text-gray-100' : 'text-gray-900'} mb-3 sm:mb-4 flex items-center`}>
+            <FiFileText size={18} className={`sm:w-5 sm:h-5 mr-2 ${darkMode ? 'text-green-400' : 'text-green-600'}`} />
+            <span className="text-sm sm:text-base">{t('admin.topPostsByViews')}</span>
           </h3>
           <div className="space-y-3">
             {dashboard.top_posts.map((post, index) => (
@@ -224,10 +224,10 @@ const Dashboard = () => {
       </div>
 
       {/* Recent Users */}
-      <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'} rounded-xl shadow-md p-6 border`}>
-        <h3 className={`text-lg font-bold ${darkMode ? 'text-gray-100' : 'text-gray-900'} mb-4 flex items-center`}>
-          <FiUsers className={`mr-2 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`} />
-          {t('admin.recentUsers')}
+      <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'} rounded-xl shadow-md p-4 sm:p-6 border`}>
+        <h3 className={`text-base sm:text-lg font-bold ${darkMode ? 'text-gray-100' : 'text-gray-900'} mb-3 sm:mb-4 flex items-center`}>
+          <FiUsers size={18} className={`sm:w-5 sm:h-5 mr-2 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`} />
+          <span className="text-sm sm:text-base">{t('admin.recentUsers')}</span>
         </h3>
         <div className="overflow-x-auto">
           <table className="w-full">
