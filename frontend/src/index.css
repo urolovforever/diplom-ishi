@@ -2,77 +2,90 @@
 @tailwind components;
 @tailwind utilities;
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #f9fafb;
+  }
+
+  /* Remove ALL link underlines at the base level */
+  a,
+  a:link,
+  a:visited,
+  a:hover,
+  a:active,
+  a:focus {
+    text-decoration: none !important;
+  }
 }
 
-body {
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background-color: #f9fafb;
+@layer utilities {
+  /* Ultra-aggressive underline removal for utilities layer (highest priority) */
+  .no-underline,
+  a.no-underline,
+  a.no-underline:link,
+  a.no-underline:visited,
+  a.no-underline:hover,
+  a.no-underline:active,
+  a.no-underline:focus {
+    text-decoration: none !important;
+    text-decoration-line: none !important;
+    text-decoration-style: none !important;
+    text-decoration-color: transparent !important;
+  }
 }
 
-/* ABSOLUTE NUCLEAR OPTION - KILL ALL UNDERLINES */
-/* Apply this AFTER Tailwind to ensure maximum priority */
+/* CRITICAL: Global override AFTER all Tailwind layers for maximum priority */
+/* This ensures no browser default styles can add underlines */
 a,
 a:link,
 a:visited,
 a:hover,
 a:active,
 a:focus,
+a *,
 button a,
-button a:link,
-button a:visited,
-button a:hover,
-button a:active,
 div a,
-div a:link,
-div a:visited,
-div a:hover,
-div a:active,
 span a,
-span a:link,
-span a:visited,
-span a:hover,
-span a:active,
 p a,
-p a:link,
-p a:visited,
-p a:hover,
-p a:active,
 nav a,
-nav a:link,
-nav a:visited,
-nav a:hover,
-nav a:active {
+h1 a,
+h2 a,
+h3 a,
+h4 a,
+h5 a,
+h6 a {
   text-decoration: none !important;
   text-decoration-line: none !important;
   text-decoration-style: none !important;
   text-decoration-color: transparent !important;
   -webkit-text-decoration: none !important;
   -moz-text-decoration: none !important;
-  -ms-text-decoration: none !important;
-  -o-text-decoration: none !important;
 }
 
-@layer base {
-  a {
-    text-decoration: none !important;
-  }
-
-  a:link,
-  a:visited,
-  a:hover,
-  a:active {
-    text-decoration: none !important;
-  }
+/* Extra safety: Target all child elements inside links */
+a > *,
+a span,
+a div,
+a p,
+a h1,
+a h2,
+a h3,
+a h4,
+a h5,
+a h6 {
+  text-decoration: none !important;
 }
 
-@layer utilities {
-  .no-underline {
-    text-decoration: none !important;
-  }
+/* Universal selector as last resort */
+* {
+  text-decoration: inherit;
 }
 
 /* Custom scrollbar */
