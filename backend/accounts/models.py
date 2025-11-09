@@ -15,11 +15,17 @@ class User(AbstractUser):
         ('ru', 'Russian'),
     ]
 
+    THEME_CHOICES = [
+        ('light', 'Light'),
+        ('dark', 'Dark'),
+    ]
+
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='user')
     bio = models.TextField(blank=True, null=True)
     avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
     is_active = models.BooleanField(default=True)
     preferred_language = models.CharField(max_length=5, choices=LANGUAGE_CHOICES, default='en')
+    preferred_theme = models.CharField(max_length=10, choices=THEME_CHOICES, default='light')
 
     def __str__(self):
         return f"{self.username} ({self.get_role_display()})"

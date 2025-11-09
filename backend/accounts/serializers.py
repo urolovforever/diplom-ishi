@@ -12,7 +12,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'first_name', 'last_name', 'role', 'bio', 'avatar',
-                  'is_active', 'date_joined', 'managed_confessions', 'permissions', 'preferred_language']
+                  'is_active', 'date_joined', 'managed_confessions', 'permissions', 'preferred_language', 'preferred_theme']
         read_only_fields = ['id', 'username', 'email', 'role', 'date_joined', 'managed_confessions', 'permissions']
 
     def get_managed_confessions(self, obj):
