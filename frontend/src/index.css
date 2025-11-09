@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  a {
+    text-decoration: none !important;
+  }
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -11,6 +17,20 @@
 body {
   font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background-color: #f9fafb;
+}
+
+/* Global link style - no underline anywhere */
+* a,
+* a:link,
+* a:visited,
+* a:hover,
+* a:active,
+a,
+a:link,
+a:visited,
+a:hover,
+a:active {
+  text-decoration: none !important;
 }
 
 /* Custom scrollbar */
@@ -34,15 +54,6 @@ body {
 /* Smooth transitions - removed global * selector to prevent unwanted animations */
 a, button, input, textarea, select {
   transition: all 0.2s ease-in-out;
-}
-
-/* Remove underline from all links */
-a {
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: none;
 }
 
 /* Button hover effects */
