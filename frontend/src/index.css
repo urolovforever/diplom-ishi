@@ -36,6 +36,15 @@ a, button, input, textarea, select {
   transition: all 0.2s ease-in-out;
 }
 
+/* Remove underline from all links */
+a {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
 /* Button hover effects */
 button:hover {
   transform: translateY(-1px);
