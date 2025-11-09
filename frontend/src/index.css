@@ -15,12 +15,6 @@
   }
 }
 
-@layer utilities {
-  .no-underline {
-    text-decoration: none !important;
-  }
-}
-
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;

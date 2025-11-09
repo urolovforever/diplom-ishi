@@ -14,5 +14,27 @@ export default {
       }
     },
   },
-  plugins: [],
+  corePlugins: {
+    // Disable default textDecoration plugin to override it
+    textDecoration: false,
+  },
+  plugins: [
+    // Custom textDecoration plugin with proper no-underline
+    function({ addUtilities }) {
+      addUtilities({
+        '.underline': {
+          'text-decoration': 'underline',
+        },
+        '.overline': {
+          'text-decoration': 'overline',
+        },
+        '.line-through': {
+          'text-decoration': 'line-through',
+        },
+        '.no-underline': {
+          'text-decoration': 'none !important',
+        },
+      })
+    },
+  ],
 }
