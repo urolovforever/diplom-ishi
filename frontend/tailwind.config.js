@@ -14,5 +14,9 @@ export default {
       }
     },
   },
+  corePlugins: {
+    // Disable Tailwind's default text-decoration utilities to prevent conflicts
+    textDecoration: false,
+  },
   plugins: [],
 }
