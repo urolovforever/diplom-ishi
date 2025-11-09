@@ -13,61 +13,88 @@
     font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background-color: #f9fafb;
   }
-
-  /* Override Tailwind's text-decoration: inherit */
-  a,
-  a:link,
-  a:visited,
-  a:hover,
-  a:active,
-  a:focus {
-    text-decoration: none !important;
-  }
 }
 
-@layer utilities {
-  .no-underline {
-    text-decoration: none !important;
-  }
+/* ============================================================================
+   CRITICAL SECTION: LINK UNDERLINE REMOVAL
+   This MUST come AFTER all Tailwind directives to have highest priority
+   ============================================================================ */
+
+/* Step 1: Override Tailwind Preflight's base "a" styles */
+a {
+  color: inherit !important;
+  text-decoration: none !important;
 }
 
-/* ULTRA CRITICAL: Place AFTER @tailwind utilities to override everything */
-/* Using only shorthand property to avoid specificity conflicts */
-a,
-a:any-link,
+/* Step 2: Override ALL link pseudo-classes */
 a:link,
 a:visited,
 a:hover,
 a:active,
 a:focus,
+a:any-link,
 a:focus-visible,
-button a,
+a:focus-within {
+  text-decoration: none !important;
+}
+
+/* Step 3: Override links inside any container */
+* a,
 div a,
 span a,
 p a,
+button a,
 nav a,
 header a,
 footer a,
 section a,
 article a,
 aside a,
+main a,
 h1 a,
 h2 a,
 h3 a,
 h4 a,
 h5 a,
-h6 a,
-a *,
-a > * {
+h6 a {
   text-decoration: none !important;
 }
 
-/* Force all elements to have no text-decoration */
+/* Step 4: Override all children inside links */
+a *,
+a > *,
+a span,
+a div,
+a p,
+a h1,
+a h2,
+a h3,
+a h4,
+a h5,
+a h6 {
+  text-decoration: none !important;
+}
+
+/* Step 5: Nuclear option - force ALL elements */
 *,
 *::before,
 *::after {
   text-decoration: none !important;
 }
+
+/* Step 6: Tailwind utility class override */
+.no-underline,
+.no-underline:link,
+.no-underline:visited,
+.no-underline:hover,
+.no-underline:active,
+.no-underline:focus {
+  text-decoration: none !important;
+}
+
+/* ============================================================================
+   END CRITICAL SECTION
+   ============================================================================ */
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
