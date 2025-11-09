@@ -217,52 +217,52 @@ const ConfessionPage = () => {
       {/* Back Button */}
       <button
         onClick={() => navigate(-1)}
-        className="inline-flex items-center space-x-2 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 mb-4 transition-colors"
+        className="inline-flex items-center space-x-2 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 mb-4 transition-colors text-sm sm:text-base"
       >
-        <FiArrowLeft />
+        <FiArrowLeft size={18} className="sm:w-5 sm:h-5" />
         <span>{t('common.back')}</span>
       </button>
 
       {/* Header */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-transparent dark:border-gray-700 p-8 mb-8">
-        <div className="flex items-start justify-between">
-          <div className="flex items-start space-x-6">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-transparent dark:border-gray-700 p-4 sm:p-6 lg:p-8 mb-6 sm:mb-8">
+        <div className="flex flex-col lg:flex-row items-start justify-between gap-6">
+          <div className="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4 lg:space-x-6 w-full lg:w-auto">
             {confession.logo && (
               <img
                 src={confession.logo}
                 alt={confession.name}
-                className="w-24 h-24 rounded-full object-cover border-4 border-blue-500 dark:border-blue-400"
+                className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-4 border-blue-500 dark:border-blue-400"
               />
             )}
-            <div>
-              <h1 className="text-4xl font-bold text-gray-800 dark:text-gray-100 mb-2">
+            <div className="text-center sm:text-left w-full">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800 dark:text-gray-100 mb-2">
                 {confession.name}
               </h1>
-              <p className="text-gray-600 dark:text-gray-400 mb-4">{confession.description}</p>
+              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-4">{confession.description}</p>
 
-              <div className="flex items-center space-x-6 text-sm text-gray-500 dark:text-gray-400">
+              <div className="flex items-center justify-center sm:justify-start space-x-4 sm:space-x-6 text-xs sm:text-sm text-gray-500 dark:text-gray-400">
                 <Link
                   to={`/confession/${slug}/followers`}
                   className="flex items-center space-x-1 hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer no-underline"
                 >
-                  <FiUsers />
+                  <FiUsers size={16} className="sm:w-4 sm:h-4" />
                   <span>{confession.subscribers_count} {t('confession.followers')}</span>
                 </Link>
                 <div className="flex items-center space-x-1">
-                  <FiFileText />
+                  <FiFileText size={16} className="sm:w-4 sm:h-4" />
                   <span>{confession.posts_count} {t('common.posts')}</span>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="flex items-center space-x-3">
+          <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-3 w-full lg:w-auto">
             {isConfessionAdmin && (
               <button
                 onClick={handleEditClick}
-                className="flex items-center space-x-2 px-4 py-2 bg-purple-600 dark:bg-purple-500 text-white rounded-lg hover:bg-purple-700 dark:hover:bg-purple-600 transition-colors"
+                className="flex items-center justify-center space-x-2 px-3 py-2 sm:px-4 sm:py-2 bg-purple-600 dark:bg-purple-500 text-white rounded-lg hover:bg-purple-700 dark:hover:bg-purple-600 transition-colors text-sm sm:text-base w-full sm:w-auto"
               >
-                <FiEdit2 />
+                <FiEdit2 size={16} className="sm:w-4 sm:h-4" />
                 <span>{t('common.edit')}</span>
               </button>
             )}
@@ -270,13 +270,13 @@ const ConfessionPage = () => {
               <button
                 onClick={handleSubscribe}
                 disabled={subscribing}
-                className={`flex items-center space-x-2 px-6 py-3 rounded-lg font-medium transition-all ${
+                className={`flex items-center justify-center space-x-2 px-4 py-2 sm:px-6 sm:py-3 rounded-lg font-medium transition-all text-sm sm:text-base w-full sm:w-auto ${
                   confession.is_subscribed
                     ? 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600'
                     : 'bg-blue-600 dark:bg-blue-500 text-white hover:bg-blue-700 dark:hover:bg-blue-600'
                 }`}
               >
-                {confession.is_subscribed ? <FiUserMinus /> : <FiUserPlus />}
+                {confession.is_subscribed ? <FiUserMinus size={16} className="sm:w-4 sm:h-4" /> : <FiUserPlus size={16} className="sm:w-4 sm:h-4" />}
                 <span>{confession.is_subscribed ? t('confession.unsubscribe') : t('confession.subscribe')}</span>
               </button>
             )}
@@ -286,11 +286,11 @@ const ConfessionPage = () => {
 
       {/* Posts Grid */}
       <div>
-        <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6 px-4">{t('common.posts')}</h2>
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-gray-100 mb-4 sm:mb-6 px-2 sm:px-4">{t('common.posts')}</h2>
 
         {posts.length === 0 ? (
-          <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-xl shadow-md border border-transparent dark:border-gray-700">
-            <p className="text-gray-500 dark:text-gray-400 text-lg">{t('confession.noPosts')}</p>
+          <div className="text-center py-8 sm:py-12 bg-white dark:bg-gray-800 rounded-xl shadow-md border border-transparent dark:border-gray-700">
+            <p className="text-gray-500 dark:text-gray-400 text-base sm:text-lg px-4">{t('confession.noPosts')}</p>
           </div>
         ) : (
           <div className="grid grid-cols-3 gap-1 md:gap-2">
@@ -437,17 +437,17 @@ const ConfessionPage = () => {
       {showEditModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-70 flex items-center justify-center z-50 p-4">
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
-              <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">{t('confession.editConfession')}</h2>
+            <div className="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-gray-100">{t('confession.editConfession')}</h2>
               <button
                 onClick={() => setShowEditModal(false)}
                 className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors text-gray-600 dark:text-gray-400"
               >
-                <FiX size={24} />
+                <FiX size={20} className="sm:w-6 sm:h-6" />
               </button>
             </div>
 
-            <form onSubmit={handleEditSubmit} className="p-6 space-y-6">
+            <form onSubmit={handleEditSubmit} className="p-4 sm:p-6 space-y-4 sm:space-y-6">
               {/* Name */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
@@ -516,18 +516,18 @@ const ConfessionPage = () => {
               </div>
 
               {/* Buttons */}
-              <div className="flex items-center space-x-4 pt-4">
+              <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4 pt-2 sm:pt-4">
                 <button
                   type="submit"
                   disabled={updating}
-                  className="flex-1 px-6 py-3 bg-blue-600 dark:bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-700 dark:hover:bg-blue-600 disabled:bg-blue-300 dark:disabled:bg-blue-700 disabled:cursor-not-allowed transition-colors"
+                  className="w-full flex-1 px-4 py-2.5 sm:px-6 sm:py-3 bg-blue-600 dark:bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-700 dark:hover:bg-blue-600 disabled:bg-blue-300 dark:disabled:bg-blue-700 disabled:cursor-not-allowed transition-colors text-sm sm:text-base"
                 >
                   {updating ? t('confession.updating') : t('confession.updateConfession')}
                 </button>
                 <button
                   type="button"
                   onClick={() => setShowEditModal(false)}
-                  className="px-6 py-3 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                  className="w-full sm:w-auto px-4 py-2.5 sm:px-6 sm:py-3 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors text-sm sm:text-base"
                 >
                   {t('common.cancel')}
                 </button>
