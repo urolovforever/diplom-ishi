@@ -87,7 +87,7 @@ const RightSidebar = () => {
   const ConfessionItem = ({ confession, showButton = false }) => (
     <Link
       to={`/confession/${confession.slug}`}
-      className="flex items-center space-x-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg px-2 transition-colors group"
+      className="flex items-center space-x-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg px-2 transition-colors group no-underline"
     >
       {confession.logo ? (
         <img
@@ -163,13 +163,13 @@ const RightSidebar = () => {
       <div className="mt-6 px-2 pb-4">
         <div className="text-xs text-gray-500 dark:text-gray-400 space-y-2">
           <div className="flex flex-wrap gap-2">
-            <a href="#" className="hover:text-gray-700 dark:hover:text-gray-300">About</a>
+            <a href="#" className="hover:text-gray-700 dark:hover:text-gray-300 no-underline">About</a>
             <span>·</span>
-            <a href="#" className="hover:text-gray-700 dark:hover:text-gray-300">Help</a>
+            <a href="#" className="hover:text-gray-700 dark:hover:text-gray-300 no-underline">Help</a>
             <span>·</span>
-            <a href="#" className="hover:text-gray-700 dark:hover:text-gray-300">Privacy</a>
+            <a href="#" className="hover:text-gray-700 dark:hover:text-gray-300 no-underline">Privacy</a>
             <span>·</span>
-            <a href="#" className="hover:text-gray-700 dark:hover:text-gray-300">Terms</a>
+            <a href="#" className="hover:text-gray-700 dark:hover:text-gray-300 no-underline">Terms</a>
           </div>
           <p className="text-gray-400 dark:text-gray-500">© 2025 Religion Platform</p>
         </div>

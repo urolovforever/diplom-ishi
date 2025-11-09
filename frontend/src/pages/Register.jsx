@@ -207,7 +207,7 @@ const Register = () => {
         <div className="mt-6 text-center">
           <p className="text-gray-600">
             {t('auth.alreadyHaveAccount')}{' '}
-            <Link to="/login" className="text-blue-600 hover:text-blue-700 font-medium">
+            <Link to="/login" className="text-blue-600 hover:text-blue-700 font-medium no-underline">
               {t('auth.loginHere')}
             </Link>
           </p>

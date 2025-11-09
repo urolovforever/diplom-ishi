@@ -83,7 +83,7 @@ const PostDetails = () => {
       {/* Back Button */}
       <Link
         to="/"
-        className="inline-flex items-center space-x-2 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 mb-6 transition-colors"
+        className="inline-flex items-center space-x-2 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 mb-6 transition-colors no-underline"
       >
         <FiArrowLeft />
         <span>{t('common.backToHome')}</span>
@@ -96,7 +96,7 @@ const PostDetails = () => {
           <div className="flex items-center justify-between mb-4">
             <Link
               to={`/confession/${post.confession.slug}`}
-              className="flex items-center space-x-3 hover:opacity-80 transition-opacity"
+              className="flex items-center space-x-3 hover:opacity-80 transition-opacity no-underline"
             >
               {post.confession.logo && (
                 <img
@@ -142,7 +142,7 @@ const PostDetails = () => {
                       href={pdfFile.file}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center space-x-3 p-4 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-100 dark:border-red-900/30 hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors"
+                      className="flex items-center space-x-3 p-4 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-100 dark:border-red-900/30 hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors no-underline"
                     >
                       <div className="flex-shrink-0 w-12 h-12 bg-red-200 dark:bg-red-800 rounded-lg flex items-center justify-center">
                         <FiFileText size={24} className="text-red-600 dark:text-red-400" />
