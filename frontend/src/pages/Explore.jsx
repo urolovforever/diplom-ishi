@@ -59,8 +59,8 @@ const Explore = () => {
     <MainLayout>
       <div>
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-4">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800 dark:text-gray-100 mb-3 sm:mb-4">
             {t('explore.exploreConfessions')}
           </h1>
 
@@ -71,20 +71,20 @@ const Explore = () => {
               placeholder={t('explore.searchConfessions')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full px-4 py-3 pl-12 bg-white dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-400 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent"
+              className="w-full px-4 py-2.5 sm:py-3 pl-10 sm:pl-12 bg-white dark:bg-gray-800 text-sm sm:text-base dark:text-gray-100 dark:placeholder-gray-400 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-colors"
             />
-            <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500" size={20} />
+            <FiSearch className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500" size={18} />
           </div>
         </div>
 
         {/* Confessions Grid */}
         {filteredConfessions.length === 0 ? (
-          <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
-            <div className="text-6xl mb-4">🔍</div>
-            <p className="text-gray-500 dark:text-gray-400 text-lg mb-2">{t('explore.noConfessionsFound')}</p>
+          <div className="text-center py-12 sm:py-16 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+            <div className="text-5xl sm:text-6xl mb-4">🔍</div>
+            <p className="text-gray-500 dark:text-gray-400 text-base sm:text-lg mb-2 px-4">{t('explore.noConfessionsFound')}</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
             {filteredConfessions.map(confession => (
               <ConfessionCard key={confession.id} confession={confession} />
             ))}
