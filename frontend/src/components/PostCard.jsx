@@ -47,11 +47,11 @@ const PostCard = ({ post, onLike, onUnlike, onDelete, isConfessionAdmin }) => {
                 className="w-10 h-10 rounded-full object-cover"
               />
             )}
-            <div>
-              <h4 className="font-semibold text-gray-800 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400">
+            <div className="no-underline">
+              <h4 className="font-semibold text-gray-800 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 no-underline">
                 {post.confession.name}
               </h4>
-              <p className="text-xs text-gray-500 dark:text-gray-400">
+              <p className="text-xs text-gray-500 dark:text-gray-400 no-underline">
                 {t('common.by')} {formatUsername(post.author.username)} • {formatRelativeTime(post.created_at, language)}
               </p>
             </div>
@@ -59,9 +59,9 @@ const PostCard = ({ post, onLike, onUnlike, onDelete, isConfessionAdmin }) => {
 
           <div className="flex items-center space-x-2">
             {post.is_pinned && (
-              <div className="flex items-center space-x-1 text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900/30 px-2 py-1 rounded-full">
+              <div className="flex items-center space-x-1 text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900/30 px-2 py-1 rounded-full no-underline">
                 <BsPinFill size={14} />
-                <span className="text-xs font-medium">{t('common.pinned')}</span>
+                <span className="text-xs font-medium no-underline">{t('common.pinned')}</span>
               </div>
             )}
 
@@ -89,12 +89,12 @@ const PostCard = ({ post, onLike, onUnlike, onDelete, isConfessionAdmin }) => {
 
       {/* Content */}
       <Link to={`/post/${post.id}`} className="block no-underline">
-        <div className="p-4">
-          <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2 hover:text-blue-600 dark:hover:text-blue-400">
+        <div className="p-4 no-underline">
+          <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2 hover:text-blue-600 dark:hover:text-blue-400 no-underline">
             {post.title}
           </h3>
 
-          <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3">
+          <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3 no-underline">
             {post.content}
           </p>
         </div>
@@ -129,7 +129,7 @@ const PostCard = ({ post, onLike, onUnlike, onDelete, isConfessionAdmin }) => {
         <div className="flex items-center space-x-3">
           <button
             onClick={handleLikeToggle}
-            className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors ${
+            className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors no-underline ${
               post.is_liked
                 ? 'text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/30 hover:bg-red-100 dark:hover:bg-red-900/50'
                 : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
@@ -139,7 +139,7 @@ const PostCard = ({ post, onLike, onUnlike, onDelete, isConfessionAdmin }) => {
               size={18}
               fill={post.is_liked ? 'currentColor' : 'none'}
             />
-            <span className="font-medium">{post.likes_count}</span>
+            <span className="font-medium no-underline">{post.likes_count}</span>
           </button>
 
           {/* Only show comment icon if comments are enabled */}
@@ -149,14 +149,14 @@ const PostCard = ({ post, onLike, onUnlike, onDelete, isConfessionAdmin }) => {
               className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 rounded-lg transition-colors no-underline"
             >
               <FiMessageCircle size={18} />
-              <span className="font-medium">{post.comments_count}</span>
+              <span className="font-medium no-underline">{post.comments_count}</span>
             </Link>
           )}
         </div>
 
-        <div className="flex items-center space-x-2 text-gray-500 dark:text-gray-400 text-sm">
+        <div className="flex items-center space-x-2 text-gray-500 dark:text-gray-400 text-sm no-underline">
           <FiEye size={16} />
-          <span>{post.views_count || 0}</span>
+          <span className="no-underline">{post.views_count || 0}</span>
         </div>
       </div>
     </div>
