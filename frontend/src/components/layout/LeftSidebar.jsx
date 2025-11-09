@@ -244,7 +244,7 @@ const LeftSidebar = () => {
   return (
     <div className="fixed left-0 top-0 h-screen w-72 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 flex flex-col transition-colors duration-200">
       {/* Logo */}
-      <Link to="/" className="flex items-center space-x-3 px-6 py-6 border-b border-gray-200 dark:border-gray-700 no-underline">
+      <Link to="/" className="flex items-center space-x-3 px-6 py-6 no-underline">
         <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
           <span className="text-white font-bold text-2xl">RP</span>
         </div>
@@ -288,7 +288,7 @@ const LeftSidebar = () => {
         // Notifications View
         <div className="flex-1 flex flex-col min-h-0">
           {/* Back Button */}
-          <div className="px-4 py-4 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
+          <div className="px-4 py-4 flex-shrink-0">
             <button
               onClick={handleBackClick}
               className="flex items-center space-x-3 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
@@ -300,7 +300,7 @@ const LeftSidebar = () => {
 
           {/* Mark all read button */}
           {notifications.some(n => !n.is_read) && (
-            <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
+            <div className="px-4 py-3 flex-shrink-0">
               <button
                 onClick={handleMarkAllRead}
                 className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium"
