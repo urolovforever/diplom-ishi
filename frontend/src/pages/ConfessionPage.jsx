@@ -243,7 +243,7 @@ const ConfessionPage = () => {
               <div className="flex items-center space-x-6 text-sm text-gray-500 dark:text-gray-400">
                 <Link
                   to={`/confession/${slug}/followers`}
-                  className="flex items-center space-x-1 hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer"
+                  className="flex items-center space-x-1 hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer no-underline"
                 >
                   <FiUsers />
                   <span>{confession.subscribers_count} {t('confession.followers')}</span>
