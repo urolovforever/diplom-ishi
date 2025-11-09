@@ -63,10 +63,17 @@ h5 a,
 h6 a {
   text-decoration: none !important;
   text-decoration-line: none !important;
-  text-decoration-style: none !important;
+  text-decoration-style: solid !important;
+  text-decoration-thickness: 0 !important;
   text-decoration-color: transparent !important;
   -webkit-text-decoration: none !important;
+  -webkit-text-decoration-line: none !important;
+  -webkit-text-decoration-style: solid !important;
+  -webkit-text-decoration-color: transparent !important;
   -moz-text-decoration: none !important;
+  -moz-text-decoration-line: none !important;
+  -moz-text-decoration-style: solid !important;
+  -moz-text-decoration-color: transparent !important;
 }
 
 /* Extra safety: Target all child elements inside links */
@@ -81,11 +88,15 @@ a h4,
 a h5,
 a h6 {
   text-decoration: none !important;
+  text-decoration-line: none !important;
+  text-decoration-thickness: 0 !important;
+  -webkit-text-decoration: none !important;
+  -moz-text-decoration: none !important;
 }
 
-/* Universal selector as last resort */
+/* Universal selector - force inheritance */
 * {
-  text-decoration: inherit;
+  text-decoration-thickness: 0 !important;
 }
 
 /* Custom scrollbar */
