@@ -45,35 +45,35 @@ const ConfessionCard = ({ confession }) => {
 
       {/* Content */}
       <div className="p-4">
-        <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2 no-underline">
+        <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2">
           {confession.name}
         </h3>
 
-        <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2 no-underline">
+        <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2">
           {confession.description}
         </p>
 
         {/* Stats */}
-        <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400 no-underline">
-          <div className="flex items-center space-x-1 no-underline">
+        <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+          <div className="flex items-center space-x-1">
             <FiUsers size={16} />
-            <span className="no-underline">{confession.subscribers_count} {t('common.followers')}</span>
+            <span>{confession.subscribers_count} {t('common.followers')}</span>
           </div>
 
-          <div className="flex items-center space-x-1 no-underline">
+          <div className="flex items-center space-x-1">
             <FiFileText size={16} />
-            <span className="no-underline">{confession.posts_count} {t('common.posts')}</span>
+            <span>{confession.posts_count} {t('common.posts')}</span>
           </div>
         </div>
 
         {/* Admin info */}
         {confession.admin && (
           <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
-            <p className="text-xs text-gray-500 dark:text-gray-400 no-underline">
+            <p className="text-xs text-gray-500 dark:text-gray-400">
               {t('confession.admin')}:{' '}
               <button
                 onClick={(e) => handleAdminClick(e, confession.admin.username)}
-                className="font-medium text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors no-underline"
+                className="font-medium text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
               >
                 {formatUsername(confession.admin.username)}
               </button>

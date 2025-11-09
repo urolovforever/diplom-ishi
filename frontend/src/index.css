@@ -15,86 +15,11 @@
   }
 }
 
-/* ============================================================================
-   CRITICAL SECTION: LINK UNDERLINE REMOVAL
-   This MUST come AFTER all Tailwind directives to have highest priority
-   ============================================================================ */
-
-/* Step 1: Override Tailwind Preflight's base "a" styles */
-a {
-  color: inherit !important;
-  text-decoration: none !important;
+@layer utilities {
+  .no-underline {
+    text-decoration: none !important;
+  }
 }
-
-/* Step 2: Override ALL link pseudo-classes */
-a:link,
-a:visited,
-a:hover,
-a:active,
-a:focus,
-a:any-link,
-a:focus-visible,
-a:focus-within {
-  text-decoration: none !important;
-}
-
-/* Step 3: Override links inside any container */
-* a,
-div a,
-span a,
-p a,
-button a,
-nav a,
-header a,
-footer a,
-section a,
-article a,
-aside a,
-main a,
-h1 a,
-h2 a,
-h3 a,
-h4 a,
-h5 a,
-h6 a {
-  text-decoration: none !important;
-}
-
-/* Step 4: Override all children inside links */
-a *,
-a > *,
-a span,
-a div,
-a p,
-a h1,
-a h2,
-a h3,
-a h4,
-a h5,
-a h6 {
-  text-decoration: none !important;
-}
-
-/* Step 5: Nuclear option - force ALL elements */
-*,
-*::before,
-*::after {
-  text-decoration: none !important;
-}
-
-/* Step 6: Tailwind utility class override */
-.no-underline,
-.no-underline:link,
-.no-underline:visited,
-.no-underline:hover,
-.no-underline:active,
-.no-underline:focus {
-  text-decoration: none !important;
-}
-
-/* ============================================================================
-   END CRITICAL SECTION
-   ============================================================================ */
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
@@ -114,7 +39,7 @@ a h6 {
   background: #555;
 }
 
-/* Smooth transitions - removed global * selector to prevent unwanted animations */
+/* Smooth transitions */
 a, button, input, textarea, select {
   transition: all 0.2s ease-in-out;
 }
