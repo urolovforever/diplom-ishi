@@ -6,6 +6,19 @@
   a {
     text-decoration: none !important;
   }
+
+  a:link,
+  a:visited,
+  a:hover,
+  a:active {
+    text-decoration: none !important;
+  }
+}
+
+@layer utilities {
+  .no-underline {
+    text-decoration: none !important;
+  }
 }
 
 * {
@@ -19,7 +32,22 @@ body {
   background-color: #f9fafb;
 }
 
-/* Global link style - no underline anywhere */
+/* Global link style - no underline anywhere - MAXIMUM PRIORITY */
+html a,
+html a:link,
+html a:visited,
+html a:hover,
+html a:active,
+body a,
+body a:link,
+body a:visited,
+body a:hover,
+body a:active,
+div a,
+div a:link,
+div a:visited,
+div a:hover,
+div a:active,
 * a,
 * a:link,
 * a:visited,
@@ -31,6 +59,10 @@ a:visited,
 a:hover,
 a:active {
   text-decoration: none !important;
+  text-decoration-line: none !important;
+  text-decoration-style: none !important;
+  -webkit-text-decoration: none !important;
+  -moz-text-decoration: none !important;
 }
 
 /* Custom scrollbar */
