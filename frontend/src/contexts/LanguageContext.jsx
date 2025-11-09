@@ -2,6 +2,8 @@ import React, { createContext, useContext, useState, useEffect } from 'react'
 import en from '../locales/en.json'
 import uz from '../locales/uz.json'
 import ru from '../locales/ru.json'
+import { useAuthStore } from '../store/authStore'
+import api from '../api/axios'
 
 const translations = { en, uz, ru }
 
@@ -16,10 +18,24 @@ export const useLanguage = () => {
 }
 
 export const LanguageProvider = ({ children }) => {
+  const { user } = useAuthStore()
+
   const [language, setLanguage] = useState(() => {
+    // If user is logged in and has a preferred language, use it
+    if (user?.preferred_language) {
+      return user.preferred_language
+    }
+    // Otherwise, use saved language from localStorage
     const savedLang = localStorage.getItem('language') || 'en'
     return savedLang
   })
+
+  // Update language when user changes (login/logout)
+  useEffect(() => {
+    if (user?.preferred_language && user.preferred_language !== language) {
+      setLanguage(user.preferred_language)
+    }
+  }, [user])
 
   useEffect(() => {
     localStorage.setItem('language', language)
@@ -50,9 +66,20 @@ export const LanguageProvider = ({ children }) => {
     return result
   }
 
-  const changeLanguage = (lang) => {
+  const changeLanguage = async (lang) => {
     if (translations[lang]) {
       setLanguage(lang)
+
+      // If user is logged in, save preference to backend
+      if (user) {
+        try {
+          await api.patch('/accounts/profile/', { preferred_language: lang })
+          // Update user in auth store
+          useAuthStore.getState().updateUser({ preferred_language: lang })
+        } catch (error) {
+          console.error('Failed to save language preference:', error)
+        }
+      }
     }
   }
 
