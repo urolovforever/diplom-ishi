@@ -205,7 +205,15 @@ const LeftSidebar = () => {
     return translatedMessage;
   };
 
-  const NavItem = ({ to, icon: Icon, label, onClick, badge, isButton }) => {
+  const NavItem = ({ to, icon: Icon, label, onClick, badge }) => {
+    const handleClick = () => {
+      if (onClick) {
+        onClick()
+      } else if (to) {
+        navigate(to)
+      }
+    }
+
     const content = (
       <>
         <div className="relative">
@@ -220,24 +228,16 @@ const LeftSidebar = () => {
       </>
     )
 
-    const className = `flex items-center space-x-4 px-5 py-3.5 rounded-xl transition-all duration-200 relative no-underline ${
-      !isButton && isActive(to)
+    const className = `flex items-center space-x-4 px-5 py-3.5 rounded-xl transition-all duration-200 relative w-full text-left ${
+      to && isActive(to)
         ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-semibold'
         : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
-    } ${isButton ? 'w-full text-left' : ''}`
-
-    if (isButton) {
-      return (
-        <button onClick={onClick} className={className}>
-          {content}
-        </button>
-      )
-    }
+    }`
 
     return (
-      <Link to={to} onClick={onClick} className={className}>
+      <button onClick={handleClick} className={className}>
         {content}
-      </Link>
+      </button>
     )
   }
 
@@ -269,7 +269,6 @@ const LeftSidebar = () => {
                 label={t('nav.notifications')}
                 onClick={handleNotificationsClick}
                 badge={unreadCount}
-                isButton={true}
               />
 
               {user.role === 'admin' && (
