@@ -462,7 +462,7 @@ const Profile = () => {
               </p>
               <Link
                 to="/explore"
-                className="inline-flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-500 dark:to-purple-500 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 dark:hover:from-blue-600 dark:hover:to-purple-600 shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105 font-semibold"
+                className="inline-flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-500 dark:to-purple-500 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 dark:hover:from-blue-600 dark:hover:to-purple-600 shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105 font-semibold no-underline"
               >
                 <FiCompass size={20} />
                 <span>{t('explore.exploreConfessions')}</span>
@@ -474,7 +474,7 @@ const Profile = () => {
                 <Link
                   key={sub.id}
                   to={`/confession/${sub.confession.slug}`}
-                  className="flex items-center space-x-4 p-4 border-2 border-gray-100 dark:border-gray-700 rounded-xl hover:shadow-md hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-200 group bg-white dark:bg-gray-800/50"
+                  className="flex items-center space-x-4 p-4 border-2 border-gray-100 dark:border-gray-700 rounded-xl hover:shadow-md hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-200 group bg-white dark:bg-gray-800/50 no-underline"
                 >
                   {sub.confession.logo ? (
                     <img

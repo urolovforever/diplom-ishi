@@ -134,12 +134,12 @@ const Login = () => {
 
         {/* Footer */}
         <div className="mt-6 text-center space-y-3">
-          <Link to="/password-reset" className="block text-purple-600 hover:text-purple-700 font-medium text-sm">
+          <Link to="/password-reset" className="block text-purple-600 hover:text-purple-700 font-medium text-sm no-underline">
             {t('auth.forgotPassword')}
           </Link>
           <p className="text-gray-600">
             {t('auth.dontHaveAccount')}{' '}
-            <Link to="/register" className="text-blue-600 hover:text-blue-700 font-medium">
+            <Link to="/register" className="text-blue-600 hover:text-blue-700 font-medium no-underline">
               {t('auth.registerHere')}
             </Link>
           </p>

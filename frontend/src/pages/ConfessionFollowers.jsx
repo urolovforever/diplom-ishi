@@ -75,7 +75,7 @@ const ConfessionFollowers = () => {
           <div className="p-4 border-b border-gray-100 dark:border-gray-700">
             <Link
               to={`/confession/${slug}`}
-              className="inline-flex items-center space-x-2 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-500"
+              className="inline-flex items-center space-x-2 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-500 no-underline"
             >
               <FiArrowLeft />
               <span>{t('common.back')} {confession.name}</span>
@@ -105,7 +105,7 @@ const ConfessionFollowers = () => {
               <p className="text-gray-500 dark:text-gray-400 mb-4">{t('followers.subscribeToView')}</p>
               <Link
                 to={`/confession/${slug}`}
-                className="inline-block px-6 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
+                className="inline-block px-6 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors no-underline"
               >
                 {t('followers.goToConfession')}
               </Link>
@@ -122,7 +122,7 @@ const ConfessionFollowers = () => {
                   <Link
                     key={follower.id}
                     to={`/user/${follower.username}`}
-                    className="flex items-center justify-between p-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                    className="flex items-center justify-between p-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors no-underline"
                   >
                     <div className="flex items-center space-x-3">
                       {follower.avatar ? (

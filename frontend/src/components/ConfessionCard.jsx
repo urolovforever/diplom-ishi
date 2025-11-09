@@ -17,7 +17,7 @@ const ConfessionCard = ({ confession }) => {
   return (
     <Link
       to={`/confession/${confession.slug}`}
-      className="block bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden card-hover border border-transparent dark:border-gray-700"
+      className="block bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden card-hover border border-transparent dark:border-gray-700 no-underline"
     >
       {/* Header with logo */}
       <div className="relative h-32 bg-gradient-to-r from-blue-500 to-purple-600">

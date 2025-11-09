@@ -137,7 +137,7 @@ const Dashboard = () => {
           <Link
             key={stat.name}
             to={stat.link}
-            className={`${darkMode ? 'bg-gray-800 border-gray-700 hover:bg-gray-750' : 'bg-white border-gray-100'} rounded-xl shadow-md hover:shadow-xl transition-all p-6 border`}
+            className={`${darkMode ? 'bg-gray-800 border-gray-700 hover:bg-gray-750' : 'bg-white border-gray-100'} rounded-xl shadow-md hover:shadow-xl transition-all p-6 border no-underline`}
           >
             <div className="flex items-center justify-between mb-4">
               <div className={`${stat.color} p-3 rounded-lg`}>

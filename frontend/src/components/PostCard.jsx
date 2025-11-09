@@ -38,7 +38,7 @@ const PostCard = ({ post, onLike, onUnlike, onDelete, isConfessionAdmin }) => {
         <div className="flex items-center justify-between">
           <Link
             to={`/confession/${post.confession.slug}`}
-            className="flex items-center space-x-3"
+            className="flex items-center space-x-3 no-underline"
           >
             {post.confession.logo && (
               <img
@@ -88,7 +88,7 @@ const PostCard = ({ post, onLike, onUnlike, onDelete, isConfessionAdmin }) => {
       </div>
 
       {/* Content */}
-      <Link to={`/post/${post.id}`} className="block">
+      <Link to={`/post/${post.id}`} className="block no-underline">
         <div className="p-4">
           <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2 hover:text-blue-600 dark:hover:text-blue-400">
             {post.title}
@@ -146,7 +146,7 @@ const PostCard = ({ post, onLike, onUnlike, onDelete, isConfessionAdmin }) => {
           {post.comments_enabled !== false && (
             <Link
               to={`/post/${post.id}`}
-              className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 rounded-lg transition-colors"
+              className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 rounded-lg transition-colors no-underline"
             >
               <FiMessageCircle size={18} />
               <span className="font-medium">{post.comments_count}</span>

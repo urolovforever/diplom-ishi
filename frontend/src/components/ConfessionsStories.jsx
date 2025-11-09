@@ -88,7 +88,7 @@ const ConfessionsStories = ({ onConfessionSelect }) => {
           </p>
           <Link
             to="/explore"
-            className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm font-semibold"
+            className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm font-semibold no-underline"
           >
             {t('home.exploreConfessionsLink')}
           </Link>

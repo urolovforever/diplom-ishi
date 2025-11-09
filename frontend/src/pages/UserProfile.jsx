@@ -102,7 +102,7 @@ const UserProfile = () => {
         {/* Back Button */}
         <Link
           to="/"
-          className={`inline-flex items-center space-x-2 ${darkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-700'} mb-6`}
+          className={`inline-flex items-center space-x-2 ${darkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-700'} mb-6 no-underline`}
         >
           <FiArrowLeft />
           <span>{t('userProfile.backToHome')}</span>

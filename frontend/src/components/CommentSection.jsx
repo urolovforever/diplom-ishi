@@ -20,7 +20,7 @@ const linkify = (text) => {
           href={part}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-blue-600 dark:text-blue-400"
+          className="text-blue-600 dark:text-blue-400 no-underline"
         >
           {part}
         </a>
