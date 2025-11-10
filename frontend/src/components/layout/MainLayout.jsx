@@ -1,8 +1,14 @@
 import React from 'react'
+import { useLocation } from 'react-router-dom'
+import { useAuthStore } from '../../store/authStore'
 import LeftSidebar from './LeftSidebar'
 import RightSidebar from './RightSidebar'
 
 const MainLayout = ({ children, showRightSidebar = true }) => {
+  const location = useLocation()
+  const { user } = useAuthStore()
+  const isHomePage = location.pathname === '/'
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors duration-200">
       {/* Left Sidebar - Always render (contains mobile top/bottom nav) */}
@@ -13,6 +19,7 @@ const MainLayout = ({ children, showRightSidebar = true }) => {
         min-h-screen
         lg:ml-72
         ${showRightSidebar ? 'xl:mr-96' : ''}
+        ${isHomePage && user ? 'pt-16 lg:pt-0' : ''}
         pb-20 lg:pb-0
       `}>
         <div className="max-w-3xl mx-auto py-4 px-4 sm:py-6 sm:px-6">

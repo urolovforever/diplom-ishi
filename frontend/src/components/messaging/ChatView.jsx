@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { FiArrowLeft } from 'react-icons/fi';
 import useMessagingStore from '../../store/messagingStore';
 import { useAuthStore } from '../../store/authStore';
 import WebSocketManager from '../../utils/websocket';
@@ -9,6 +11,7 @@ import { useLanguage } from '../../contexts/LanguageContext';
 
 const ChatView = ({ conversationId }) => {
   const { t } = useLanguage();
+  const navigate = useNavigate();
   const messagesEndRef = useRef(null);
   const wsRef = useRef(null);
   const typingTimeoutRef = useRef(null);
@@ -237,18 +240,26 @@ const ChatView = ({ conversationId }) => {
     <div className="flex flex-col h-full bg-gray-50 dark:bg-gray-900">
       {/* Header */}
       <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-4 flex items-center justify-between">
-        <div className="flex items-center">
+        <div className="flex items-center flex-1">
+          {/* Back Button - Mobile Only */}
+          <button
+            onClick={() => navigate('/messages')}
+            className="md:hidden p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors mr-2"
+          >
+            <FiArrowLeft size={20} className="text-gray-700 dark:text-gray-300" />
+          </button>
+
           <div className="h-10 w-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold mr-3">
             {currentConversation?.participants[0]?.username?.charAt(0).toUpperCase() || 'U'}
           </div>
-          <div>
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+          <div className="flex-1 min-w-0">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 truncate">
               {currentConversation?.participants
                 .map((p) => p.username)
                 .join(', ') || 'Conversation'}
             </h2>
             {currentConversation?.confession && (
-              <p className="text-sm text-gray-500 dark:text-gray-400">in {currentConversation.confession.name}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 truncate">in {currentConversation.confession.name}</p>
             )}
           </div>
         </div>

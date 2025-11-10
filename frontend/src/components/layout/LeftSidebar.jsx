@@ -252,6 +252,45 @@ const LeftSidebar = () => {
 
   return (
     <>
+      {/* Mobile Top Bar - Only on Home Page */}
+      {user && location.pathname === '/' && (
+        <div className="lg:hidden fixed top-0 left-0 right-0 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 z-40">
+          <div className="flex items-center justify-between px-4 py-3">
+            <Link to="/" className="flex items-center space-x-2 no-underline">
+              <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                <span className="text-white font-bold text-sm">RP</span>
+              </div>
+              <span className="text-lg font-bold text-gray-800 dark:text-gray-100">Religion Platform</span>
+            </Link>
+
+            <div className="flex items-center space-x-3">
+              <Link
+                to="/messages"
+                className="relative p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors no-underline text-gray-700 dark:text-gray-300"
+              >
+                <FiMessageCircle size={24} />
+                {unreadMessagesCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                    {unreadMessagesCount > 9 ? '9+' : unreadMessagesCount}
+                  </span>
+                )}
+              </Link>
+
+              <button
+                onClick={handleNotificationsClick}
+                className="relative p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors text-gray-700 dark:text-gray-300"
+              >
+                <FiBell size={24} />
+                {unreadCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                    {unreadCount > 9 ? '9+' : unreadCount}
+                  </span>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Desktop Sidebar */}
       <div className="hidden lg:flex fixed left-0 top-0 h-screen w-72 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 flex-col transition-colors duration-200">
@@ -436,10 +475,20 @@ const LeftSidebar = () => {
             {/* More Menu Dropdown */}
             {showMoreMenu && (
               <div className="absolute bottom-full left-4 right-4 mb-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-2xl overflow-hidden z-50">
+                {/* Profile Link */}
+                <Link
+                  to="/profile"
+                  onClick={() => setShowMoreMenu(false)}
+                  className="w-full flex items-center space-x-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors no-underline text-gray-700 dark:text-gray-300"
+                >
+                  <FiUser size={20} />
+                  <span className="text-sm font-medium">{t('nav.profile')}</span>
+                </Link>
+
                 {/* Dark Mode Toggle */}
                 <button
                   onClick={handleDarkModeToggle}
-                  className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                  className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors border-t border-gray-200 dark:border-gray-700"
                 >
                   <div className="flex items-center space-x-3">
                     {darkMode ? <FiSun size={20} className="text-yellow-500" /> : <FiMoon size={20} className="text-indigo-600" />}
