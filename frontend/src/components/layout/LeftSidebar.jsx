@@ -252,6 +252,46 @@ const LeftSidebar = () => {
 
   return (
     <>
+      {/* Mobile Top Bar - Messages & Notifications */}
+      {user && (
+        <div className="lg:hidden fixed top-0 left-0 right-0 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 z-40 safe-area-top">
+          <div className="flex items-center justify-between px-4 py-3">
+            <Link to="/" className="flex items-center space-x-2 no-underline">
+              <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                <span className="text-white font-bold text-sm">RP</span>
+              </div>
+              <span className="text-lg font-bold text-gray-800 dark:text-gray-100">Religion Platform</span>
+            </Link>
+
+            <div className="flex items-center space-x-3">
+              <Link
+                to="/messages"
+                className="relative p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors no-underline text-gray-700 dark:text-gray-300"
+              >
+                <FiMessageCircle size={24} />
+                {unreadMessagesCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                    {unreadMessagesCount > 9 ? '9+' : unreadMessagesCount}
+                  </span>
+                )}
+              </Link>
+
+              <button
+                onClick={handleNotificationsClick}
+                className="relative p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors text-gray-700 dark:text-gray-300"
+              >
+                <FiBell size={24} />
+                {unreadCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                    {unreadCount > 9 ? '9+' : unreadCount}
+                  </span>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Desktop Sidebar */}
       <div className="hidden lg:flex fixed left-0 top-0 h-screen w-72 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 flex-col transition-colors duration-200">
         {/* Logo */}
@@ -511,7 +551,7 @@ const LeftSidebar = () => {
         )}
       </div>
 
-      {/* Mobile Bottom Navigation */}
+      {/* Mobile Bottom Navigation - Instagram Style */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 z-50 safe-area-bottom">
         <div className="flex items-center justify-around px-2 py-3">
           <Link
@@ -543,37 +583,16 @@ const LeftSidebar = () => {
             </Link>
           )}
 
-          {user && (
-            <>
-              <Link
-                to="/messages"
-                className={`flex items-center justify-center p-2 rounded-lg relative no-underline ${
-                  isActive('/messages') ? 'text-blue-600 dark:text-blue-400' : 'text-gray-600 dark:text-gray-400'
-                }`}
-              >
-                <FiMessageCircle size={26} />
-                {unreadMessagesCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                    {unreadMessagesCount > 9 ? '9+' : unreadMessagesCount}
-                  </span>
-                )}
-              </Link>
-
-              <button
-                onClick={() => setShowMobileMenu(!showMobileMenu)}
-                className={`flex items-center justify-center p-2 rounded-lg mobile-menu-container relative ${
-                  showMobileMenu ? 'text-blue-600 dark:text-blue-400' : 'text-gray-600 dark:text-gray-400'
-                }`}
-              >
-                <FiUser size={26} />
-                {(unreadCount > 0 || unreadMessagesCount > 0) && (
-                  <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
-                )}
-              </button>
-            </>
-          )}
-
-          {!user && (
+          {user ? (
+            <button
+              onClick={() => setShowMobileMenu(!showMobileMenu)}
+              className={`flex items-center justify-center p-2 rounded-lg mobile-menu-container ${
+                showMobileMenu ? 'text-blue-600 dark:text-blue-400' : 'text-gray-600 dark:text-gray-400'
+              }`}
+            >
+              <FiUser size={26} />
+            </button>
+          ) : (
             <Link
               to="/login"
               className="flex items-center justify-center p-2 rounded-lg text-gray-600 dark:text-gray-400 no-underline"
@@ -618,19 +637,6 @@ const LeftSidebar = () => {
                   <FiUser size={20} />
                   <span className="text-sm font-medium">{t('nav.profile')}</span>
                 </Link>
-
-                <button
-                  onClick={handleNotificationsClick}
-                  className="w-full flex items-center space-x-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors text-gray-700 dark:text-gray-300 relative"
-                >
-                  <FiBell size={20} />
-                  <span className="text-sm font-medium">{t('nav.notifications')}</span>
-                  {unreadCount > 0 && (
-                    <span className="ml-auto bg-red-500 text-white text-xs font-bold rounded-full px-2 py-1">
-                      {unreadCount > 9 ? '9+' : unreadCount}
-                    </span>
-                  )}
-                </button>
 
                 {user.role === 'superadmin' && (
                   <Link

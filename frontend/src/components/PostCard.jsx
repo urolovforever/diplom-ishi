@@ -126,34 +126,36 @@ const PostCard = ({ post, onLike, onUnlike, onDelete, isConfessionAdmin }) => {
 
       {/* Actions */}
       <div className="px-4 py-3 border-t border-gray-100 dark:border-gray-700">
-        <div className="flex items-center space-x-3 flex-wrap gap-y-2">
-          <button
-            onClick={handleLikeToggle}
-            className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors ${
-              post.is_liked
-                ? 'text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/30 hover:bg-red-100 dark:hover:bg-red-900/50'
-                : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
-            }`}
-          >
-            <FiHeart
-              size={18}
-              fill={post.is_liked ? 'currentColor' : 'none'}
-            />
-            <span className="font-medium">{post.likes_count}</span>
-          </button>
-
-          {/* Only show comment icon if comments are enabled */}
-          {post.comments_enabled !== false && (
-            <Link
-              to={`/post/${post.id}`}
-              className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 rounded-lg transition-colors no-underline"
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <button
+              onClick={handleLikeToggle}
+              className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors ${
+                post.is_liked
+                  ? 'text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/30 hover:bg-red-100 dark:hover:bg-red-900/50'
+                  : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
+              }`}
             >
-              <FiMessageCircle size={18} />
-              <span className="font-medium">{post.comments_count}</span>
-            </Link>
-          )}
+              <FiHeart
+                size={18}
+                fill={post.is_liked ? 'currentColor' : 'none'}
+              />
+              <span className="font-medium">{post.likes_count}</span>
+            </button>
 
-          <div className="flex items-center space-x-2 text-gray-500 dark:text-gray-400 px-3 py-2 text-sm">
+            {/* Only show comment icon if comments are enabled */}
+            {post.comments_enabled !== false && (
+              <Link
+                to={`/post/${post.id}`}
+                className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 rounded-lg transition-colors no-underline"
+              >
+                <FiMessageCircle size={18} />
+                <span className="font-medium">{post.comments_count}</span>
+              </Link>
+            )}
+          </div>
+
+          <div className="flex items-center space-x-2 text-gray-500 dark:text-gray-400 text-sm">
             <FiEye size={16} />
             <span>{post.views_count || 0}</span>
           </div>

@@ -180,31 +180,33 @@ const PostDetails = () => {
 
         {/* Actions */}
         <div className="px-4 sm:px-6 py-3 sm:py-4 border-t border-gray-100 dark:border-gray-700">
-          <div className="flex items-center space-x-2 sm:space-x-4 flex-wrap gap-y-2">
-            <button
-              onClick={handleLikeToggle}
-              className={`flex items-center space-x-1.5 sm:space-x-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg font-medium transition-all text-sm sm:text-base ${
-                post.is_liked
-                  ? 'text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/30 hover:bg-red-100 dark:hover:bg-red-900/50'
-                  : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
-              }`}
-            >
-              <FiHeart
-                size={18}
-                className="sm:w-5 sm:h-5"
-                fill={post.is_liked ? 'currentColor' : 'none'}
-              />
-              <span className="hidden sm:inline">{post.likes_count} {post.likes_count === 1 ? t('common.like') : t('common.like') + 's'}</span>
-              <span className="sm:hidden">{post.likes_count}</span>
-            </button>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2 sm:space-x-4">
+              <button
+                onClick={handleLikeToggle}
+                className={`flex items-center space-x-1.5 sm:space-x-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg font-medium transition-all text-sm sm:text-base ${
+                  post.is_liked
+                    ? 'text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/30 hover:bg-red-100 dark:hover:bg-red-900/50'
+                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
+                }`}
+              >
+                <FiHeart
+                  size={18}
+                  className="sm:w-5 sm:h-5"
+                  fill={post.is_liked ? 'currentColor' : 'none'}
+                />
+                <span className="hidden sm:inline">{post.likes_count} {post.likes_count === 1 ? t('common.like') : t('common.like') + 's'}</span>
+                <span className="sm:hidden">{post.likes_count}</span>
+              </button>
 
-            <div className="flex items-center space-x-1.5 sm:space-x-2 text-gray-600 dark:text-gray-400 px-3 py-1.5 sm:px-4 sm:py-2 text-sm sm:text-base">
-              <FiMessageCircle size={18} className="sm:w-5 sm:h-5" />
-              <span className="hidden sm:inline">{post.comments_count} {post.comments_count === 1 ? t('common.comment') : t('common.comments')}</span>
-              <span className="sm:hidden">{post.comments_count}</span>
+              <div className="flex items-center space-x-1.5 sm:space-x-2 text-gray-600 dark:text-gray-400 px-3 py-1.5 sm:px-4 sm:py-2 text-sm sm:text-base">
+                <FiMessageCircle size={18} className="sm:w-5 sm:h-5" />
+                <span className="hidden sm:inline">{post.comments_count} {post.comments_count === 1 ? t('common.comment') : t('common.comments')}</span>
+                <span className="sm:hidden">{post.comments_count}</span>
+              </div>
             </div>
 
-            <div className="flex items-center space-x-1.5 sm:space-x-2 text-gray-500 dark:text-gray-400 px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm">
+            <div className="flex items-center space-x-1.5 sm:space-x-2 text-gray-500 dark:text-gray-400 text-xs sm:text-sm">
               <FiEye size={16} className="sm:w-[18px] sm:h-[18px]" />
               <span>{post.views_count || 0} {t('common.views')}</span>
             </div>
