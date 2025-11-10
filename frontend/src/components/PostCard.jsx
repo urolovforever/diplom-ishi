@@ -125,8 +125,8 @@ const PostCard = ({ post, onLike, onUnlike, onDelete, isConfessionAdmin }) => {
       </Link>
 
       {/* Actions */}
-      <div className="px-4 py-3 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between">
-        <div className="flex items-center space-x-3">
+      <div className="px-4 py-3 border-t border-gray-100 dark:border-gray-700">
+        <div className="flex items-center space-x-3 flex-wrap gap-y-2">
           <button
             onClick={handleLikeToggle}
             className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors ${
@@ -152,11 +152,11 @@ const PostCard = ({ post, onLike, onUnlike, onDelete, isConfessionAdmin }) => {
               <span className="font-medium">{post.comments_count}</span>
             </Link>
           )}
-        </div>
 
-        <div className="flex items-center space-x-2 text-gray-500 dark:text-gray-400 text-sm">
-          <FiEye size={16} />
-          <span>{post.views_count || 0}</span>
+          <div className="flex items-center space-x-2 text-gray-500 dark:text-gray-400 px-3 py-2 text-sm">
+            <FiEye size={16} />
+            <span>{post.views_count || 0}</span>
+          </div>
         </div>
       </div>
     </div>

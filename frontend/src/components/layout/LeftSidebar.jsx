@@ -253,7 +253,7 @@ const LeftSidebar = () => {
   return (
     <>
       {/* Desktop Sidebar */}
-      <div className="fixed left-0 top-0 h-screen w-72 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 flex flex-col transition-colors duration-200">
+      <div className="hidden lg:flex fixed left-0 top-0 h-screen w-72 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 flex-col transition-colors duration-200">
         {/* Logo */}
         <Link to="/" className="flex items-center space-x-3 px-6 py-6 no-underline">
           <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
