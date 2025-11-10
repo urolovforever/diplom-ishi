@@ -42,6 +42,8 @@ const Messages = () => {
   useEffect(() => {
     if (conversationId) {
       setSelectedConversationId(parseInt(conversationId));
+    } else {
+      setSelectedConversationId(null);
     }
   }, [conversationId]);
 

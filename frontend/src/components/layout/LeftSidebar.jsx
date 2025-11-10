@@ -264,18 +264,6 @@ const LeftSidebar = () => {
             </Link>
 
             <div className="flex items-center space-x-3">
-              <Link
-                to="/messages"
-                className="relative p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors no-underline text-gray-700 dark:text-gray-300"
-              >
-                <FiMessageCircle size={24} />
-                {unreadMessagesCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                    {unreadMessagesCount > 9 ? '9+' : unreadMessagesCount}
-                  </span>
-                )}
-              </Link>
-
               <button
                 onClick={handleNotificationsClick}
                 className="relative p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors text-gray-700 dark:text-gray-300"
@@ -287,6 +275,18 @@ const LeftSidebar = () => {
                   </span>
                 )}
               </button>
+
+              <Link
+                to="/messages"
+                className="relative p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors no-underline text-gray-700 dark:text-gray-300"
+              >
+                <FiMessageCircle size={24} />
+                {unreadMessagesCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                    {unreadMessagesCount > 9 ? '9+' : unreadMessagesCount}
+                  </span>
+                )}
+              </Link>
             </div>
           </div>
         </div>
@@ -474,7 +474,7 @@ const LeftSidebar = () => {
 
             {/* More Menu Dropdown */}
             {showMoreMenu && (
-              <div className="absolute bottom-full left-4 right-4 mb-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-2xl overflow-hidden z-50">
+              <div className="more-menu-container absolute bottom-full left-4 right-4 mb-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-2xl overflow-hidden z-50">
                 {/* Profile Link */}
                 <Link
                   to="/profile"
@@ -593,38 +593,6 @@ const LeftSidebar = () => {
             </Link>
           )}
 
-          {user && (
-            <>
-              <Link
-                to="/messages"
-                className={`relative flex items-center justify-center p-2 rounded-lg no-underline ${
-                  isActive('/messages') ? 'text-blue-600 dark:text-blue-400' : 'text-gray-600 dark:text-gray-400'
-                }`}
-              >
-                <FiMessageCircle size={26} />
-                {unreadMessagesCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                    {unreadMessagesCount > 9 ? '9+' : unreadMessagesCount}
-                  </span>
-                )}
-              </Link>
-
-              <button
-                onClick={handleNotificationsClick}
-                className={`relative flex items-center justify-center p-2 rounded-lg ${
-                  showNotifications ? 'text-blue-600 dark:text-blue-400' : 'text-gray-600 dark:text-gray-400'
-                }`}
-              >
-                <FiBell size={26} />
-                {unreadCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                    {unreadCount > 9 ? '9+' : unreadCount}
-                  </span>
-                )}
-              </button>
-            </>
-          )}
-
           {user ? (
             <button
               onClick={() => setShowMobileMenu(!showMobileMenu)}
@@ -646,7 +614,7 @@ const LeftSidebar = () => {
 
         {/* Mobile Menu Dropdown - Compact */}
         {showMobileMenu && user && (
-          <div className="absolute bottom-full left-0 right-0 mb-2 mx-4 max-w-xs mx-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-2xl overflow-hidden">
+          <div className="mobile-menu-container absolute bottom-full left-0 right-0 mb-2 mx-4 max-w-xs mx-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-2xl overflow-hidden">
             <div className="divide-y divide-gray-200 dark:divide-gray-700">
               {/* User Info */}
               <div className="p-3">
