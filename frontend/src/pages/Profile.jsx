@@ -5,6 +5,7 @@ import { authAPI } from '../api/auth'
 import { confessionAPI } from '../api/confession'
 import { useAuthStore } from '../store/authStore'
 import MainLayout from '../components/layout/MainLayout'
+import BackButton from '../components/BackButton'
 import Loading from '../components/Loading'
 import { FiEdit2, FiSave, FiX, FiLock, FiImage, FiCompass, FiShield } from 'react-icons/fi'
 import { formatRelativeTime } from '../utils/formatters'
@@ -157,6 +158,11 @@ const Profile = () => {
   return (
     <MainLayout showRightSidebar={false}>
       <div className="space-y-4 sm:space-y-6">
+        {/* Back Button */}
+        <div className="sticky top-0 bg-gray-50 dark:bg-gray-950 pt-2 z-10">
+          <BackButton />
+        </div>
+
         {/* Profile Header Card - Full Width Horizontal */}
         <div className="bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-800 dark:via-gray-800 dark:to-gray-900 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 p-4 sm:p-6 lg:p-8 border border-blue-100 dark:border-gray-700">
           <div className="flex flex-col sm:flex-row items-center sm:space-x-6 lg:space-x-8 space-y-4 sm:space-y-0">

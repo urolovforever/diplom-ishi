@@ -4,6 +4,7 @@ import { toast } from 'react-toastify'
 import { confessionAPI } from '../api/confession'
 import { useAuthStore } from '../store/authStore'
 import MainLayout from '../components/layout/MainLayout'
+import BackButton from '../components/BackButton'
 import Loading from '../components/Loading'
 import { FiImage, FiX, FiVideo, FiUpload, FiPlus, FiFileText } from 'react-icons/fi'
 import { useLanguage } from '../contexts/LanguageContext'
@@ -175,6 +176,11 @@ const CreatePost = () => {
   return (
     <MainLayout showRightSidebar={false}>
       <div className="max-w-3xl mx-auto">
+        {/* Back Button */}
+        <div className="mb-4 sticky top-0 bg-gray-50 dark:bg-gray-950 pt-2 z-10">
+          <BackButton />
+        </div>
+
         <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-8">{t('post.create')}</h1>
 
         <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 space-y-6">

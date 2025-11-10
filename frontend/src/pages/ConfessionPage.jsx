@@ -5,8 +5,9 @@ import { confessionAPI } from '../api/confession'
 import { useAuthStore } from '../store/authStore'
 import { useLanguage } from '../contexts/LanguageContext'
 import MainLayout from '../components/layout/MainLayout'
+import BackButton from '../components/BackButton'
 import Loading from '../components/Loading'
-import { FiUsers, FiFileText, FiUserPlus, FiUserMinus, FiEdit2, FiX, FiImage, FiTrash2, FiEye, FiHeart, FiMessageCircle, FiArrowLeft, FiVideo } from 'react-icons/fi'
+import { FiUsers, FiFileText, FiUserPlus, FiUserMinus, FiEdit2, FiX, FiImage, FiTrash2, FiEye, FiHeart, FiMessageCircle, FiVideo } from 'react-icons/fi'
 
 const ConfessionPage = () => {
   const { slug } = useParams()
@@ -215,13 +216,9 @@ const ConfessionPage = () => {
     <MainLayout>
       <div>
       {/* Back Button */}
-      <button
-        onClick={() => navigate(-1)}
-        className="inline-flex items-center space-x-2 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 mb-4 transition-colors text-sm sm:text-base"
-      >
-        <FiArrowLeft size={18} className="sm:w-5 sm:h-5" />
-        <span>{t('common.back')}</span>
-      </button>
+      <div className="mb-4 sticky top-0 bg-gray-50 dark:bg-gray-950 pt-2 z-10">
+        <BackButton label={t('common.back')} />
+      </div>
 
       {/* Header */}
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-transparent dark:border-gray-700 p-4 sm:p-6 lg:p-8 mb-6 sm:mb-8">

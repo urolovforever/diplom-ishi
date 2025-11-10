@@ -8,7 +8,8 @@ import CommentSection from '../components/CommentSection'
 import Loading from '../components/Loading'
 import MediaCarousel from '../components/MediaCarousel'
 import VideoPlayer from '../components/VideoPlayer'
-import { FiHeart, FiMessageCircle, FiArrowLeft, FiEye, FiFileText } from 'react-icons/fi'
+import BackButton from '../components/BackButton'
+import { FiHeart, FiMessageCircle, FiEye, FiFileText } from 'react-icons/fi'
 import { BsPinFill } from 'react-icons/bs'
 import { formatDistanceToNow } from 'date-fns'
 import { formatUsername } from '../utils/formatters'
@@ -81,13 +82,9 @@ const PostDetails = () => {
     <MainLayout>
       <div className="max-w-4xl mx-auto">
       {/* Back Button */}
-      <Link
-        to="/"
-        className="inline-flex items-center space-x-2 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 mb-4 sm:mb-6 transition-colors no-underline text-sm sm:text-base"
-      >
-        <FiArrowLeft size={18} className="sm:w-5 sm:h-5" />
-        <span>{t('common.backToHome')}</span>
-      </Link>
+      <div className="mb-4 sm:mb-6 sticky top-0 bg-gray-50 dark:bg-gray-950 pt-2 z-10">
+        <BackButton label={t('common.backToHome')} />
+      </div>
 
       {/* Post Content */}
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden mb-4 sm:mb-6">

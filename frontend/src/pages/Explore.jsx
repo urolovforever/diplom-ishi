@@ -4,6 +4,7 @@ import { confessionAPI } from '../api/confession'
 import MainLayout from '../components/layout/MainLayout'
 import ConfessionCard from '../components/ConfessionCard'
 import Loading from '../components/Loading'
+import BackButton from '../components/BackButton'
 import { FiSearch } from 'react-icons/fi'
 import { useLanguage } from '../contexts/LanguageContext'
 
@@ -58,6 +59,11 @@ const Explore = () => {
   return (
     <MainLayout>
       <div>
+        {/* Back Button */}
+        <div className="mb-4 sticky top-0 bg-gray-50 dark:bg-gray-950 pt-2 z-10">
+          <BackButton />
+        </div>
+
         {/* Header */}
         <div className="mb-6 sm:mb-8">
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800 dark:text-gray-100 mb-3 sm:mb-4">
@@ -84,7 +90,7 @@ const Explore = () => {
             <p className="text-gray-500 dark:text-gray-400 text-base sm:text-lg mb-2 px-4">{t('explore.noConfessionsFound')}</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
+          <div className="grid grid-cols-1 min-[500px]:grid-cols-2 gap-4 sm:gap-6">
             {filteredConfessions.map(confession => (
               <ConfessionCard key={confession.id} confession={confession} />
             ))}

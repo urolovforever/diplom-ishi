@@ -7,7 +7,8 @@ import { confessionAPI } from '../api/confession';
 import messagingAPI from '../api/messaging';
 import ConversationList from '../components/messaging/ConversationList';
 import ChatView from '../components/messaging/ChatView';
-import { FiMessageCircle, FiUsers, FiArrowLeft } from 'react-icons/fi';
+import BackButton from '../components/BackButton';
+import { FiMessageCircle, FiUsers } from 'react-icons/fi';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const Messages = () => {
@@ -134,15 +135,11 @@ const Messages = () => {
       {/* Conversations List - Hide on mobile when conversation is selected */}
       <div className={`${selectedConversationId ? 'hidden md:flex' : 'flex'} w-full md:w-96 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex-col`}>
         <div className="p-3 sm:p-4 border-b border-gray-200 dark:border-gray-700">
-          <div className="flex items-center space-x-2 sm:space-x-3">
-            <button
-              onClick={() => navigate('/')}
-              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-              title="Back to Home"
-            >
-              <FiArrowLeft size={18} className="sm:w-5 sm:h-5 text-gray-600 dark:text-gray-400" />
-            </button>
-            <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100">{t('messages.messages')}</h1>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <BackButton to="/" />
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100">{t('messages.messages')}</h1>
+            </div>
           </div>
         </div>
 

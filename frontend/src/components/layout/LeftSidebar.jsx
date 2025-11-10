@@ -282,7 +282,7 @@ const LeftSidebar = () => {
                   badge={unreadCount}
                 />
 
-                {user.role === 'admin' && (
+                {(user.role === 'admin' || user.role === 'superadmin') && (
                   <NavItem to="/create" icon={FiPlusSquare} label={t('nav.create')} />
                 )}
 
@@ -513,31 +513,31 @@ const LeftSidebar = () => {
 
       {/* Mobile Bottom Navigation */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 z-50 safe-area-bottom">
-        <div className="flex items-center justify-around px-2 py-2">
+        <div className="flex items-center justify-around px-2 py-3">
           <Link
             to="/"
-            className={`flex flex-col items-center justify-center p-2 rounded-lg no-underline ${
+            className={`flex items-center justify-center p-2 rounded-lg no-underline ${
               isActive('/') ? 'text-blue-600 dark:text-blue-400' : 'text-gray-600 dark:text-gray-400'
             }`}
           >
-            <FiHome size={24} />
-            <span className="text-xs mt-1">{t('nav.home')}</span>
+            <FiHome size={26} />
           </Link>
 
           <Link
             to="/explore"
-            className={`flex flex-col items-center justify-center p-2 rounded-lg no-underline ${
+            className={`flex items-center justify-center p-2 rounded-lg no-underline ${
               isActive('/explore') ? 'text-blue-600 dark:text-blue-400' : 'text-gray-600 dark:text-gray-400'
             }`}
           >
-            <FiCompass size={24} />
-            <span className="text-xs mt-1">{t('nav.explore')}</span>
+            <FiCompass size={26} />
           </Link>
 
-          {user && user.role === 'admin' && (
+          {user && (user.role === 'admin' || user.role === 'superadmin') && (
             <Link
               to="/create"
-              className="flex flex-col items-center justify-center p-2 rounded-lg text-blue-600 dark:text-blue-400 no-underline"
+              className={`flex items-center justify-center p-2 rounded-lg no-underline ${
+                isActive('/create') ? 'text-blue-600 dark:text-blue-400' : 'text-gray-600 dark:text-gray-400'
+              }`}
             >
               <FiPlusSquare size={28} />
             </Link>
@@ -545,40 +545,40 @@ const LeftSidebar = () => {
 
           {user && (
             <>
-              <button
-                onClick={handleNotificationsClick}
-                className={`flex flex-col items-center justify-center p-2 rounded-lg relative ${
-                  showNotifications ? 'text-blue-600 dark:text-blue-400' : 'text-gray-600 dark:text-gray-400'
+              <Link
+                to="/messages"
+                className={`flex items-center justify-center p-2 rounded-lg relative no-underline ${
+                  isActive('/messages') ? 'text-blue-600 dark:text-blue-400' : 'text-gray-600 dark:text-gray-400'
                 }`}
               >
-                <FiBell size={24} />
-                {unreadCount > 0 && (
-                  <span className="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                    {unreadCount > 9 ? '9+' : unreadCount}
+                <FiMessageCircle size={26} />
+                {unreadMessagesCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                    {unreadMessagesCount > 9 ? '9+' : unreadMessagesCount}
                   </span>
                 )}
-                <span className="text-xs mt-1">{t('nav.notifications')}</span>
-              </button>
+              </Link>
 
               <button
                 onClick={() => setShowMobileMenu(!showMobileMenu)}
-                className={`flex flex-col items-center justify-center p-2 rounded-lg mobile-menu-container ${
+                className={`flex items-center justify-center p-2 rounded-lg mobile-menu-container relative ${
                   showMobileMenu ? 'text-blue-600 dark:text-blue-400' : 'text-gray-600 dark:text-gray-400'
                 }`}
               >
-                <FiMenu size={24} />
-                <span className="text-xs mt-1">{t('nav.more')}</span>
+                <FiUser size={26} />
+                {(unreadCount > 0 || unreadMessagesCount > 0) && (
+                  <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
+                )}
               </button>
             </>
           )}
 
           {!user && (
             <Link
-              to="/profile"
-              className="flex flex-col items-center justify-center p-2 rounded-lg text-gray-600 dark:text-gray-400 no-underline"
+              to="/login"
+              className="flex items-center justify-center p-2 rounded-lg text-gray-600 dark:text-gray-400 no-underline"
             >
-              <FiUser size={24} />
-              <span className="text-xs mt-1">{t('nav.profile')}</span>
+              <FiUser size={26} />
             </Link>
           )}
         </div>
@@ -619,19 +619,18 @@ const LeftSidebar = () => {
                   <span className="text-sm font-medium">{t('nav.profile')}</span>
                 </Link>
 
-                <Link
-                  to="/messages"
-                  onClick={() => setShowMobileMenu(false)}
-                  className="flex items-center space-x-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors no-underline text-gray-700 dark:text-gray-300 relative"
+                <button
+                  onClick={handleNotificationsClick}
+                  className="w-full flex items-center space-x-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors text-gray-700 dark:text-gray-300 relative"
                 >
-                  <FiMessageCircle size={20} />
-                  <span className="text-sm font-medium">{t('nav.messages')}</span>
-                  {unreadMessagesCount > 0 && (
+                  <FiBell size={20} />
+                  <span className="text-sm font-medium">{t('nav.notifications')}</span>
+                  {unreadCount > 0 && (
                     <span className="ml-auto bg-red-500 text-white text-xs font-bold rounded-full px-2 py-1">
-                      {unreadMessagesCount > 9 ? '9+' : unreadMessagesCount}
+                      {unreadCount > 9 ? '9+' : unreadCount}
                     </span>
                   )}
-                </Link>
+                </button>
 
                 {user.role === 'superadmin' && (
                   <Link
