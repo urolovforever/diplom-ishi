@@ -179,7 +179,7 @@ const PostDetails = () => {
         </div>
 
         {/* Actions */}
-        <div className="px-4 sm:px-6 py-3 sm:py-4 border-t border-gray-100 dark:border-gray-700 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0">
+        <div className="px-4 sm:px-6 py-3 sm:py-4 border-t border-gray-100 dark:border-gray-700">
           <div className="flex items-center space-x-2 sm:space-x-4 flex-wrap gap-y-2">
             <button
               onClick={handleLikeToggle}
@@ -203,11 +203,11 @@ const PostDetails = () => {
               <span className="hidden sm:inline">{post.comments_count} {post.comments_count === 1 ? t('common.comment') : t('common.comments')}</span>
               <span className="sm:hidden">{post.comments_count}</span>
             </div>
-          </div>
 
-          <div className="flex items-center space-x-1.5 sm:space-x-2 text-gray-500 dark:text-gray-400 text-xs sm:text-sm">
-            <FiEye size={16} className="sm:w-[18px] sm:h-[18px]" />
-            <span>{post.views_count || 0} {t('common.views')}</span>
+            <div className="flex items-center space-x-1.5 sm:space-x-2 text-gray-500 dark:text-gray-400 px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm">
+              <FiEye size={16} className="sm:w-[18px] sm:h-[18px]" />
+              <span>{post.views_count || 0} {t('common.views')}</span>
+            </div>
           </div>
         </div>
       </div>
