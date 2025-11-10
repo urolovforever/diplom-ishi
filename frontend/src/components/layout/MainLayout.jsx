@@ -13,7 +13,6 @@ const MainLayout = ({ children, showRightSidebar = true }) => {
         min-h-screen
         lg:ml-72
         ${showRightSidebar ? 'xl:mr-96' : ''}
-        pt-16 lg:pt-0
         pb-20 lg:pb-0
       `}>
         <div className="max-w-3xl mx-auto py-4 px-4 sm:py-6 sm:px-6">

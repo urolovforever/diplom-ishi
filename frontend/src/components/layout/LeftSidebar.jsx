@@ -252,45 +252,6 @@ const LeftSidebar = () => {
 
   return (
     <>
-      {/* Mobile Top Bar - Messages & Notifications */}
-      {user && (
-        <div className="lg:hidden fixed top-0 left-0 right-0 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 z-40 safe-area-top">
-          <div className="flex items-center justify-between px-4 py-3">
-            <Link to="/" className="flex items-center space-x-2 no-underline">
-              <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-                <span className="text-white font-bold text-sm">RP</span>
-              </div>
-              <span className="text-lg font-bold text-gray-800 dark:text-gray-100">Religion Platform</span>
-            </Link>
-
-            <div className="flex items-center space-x-3">
-              <Link
-                to="/messages"
-                className="relative p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors no-underline text-gray-700 dark:text-gray-300"
-              >
-                <FiMessageCircle size={24} />
-                {unreadMessagesCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                    {unreadMessagesCount > 9 ? '9+' : unreadMessagesCount}
-                  </span>
-                )}
-              </Link>
-
-              <button
-                onClick={handleNotificationsClick}
-                className="relative p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors text-gray-700 dark:text-gray-300"
-              >
-                <FiBell size={24} />
-                {unreadCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                    {unreadCount > 9 ? '9+' : unreadCount}
-                  </span>
-                )}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Desktop Sidebar */}
       <div className="hidden lg:flex fixed left-0 top-0 h-screen w-72 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 flex-col transition-colors duration-200">
@@ -579,8 +540,40 @@ const LeftSidebar = () => {
                 isActive('/create') ? 'text-blue-600 dark:text-blue-400' : 'text-gray-600 dark:text-gray-400'
               }`}
             >
-              <FiPlusSquare size={28} />
+              <FiPlusSquare size={26} />
             </Link>
+          )}
+
+          {user && (
+            <>
+              <Link
+                to="/messages"
+                className={`relative flex items-center justify-center p-2 rounded-lg no-underline ${
+                  isActive('/messages') ? 'text-blue-600 dark:text-blue-400' : 'text-gray-600 dark:text-gray-400'
+                }`}
+              >
+                <FiMessageCircle size={26} />
+                {unreadMessagesCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                    {unreadMessagesCount > 9 ? '9+' : unreadMessagesCount}
+                  </span>
+                )}
+              </Link>
+
+              <button
+                onClick={handleNotificationsClick}
+                className={`relative flex items-center justify-center p-2 rounded-lg ${
+                  showNotifications ? 'text-blue-600 dark:text-blue-400' : 'text-gray-600 dark:text-gray-400'
+                }`}
+              >
+                <FiBell size={26} />
+                {unreadCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                    {unreadCount > 9 ? '9+' : unreadCount}
+                  </span>
+                )}
+              </button>
+            </>
           )}
 
           {user ? (
@@ -602,39 +595,39 @@ const LeftSidebar = () => {
           )}
         </div>
 
-        {/* Mobile Menu Dropdown */}
+        {/* Mobile Menu Dropdown - Compact */}
         {showMobileMenu && user && (
-          <div className="absolute bottom-full left-0 right-0 mb-2 mx-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-2xl overflow-hidden">
+          <div className="absolute bottom-full left-0 right-0 mb-2 mx-4 max-w-xs mx-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-2xl overflow-hidden">
             <div className="divide-y divide-gray-200 dark:divide-gray-700">
               {/* User Info */}
-              <div className="p-4">
-                <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
+              <div className="p-3">
+                <div className="flex items-center space-x-2">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center flex-shrink-0">
                     {user.avatar ? (
                       <img
                         src={user.avatar}
                         alt={user.username}
-                        className="w-12 h-12 rounded-full object-cover"
+                        className="w-10 h-10 rounded-full object-cover"
                       />
                     ) : (
-                      <span className="text-white font-bold text-lg">{formatUsername(user.username)[0].toUpperCase()}</span>
+                      <span className="text-white font-bold text-sm">{formatUsername(user.username)[0].toUpperCase()}</span>
                     )}
                   </div>
-                  <div className="flex-1">
-                    <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">{formatUsername(user.username)}</p>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-gray-800 dark:text-gray-200 truncate">{formatUsername(user.username)}</p>
                     <p className="text-xs text-gray-500 dark:text-gray-400 capitalize">{user.role}</p>
                   </div>
                 </div>
               </div>
 
               {/* Nav Links */}
-              <div className="p-2">
+              <div className="py-1">
                 <Link
                   to="/profile"
                   onClick={() => setShowMobileMenu(false)}
-                  className="flex items-center space-x-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors no-underline text-gray-700 dark:text-gray-300"
+                  className="flex items-center space-x-2 px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors no-underline text-gray-700 dark:text-gray-300"
                 >
-                  <FiUser size={20} />
+                  <FiUser size={18} />
                   <span className="text-sm font-medium">{t('nav.profile')}</span>
                 </Link>
 
@@ -642,54 +635,54 @@ const LeftSidebar = () => {
                   <Link
                     to="/admin"
                     onClick={() => setShowMobileMenu(false)}
-                    className="flex items-center space-x-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors no-underline text-gray-700 dark:text-gray-300"
+                    className="flex items-center space-x-2 px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors no-underline text-gray-700 dark:text-gray-300"
                   >
-                    <FiSettings size={20} />
+                    <FiSettings size={18} />
                     <span className="text-sm font-medium">{t('nav.admin')}</span>
                   </Link>
                 )}
               </div>
 
               {/* Settings */}
-              <div className="p-2">
+              <div className="py-1">
                 <button
                   onClick={handleDarkModeToggle}
-                  className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                  className="w-full flex items-center justify-between px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                 >
-                  <div className="flex items-center space-x-3">
-                    {darkMode ? <FiSun size={20} className="text-yellow-500" /> : <FiMoon size={20} className="text-indigo-600" />}
+                  <div className="flex items-center space-x-2">
+                    {darkMode ? <FiSun size={18} className="text-yellow-500" /> : <FiMoon size={18} className="text-indigo-600" />}
                     <span className="text-sm font-medium text-gray-800 dark:text-gray-200">
                       {darkMode ? t('settings.lightMode') : t('settings.darkMode')}
                     </span>
                   </div>
-                  <div className={`w-10 h-6 rounded-full transition-colors ${darkMode ? 'bg-indigo-600' : 'bg-gray-300'} relative`}>
-                    <div className={`absolute top-1 ${darkMode ? 'right-1' : 'left-1'} w-4 h-4 bg-white rounded-full transition-all`}></div>
+                  <div className={`w-9 h-5 rounded-full transition-colors ${darkMode ? 'bg-indigo-600' : 'bg-gray-300'} relative flex-shrink-0`}>
+                    <div className={`absolute top-0.5 ${darkMode ? 'right-0.5' : 'left-0.5'} w-4 h-4 bg-white rounded-full transition-all`}></div>
                   </div>
                 </button>
               </div>
 
               {/* Language */}
-              <div className="p-4">
-                <div className="flex items-center space-x-2 mb-3">
-                  <FiGlobe size={18} className="text-gray-600 dark:text-gray-400" />
-                  <span className="text-sm font-semibold text-gray-800 dark:text-gray-200">{t('settings.language')}</span>
+              <div className="p-3">
+                <div className="flex items-center space-x-2 mb-2">
+                  <FiGlobe size={16} className="text-gray-600 dark:text-gray-400" />
+                  <span className="text-xs font-semibold text-gray-800 dark:text-gray-200">{t('settings.language')}</span>
                 </div>
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-3 gap-1.5">
                   {[
-                    { code: 'en', label: 'English', flag: '🇬🇧' },
-                    { code: 'uz', label: 'O\'zbek', flag: '🇺🇿' },
-                    { code: 'ru', label: 'Русский', flag: '🇷🇺' }
+                    { code: 'en', label: 'EN', flag: '🇬🇧' },
+                    { code: 'uz', label: 'UZ', flag: '🇺🇿' },
+                    { code: 'ru', label: 'RU', flag: '🇷🇺' }
                   ].map(lang => (
                     <button
                       key={lang.code}
                       onClick={() => handleLanguageChange(lang.code)}
-                      className={`flex flex-col items-center justify-center p-2 rounded-lg transition-all ${
+                      className={`flex flex-col items-center justify-center py-1.5 rounded-md transition-all ${
                         language === lang.code
-                          ? 'bg-blue-600 text-white shadow-md'
+                          ? 'bg-blue-600 text-white shadow-sm'
                           : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
                       }`}
                     >
-                      <span className="text-2xl mb-1">{lang.flag}</span>
+                      <span className="text-xl mb-0.5">{lang.flag}</span>
                       <span className="text-xs font-medium">{lang.label}</span>
                     </button>
                   ))}
@@ -697,15 +690,15 @@ const LeftSidebar = () => {
               </div>
 
               {/* Logout */}
-              <div className="p-2">
+              <div className="py-1">
                 <button
                   onClick={() => {
                     setShowMobileMenu(false)
                     handleLogout()
                   }}
-                  className="w-full flex items-center space-x-3 px-4 py-3 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors text-red-600 dark:text-red-400"
+                  className="w-full flex items-center space-x-2 px-3 py-2 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors text-red-600 dark:text-red-400"
                 >
-                  <FiLogOut size={20} />
+                  <FiLogOut size={18} />
                   <span className="text-sm font-medium">{t('settings.logout')}</span>
                 </button>
               </div>
@@ -716,7 +709,7 @@ const LeftSidebar = () => {
 
       {/* Mobile Notifications Panel */}
       {showNotifications && (
-        <div className="lg:hidden fixed inset-0 bg-white dark:bg-gray-900 z-[60] flex flex-col">
+        <div className="lg:hidden fixed top-0 left-0 right-0 bottom-20 bg-white dark:bg-gray-900 z-[60] flex flex-col">
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-4 border-b border-gray-200 dark:border-gray-700">
             <button
