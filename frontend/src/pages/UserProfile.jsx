@@ -8,8 +8,9 @@ import { useAuthStore } from '../store/authStore'
 import { useTheme } from '../contexts/ThemeContext'
 import { useLanguage } from '../contexts/LanguageContext'
 import MainLayout from '../components/layout/MainLayout'
+import BackButton from '../components/BackButton'
 import Loading from '../components/Loading'
-import { FiArrowLeft, FiMail, FiUser, FiMessageCircle } from 'react-icons/fi'
+import { FiMail, FiUser, FiMessageCircle } from 'react-icons/fi'
 
 const UserProfile = () => {
   const { username } = useParams()
@@ -100,13 +101,9 @@ const UserProfile = () => {
     <MainLayout>
       <div className="max-w-4xl mx-auto">
         {/* Back Button */}
-        <Link
-          to="/"
-          className={`inline-flex items-center space-x-2 ${darkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-700'} mb-6 no-underline`}
-        >
-          <FiArrowLeft />
-          <span>{t('userProfile.backToHome')}</span>
-        </Link>
+        <div className="mb-6 sticky top-0 bg-gray-50 dark:bg-gray-950 pt-2 z-10">
+          <BackButton label={t('userProfile.backToHome')} />
+        </div>
 
         {/* Profile Card */}
         <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-md overflow-hidden`}>
