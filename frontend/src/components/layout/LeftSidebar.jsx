@@ -544,7 +544,55 @@ const LeftSidebar = () => {
             )}
           </div>
         ) : (
-          <div className="px-4 py-4 border-t border-gray-200 dark:border-gray-700 space-y-2">
+          <div className="px-4 py-4 border-t border-gray-200 dark:border-gray-700 space-y-3">
+            {/* Theme and Language Controls for Guests */}
+            <div className="space-y-2 pb-3 border-b border-gray-200 dark:border-gray-700">
+              {/* Dark Mode Toggle */}
+              <button
+                onClick={handleDarkModeToggle}
+                className="w-full flex items-center justify-between px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors"
+              >
+                <div className="flex items-center space-x-3">
+                  {darkMode ? <FiSun size={18} className="text-yellow-500" /> : <FiMoon size={18} className="text-indigo-600" />}
+                  <span className="text-sm font-medium text-gray-800 dark:text-gray-200">
+                    {darkMode ? t('settings.lightMode') : t('settings.darkMode')}
+                  </span>
+                </div>
+                <div className={`w-10 h-6 rounded-full transition-colors ${darkMode ? 'bg-indigo-600' : 'bg-gray-300'} relative`}>
+                  <div className={`absolute top-1 ${darkMode ? 'right-1' : 'left-1'} w-4 h-4 bg-white rounded-full transition-all`}></div>
+                </div>
+              </button>
+
+              {/* Language Selector */}
+              <div className="px-2 py-2">
+                <div className="flex items-center space-x-2 mb-2">
+                  <FiGlobe size={16} className="text-gray-600 dark:text-gray-400" />
+                  <span className="text-xs font-semibold text-gray-800 dark:text-gray-200">{t('settings.language')}</span>
+                </div>
+                <div className="grid grid-cols-3 gap-2">
+                  {[
+                    { code: 'en', label: 'English', flag: '🇬🇧' },
+                    { code: 'uz', label: 'O\'zbek', flag: '🇺🇿' },
+                    { code: 'ru', label: 'Русский', flag: '🇷🇺' }
+                  ].map(lang => (
+                    <button
+                      key={lang.code}
+                      onClick={() => handleLanguageChange(lang.code)}
+                      className={`flex flex-col items-center justify-center p-2 rounded-lg transition-all ${
+                        language === lang.code
+                          ? 'bg-blue-600 text-white shadow-md'
+                          : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                      }`}
+                    >
+                      <span className="text-xl mb-0.5">{lang.flag}</span>
+                      <span className="text-xs font-medium">{lang.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Login/Register Buttons */}
             <Link
               to="/login"
               className="block w-full px-4 py-3 text-center text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg font-medium no-underline"
@@ -603,14 +651,89 @@ const LeftSidebar = () => {
               <FiUser size={26} />
             </button>
           ) : (
-            <Link
-              to="/login"
-              className="flex items-center justify-center p-2 rounded-lg text-gray-600 dark:text-gray-400 no-underline"
+            <button
+              onClick={() => setShowMobileMenu(!showMobileMenu)}
+              className={`flex items-center justify-center p-2 rounded-lg mobile-menu-container ${
+                showMobileMenu ? 'text-blue-600 dark:text-blue-400' : 'text-gray-600 dark:text-gray-400'
+              }`}
             >
-              <FiUser size={26} />
-            </Link>
+              <FiMenu size={26} />
+            </button>
           )}
         </div>
+
+        {/* Mobile Menu Dropdown for Guests */}
+        {showMobileMenu && !user && (
+          <div className="mobile-menu-container absolute bottom-full left-0 right-0 mb-2 mx-4 max-w-xs mx-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-2xl overflow-hidden">
+            <div className="divide-y divide-gray-200 dark:divide-gray-700">
+              {/* Settings */}
+              <div className="py-1">
+                <button
+                  onClick={handleDarkModeToggle}
+                  className="w-full flex items-center justify-between px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                >
+                  <div className="flex items-center space-x-2">
+                    {darkMode ? <FiSun size={18} className="text-yellow-500" /> : <FiMoon size={18} className="text-indigo-600" />}
+                    <span className="text-sm font-medium text-gray-800 dark:text-gray-200">
+                      {darkMode ? t('settings.lightMode') : t('settings.darkMode')}
+                    </span>
+                  </div>
+                  <div className={`w-9 h-5 rounded-full transition-colors ${darkMode ? 'bg-indigo-600' : 'bg-gray-300'} relative flex-shrink-0`}>
+                    <div className={`absolute top-0.5 ${darkMode ? 'right-0.5' : 'left-0.5'} w-4 h-4 bg-white rounded-full transition-all`}></div>
+                  </div>
+                </button>
+              </div>
+
+              {/* Language */}
+              <div className="p-3">
+                <div className="flex items-center space-x-2 mb-2">
+                  <FiGlobe size={16} className="text-gray-600 dark:text-gray-400" />
+                  <span className="text-xs font-semibold text-gray-800 dark:text-gray-200">{t('settings.language')}</span>
+                </div>
+                <div className="grid grid-cols-3 gap-1.5">
+                  {[
+                    { code: 'en', label: 'EN', flag: '🇬🇧' },
+                    { code: 'uz', label: 'UZ', flag: '🇺🇿' },
+                    { code: 'ru', label: 'RU', flag: '🇷🇺' }
+                  ].map(lang => (
+                    <button
+                      key={lang.code}
+                      onClick={() => handleLanguageChange(lang.code)}
+                      className={`flex flex-col items-center justify-center py-1.5 rounded-md transition-all ${
+                        language === lang.code
+                          ? 'bg-blue-600 text-white shadow-sm'
+                          : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+                      }`}
+                    >
+                      <span className="text-xl mb-0.5">{lang.flag}</span>
+                      <span className="text-xs font-medium">{lang.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Login/Register */}
+              <div className="py-1">
+                <Link
+                  to="/login"
+                  onClick={() => setShowMobileMenu(false)}
+                  className="flex items-center space-x-2 px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors no-underline text-gray-700 dark:text-gray-300"
+                >
+                  <FiUser size={18} />
+                  <span className="text-sm font-medium">{t('auth.login')}</span>
+                </Link>
+                <Link
+                  to="/register"
+                  onClick={() => setShowMobileMenu(false)}
+                  className="flex items-center space-x-2 px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors no-underline text-gray-700 dark:text-gray-300"
+                >
+                  <FiUser size={18} />
+                  <span className="text-sm font-medium">{t('auth.register')}</span>
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Mobile Menu Dropdown - Compact */}
         {showMobileMenu && user && (
